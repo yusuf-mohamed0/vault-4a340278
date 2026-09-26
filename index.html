@@ -3,188 +3,496 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0E2A47">
 <title>نظامي المالي — لوحة الثروة</title>
 <style>
-  :root { --navy:#1F3864; --gold:#C9A227; --green:#2E7D32; --red:#C62828;
-           --bg:#F4F7FB; --card:#fff; }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:"Segoe UI",Tahoma,Arial,sans-serif; background:var(--bg);
-          color:#1a2333; direction:rtl; line-height:1.6; }
-  header { background:linear-gradient(135deg,var(--navy),#2c5282); color:#fff;
-            padding:26px 18px; text-align:center; }
-  header h1 { font-size:1.5rem; }
-  header p { opacity:.85; font-size:.9rem; margin-top:4px; }
-  .wrap { max-width:960px; margin:0 auto; padding:18px; }
-  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-            gap:12px; margin:18px 0; }
-  .card { background:var(--card); border-radius:12px; padding:16px;
-           box-shadow:0 2px 8px rgba(31,56,100,.08); border-top:4px solid var(--navy); }
-  .card.g { border-top-color:var(--green); }
-  .card.r { border-top-color:var(--red); }
-  .card.y { border-top-color:var(--gold); }
-  .card .v { font-size:1.5rem; font-weight:700; }
-  .card .l { font-size:.85rem; color:#5b6b82; }
-  .card.g .v { color:var(--green); } .card.r .v { color:var(--red); }
-  .card.y .v { color:var(--gold); }
-  section { background:var(--card); border-radius:12px; padding:18px; margin:16px 0;
-             box-shadow:0 2px 8px rgba(31,56,100,.08); }
-  h2 { color:var(--navy); font-size:1.1rem; margin-bottom:10px;
-        border-inline-start:5px solid var(--gold); padding-inline-start:10px; }
-  table { width:100%; border-collapse:collapse; font-size:.92rem; }
-  th { background:var(--navy); color:#fff; padding:9px 8px; font-weight:600; }
-  td { padding:8px; border-bottom:1px solid #e4eaf3; }
-  tr:nth-child(even) td { background:#f7f9fd; }
-  .num { text-align:center; font-variant-numeric:tabular-nums; white-space:nowrap; }
-  ul { list-style:none; }
-  ul li { padding:8px; border-bottom:1px solid #e4eaf3; }
-  a { color:var(--navy); font-weight:600; text-decoration:none; }
-  a:hover { text-decoration:underline; }
-  .note { background:#FFF8E1; border:1px solid var(--gold); border-radius:10px;
-           padding:12px; font-size:.9rem; margin-top:14px; }
-  footer { text-align:center; color:#7b8aa3; font-size:.8rem; padding:18px; }
-  /* ---- lock gate ---- */
-  #lock { position:fixed; inset:0; background:linear-gradient(135deg,var(--navy),#0f1f3d);
-           display:flex; align-items:center; justify-content:center; z-index:50; }
-  #lock .box { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.18);
-                border-radius:16px; padding:32px 26px; text-align:center; width:min(340px,90vw);
-                backdrop-filter:blur(6px); }
-  #lock h1 { color:#fff; font-size:1.3rem; margin-bottom:6px; }
-  #lock p { color:#c8d4e8; font-size:.85rem; margin-bottom:16px; }
-  #lock input { width:100%; padding:12px; border-radius:10px; border:1px solid #46618f;
-                 background:#0d1b33; color:#fff; font-size:1rem; text-align:center;
-                 letter-spacing:3px; outline:none; }
-  #lock button { margin-top:14px; width:100%; padding:12px; border:0; border-radius:10px;
-                  background:var(--gold); color:#1a2333; font-weight:700; font-size:1rem;
-                  cursor:pointer; }
-  #lock .err { color:#ff9d9d; font-size:.8rem; min-height:1.2em; margin-top:10px; }
-  #lock .hint { color:#8fa5c9; font-size:.72rem; margin-top:14px; }
-  body.locked .wrap, body.locked header, body.locked footer { display:none; }
-  /* ---- quick log ---- */
-  .logrow { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
-  .logrow input { flex:1 1 130px; padding:10px; border:1px solid #cdd8ea;
-                   border-radius:9px; font-size:.95rem; background:#fff; min-width:0; }
-  .btn { padding:10px 14px; border:0; border-radius:9px; cursor:pointer;
-          font-weight:700; font-size:.9rem; background:var(--navy); color:#fff; }
-  .btn.gold { background:var(--gold); color:#1a2333; }
-  .btn.danger { background:#fdecea; color:var(--red); border:1px solid #f5c6c2; }
-  .lgstats { background:#EAF2FF; border:1px solid #cdd8ea; border-radius:10px;
-              padding:10px 12px; font-size:.95rem; margin-bottom:8px; }
-  .lgstats b { color:var(--navy); }
-  .lgstats .bad { color:var(--red); font-weight:700; }
-  #lg_list li { display:flex; justify-content:space-between; gap:8px;
-                 align-items:center; font-size:.9rem; }
-  #lg_list .del { background:none; border:0; color:var(--red); cursor:pointer;
-                   font-size:1.05rem; padding:2px 6px; }
+  :root{
+    --navy:#0E2A47; --navy2:#163A5F; --gold:#C9A227;
+    --green:#15803D; --green-bg:#ECFDF3;
+    --red:#B91C1C; --red-bg:#FEF2F2;
+    --blue:#1D4ED8; --blue-bg:#EFF4FF;
+    --amber:#B7791F; --amber-bg:#FFFBEB;
+    --bg:#F4F6F9; --surface:#fff; --line:#E4E9F0;
+    --text:#16212E; --muted:#5D6B80;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(14,42,71,.05), 0 10px 26px -16px rgba(14,42,71,.25);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:"Segoe UI","Noto Sans Arabic","Helvetica Neue",Tahoma,Arial,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.65; direction:rtl;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .ic{width:18px; height:18px; flex:none;}
+  .num{font-variant-numeric:tabular-nums;}
+
+  /* ---------- lock gate ---------- */
+  #lock{
+    position:fixed; inset:0; z-index:60; display:flex; align-items:center;
+    justify-content:center; padding:20px;
+    background:radial-gradient(1100px 520px at 50% -12%, #163A5F 0%, var(--navy) 52%, #071527 100%);
+  }
+  .lock-card{
+    width:min(380px,100%); text-align:center; color:#fff;
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14);
+    border-radius:20px; padding:34px 26px; backdrop-filter:blur(8px);
+  }
+  .lock-logo{
+    width:58px; height:58px; margin:0 auto 14px; border-radius:17px;
+    display:grid; place-items:center;
+    background:rgba(201,162,39,.14); border:1px solid rgba(201,162,39,.42);
+    color:var(--gold);
+  }
+  .lock-logo .ic{width:26px; height:26px;}
+  .lock-card h1{font-size:1.25rem; font-weight:700;}
+  .lock-card p{font-size:.87rem; color:rgba(255,255,255,.72); margin-top:5px;}
+  #lock input{
+    width:100%; margin-top:20px; padding:13px; border-radius:12px;
+    border:1px solid rgba(255,255,255,.24); background:rgba(255,255,255,.08);
+    color:#fff; text-align:center; font-size:1.05rem; letter-spacing:4px;
+  }
+  #lock input:focus{outline:none; border-color:var(--gold);}
+  .lock-btn{
+    margin-top:12px; width:100%; justify-content:center;
+    background:var(--gold); color:#1A2333; border:0;
+  }
+  .lock-btn:hover{background:#D9B23A;}
+  .lock-err{min-height:1.3em; font-size:.85rem; color:#FCA5A5; margin-top:10px;}
+  .lock-hint{
+    display:flex; gap:7px; align-items:center; justify-content:center;
+    font-size:.75rem; color:rgba(255,255,255,.55); margin-top:16px;
+  }
+
+  /* ---------- header ---------- */
+  header{background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%); color:#fff;}
+  .hd{
+    max-width:1040px; margin:0 auto; padding:18px 16px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:14px; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:12px;}
+  .logo{
+    width:44px; height:44px; border-radius:13px; display:grid; place-items:center;
+    background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.18);
+    color:var(--gold);
+  }
+  .logo .ic{width:23px; height:23px;}
+  .brand h1{font-size:1.22rem; font-weight:700; letter-spacing:-.2px;}
+  .brand .sub{font-size:.8rem; color:rgba(255,255,255,.72);}
+  .chip{
+    display:inline-flex; align-items:center; gap:7px; font-size:.78rem;
+    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16);
+    padding:7px 13px; border-radius:999px; color:rgba(255,255,255,.9);
+  }
+  .chip .ic{width:14px; height:14px; color:var(--gold);}
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:1040px; margin:0 auto; padding:20px 16px 6px;}
+  section{
+    background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--radius); padding:18px; margin-bottom:16px;
+    box-shadow:var(--shadow);
+    animation:fade .35s ease both;
+  }
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important;}}
+  .sec-h{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+  .sec-h .ic{width:19px; height:19px; color:var(--navy);}
+  .sec-h h2{font-size:1.02rem; font-weight:700; color:var(--navy);}
+  .sec-h .hint{margin-inline-start:auto; font-size:.76rem; color:var(--muted);}
+
+  /* ---------- KPI cards ---------- */
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+         gap:14px; margin-bottom:16px;}
+  .card{
+    background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--radius); padding:16px; box-shadow:var(--shadow);
+    animation:fade .35s ease both;
+  }
+  .ci{width:36px; height:36px; border-radius:11px; display:grid; place-items:center; margin-bottom:10px;}
+  .ci .ic{width:19px; height:19px;}
+  .tone-red{background:var(--red-bg); color:var(--red);}
+  .tone-green{background:var(--green-bg); color:var(--green);}
+  .tone-navy{background:#EAF0F7; color:var(--navy);}
+  .tone-gold{background:var(--amber-bg); color:var(--amber);}
+  .tone-blue{background:var(--blue-bg); color:var(--blue);}
+  .card .v{font-size:1.5rem; font-weight:700; letter-spacing:-.4px;}
+  .card .l{font-size:.82rem; color:var(--muted); margin-top:2px;}
+
+  /* ---------- market pulse (prices & news) ---------- */
+  .mk{display:grid; grid-template-columns:repeat(auto-fit,minmax(175px,1fr)); gap:10px;}
+  .mk-i{
+    background:#F8FAFD; border:1px solid var(--line); border-radius:12px;
+    padding:12px 13px; display:flex; flex-direction:column; gap:3px; min-width:0;
+  }
+  .mk-l{display:flex; align-items:center; gap:6px; font-size:.76rem; color:var(--muted);}
+  .mk-l .ic{width:14px; height:14px; color:var(--navy);}
+  .mk-v{font-size:1.02rem; font-weight:700; color:var(--navy); font-variant-numeric:tabular-nums;}
+  .mk-s{font-size:.7rem; color:#8A97A8;}
+  .mk-cols{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px;}
+  .mk-h{display:flex; align-items:center; gap:7px; font-size:.85rem;
+         font-weight:700; color:var(--navy); margin-bottom:8px;}
+  .mk-h .ic{width:15px; height:15px; color:var(--gold);}
+  .mk-ul{list-style:none; display:flex; flex-direction:column; gap:8px;}
+  .mk-ul li{
+    display:flex; gap:8px; align-items:flex-start; font-size:.82rem; color:#3A4A5E;
+    background:#F8FAFD; border:1px solid var(--line); border-radius:10px; padding:9px 11px;
+  }
+  .mk-ul li .ic{width:14px; height:14px; color:var(--muted); margin-top:3px; flex:none;}
+  .mk-date{display:block; font-size:.72rem; color:#8A97A8; margin-top:2px;}
+
+  /* ---------- quick log ---------- */
+  .seg{
+    display:inline-flex; gap:4px; padding:4px; margin-bottom:12px;
+    background:#EDF1F7; border:1px solid var(--line); border-radius:12px;
+    width:100%;
+  }
+  .seg-btn{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:8px;
+    min-height:42px; padding:9px 14px; border:0; border-radius:9px;
+    background:transparent; color:var(--muted); font-size:.92rem; font-weight:700;
+    font-family:inherit; cursor:pointer;
+  }
+  .seg-btn.on{background:#fff; color:var(--navy); box-shadow:0 1px 3px rgba(14,42,71,.16);}
+  .seg-btn.on.t-in{color:var(--green);}
+  .form{display:flex; flex-wrap:wrap; gap:10px;}
+  .form input{
+    padding:11px 12px; min-height:44px; border:1px solid var(--line);
+    border-radius:11px; font-size:.95rem; font-family:inherit; background:#fff;
+    color:var(--text);
+  }
+  .form input:focus{outline:none; border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(29,78,216,.14);}
+  #lg_d{width:165px;}
+  #lg_a{width:150px;}
+  #lg_n{flex:1 1 180px; min-width:0;}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    min-height:44px; padding:11px 18px; border-radius:11px; border:1px solid transparent;
+    font-size:.93rem; font-weight:700; font-family:inherit; cursor:pointer;
+  }
+  .btn-pri{background:var(--navy); color:#fff;}
+  .btn-pri:hover{background:var(--navy2);}
+  .btn-out{background:#fff; border-color:var(--line); color:var(--muted);}
+  .btn-out:hover{border-color:#C9D3E0; color:var(--text);}
+  .btn-danger{background:#fff; border-color:#F0C9C9; color:var(--red);}
+  .btn-danger:hover{background:var(--red-bg);}
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(165px,1fr));
+         gap:10px; margin-top:14px;}
+  .stat{background:#F8FAFD; border:1px solid var(--line); border-radius:12px; padding:12px 13px;}
+  .stat .sl{display:flex; align-items:center; gap:6px; font-size:.76rem; color:var(--muted);}
+  .stat .sl .ic{width:14px; height:14px;}
+  .stat .sv{font-size:1.16rem; font-weight:700; margin-top:3px;}
+  .bar{height:7px; background:#E6ECF3; border-radius:99px; margin-top:9px; overflow:hidden;}
+  .bar i{display:block; height:100%; border-radius:99px; width:0;
+         background:var(--green); transition:width .35s ease;}
+  .bar i.warn{background:var(--gold);}
+  .bar i.over{background:var(--red);}
+  .v-green{color:var(--green);} .v-red{color:var(--red);}
+  .log-list{margin-top:6px;}
+  .log-row{
+    display:flex; align-items:center; gap:11px; padding:11px 2px;
+    border-bottom:1px solid var(--line);
+  }
+  .log-row:last-child{border-bottom:0;}
+  .lic{width:34px; height:34px; border-radius:10px; display:grid; place-items:center; flex:none;}
+  .lic .ic{width:17px; height:17px;}
+  .li-main{flex:1; min-width:0;}
+  .li-t{font-size:.92rem; font-weight:600;}
+  .li-s{font-size:.77rem; color:var(--muted);}
+  .li-amt{font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap; font-size:.95rem;}
+  .del{
+    background:none; border:0; color:#9AA7B8; cursor:pointer;
+    padding:8px; border-radius:9px; display:grid; place-items:center;
+  }
+  .del:hover{background:var(--red-bg); color:var(--red);}
+  .del .ic{width:16px; height:16px;}
+  .empty{
+    text-align:center; color:var(--muted); font-size:.88rem; padding:20px 12px;
+    border:1px dashed var(--line); border-radius:12px;
+  }
+  .actions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
+  .actions .btn{flex:1 1 190px;}
+
+  /* ---------- tables ---------- */
+  .tw{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  table{width:100%; border-collapse:collapse; font-size:.92rem; min-width:430px;}
+  thead th{
+    background:var(--navy); color:#fff; font-size:.83rem; font-weight:600;
+    padding:11px 12px; text-align:right; white-space:nowrap;
+  }
+  tbody td{padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:0;}
+  tbody tr:hover td{background:#F8FAFD;}
+  td.num{text-align:center; font-weight:700; font-variant-numeric:tabular-nums;
+         white-space:nowrap; color:var(--navy);}
+  .cell-cat{display:flex; align-items:center; gap:9px; font-weight:600;}
+  .cell-cat .ic{width:17px; height:17px; color:var(--muted);}
+  .share{display:flex; align-items:center; gap:8px; justify-content:center;}
+  .share-bar{width:56px; height:6px; background:#E6ECF3; border-radius:99px; overflow:hidden;}
+  .share-bar i{display:block; height:100%; background:var(--blue); border-radius:99px;}
+
+  /* ---------- downloads ---------- */
+  .dl{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:10px;}
+  .dl a{
+    display:flex; align-items:center; gap:11px; padding:13px 14px;
+    border:1px solid var(--line); border-radius:12px; background:#fff;
+    color:var(--text); text-decoration:none; font-size:.9rem; font-weight:600;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .dl a:hover{border-color:var(--navy); box-shadow:var(--shadow); text-decoration:none;}
+  .dl a .ic{color:var(--navy);}
+  .dl a .sz{margin-inline-start:auto; font-size:.74rem; color:var(--muted); font-weight:500;}
+
+  /* ---------- notes / footer ---------- */
+  .note{
+    display:flex; gap:10px; align-items:flex-start; margin-top:14px;
+    background:var(--blue-bg); border:1px solid #D6E2F5; color:#28405F;
+    border-radius:12px; padding:12px 14px; font-size:.86rem;
+  }
+  .note .ic{color:var(--blue); margin-top:3px;}
+  .note.warn{background:var(--amber-bg); border-color:#EFDFAE; color:#6B5310;}
+  .note.warn .ic{color:var(--amber);}
+  footer{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    flex-wrap:wrap; text-align:center; color:var(--muted);
+    font-size:.79rem; padding:20px 16px 26px;
+  }
+  footer .ic{width:14px; height:14px;}
+
+  /* ---------- mobile ---------- */
+  @media (max-width:640px){
+    .hd{padding:15px 14px;}
+    .brand h1{font-size:1.08rem;}
+    .chip{display:none;}
+    .wrap{padding:14px 12px 4px;}
+    section{padding:14px; border-radius:12px;}
+    .cards{grid-template-columns:repeat(2,1fr); gap:10px;}
+    .card{padding:13px;}
+    .card .v{font-size:1.22rem;}
+    .ci{width:32px; height:32px; margin-bottom:8px;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .mk{grid-template-columns:repeat(2,1fr); gap:8px;}
+    .mk-i{padding:10px 11px;}
+    .mk-v{font-size:.92rem;}
+    .mk-cols{grid-template-columns:1fr;}
+    #lg_d{width:100%;}
+    #lg_a{width:calc(50% - 5px);}
+    #lg_n{flex:1 1 calc(50% - 5px);}
+    .form .btn{width:100%;}
+    table{font-size:.86rem; min-width:360px;}
+    thead th, tbody td{padding:9px 8px;}
+    .share-bar{display:none;}
+    .actions .btn{flex:1 1 100%;}
+    .lock-card{padding:28px 20px;}
+  }
 </style>
 </head>
 <body class="locked">
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="ic-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol><symbol id="ic-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol><symbol id="ic-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 1-1 1v3a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V5"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></symbol><symbol id="ic-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></symbol><symbol id="ic-trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17h6v-6"/><path d="m22 17-8.5-8.5-5 5L2 7"/></symbol><symbol id="ic-piggy-bank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17h3v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a3.16 3.16 0 0 0 2-2h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-1a5 5 0 0 0-2-4V3a4 4 0 0 0-3.2 1.6l-.3.4H11a6 6 0 0 0-6 6v1a5 5 0 0 0 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1z"/><path d="M16 10h.01"/><path d="M2 8v1a2 2 0 0 0 2 2h1"/></symbol><symbol id="ic-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></symbol><symbol id="ic-calendar-days" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M8 13h.01"/><path d="M12 13h.01"/><path d="M16 13h.01"/><path d="M8 17h.01"/><path d="M12 17h.01"/><path d="M16 17h.01"/></symbol><symbol id="ic-calendar-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="m9 15 2 2 4-4"/></symbol><symbol id="ic-clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></symbol><symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol><symbol id="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol><symbol id="ic-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></symbol><symbol id="ic-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol><symbol id="ic-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol><symbol id="ic-circle-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></symbol><symbol id="ic-circle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></symbol><symbol id="ic-triangle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol><symbol id="ic-banknote" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></symbol><symbol id="ic-fuel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0v-6.998a2 2 0 0 0-.59-1.42L18 5"/><path d="M14 21V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v16"/><path d="M2 21h13"/><path d="M3 9h11"/></symbol><symbol id="ic-smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></symbol><symbol id="ic-shopping-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></symbol><symbol id="ic-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol><symbol id="ic-coffee" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></symbol><symbol id="ic-shopping-basket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></symbol><symbol id="ic-heart-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/><path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></symbol><symbol id="ic-shirt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></symbol><symbol id="ic-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol><symbol id="ic-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></symbol><symbol id="ic-file-spreadsheet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M8 13h2"/><path d="M14 13h2"/><path d="M8 17h2"/><path d="M14 17h2"/></symbol><symbol id="ic-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol><symbol id="ic-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></symbol><symbol id="ic-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></symbol><symbol id="ic-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol><symbol id="ic-list-checks" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/></symbol><symbol id="ic-square-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></symbol><symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol><symbol id="ic-log-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/></symbol><symbol id="ic-circle-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="12" r="10"/></symbol><symbol id="ic-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></symbol></svg>
+
 <div id="lock">
-  <div class="box">
-    <h1>🔒 خزنة أموالي</h1>
-    <p>أدخل رمز الدخول عشان تشوف لوحتك المالية</p>
-    <input id="pw" type="password" inputmode="numeric" placeholder="••••" autocomplete="off">
-    <button onclick="go()">دخول</button>
-    <div class="err" id="err"></div>
-    <div class="hint">الخزنة محلية على جهازك — مفيش رمز بيتبعت لأي سيرفر</div>
+  <div class="lock-card">
+    <div class="lock-logo"><svg class="ic" aria-hidden="true"><use href="#ic-lock"/></svg></div>
+    <h1>الخزنة المالية</h1>
+    <p>أدخل رمز الدخول لعرض لوحتك</p>
+    <input id="pw" type="password" inputmode="text" placeholder="••••" autocomplete="off" aria-label="رمز الدخول">
+    <button class="btn lock-btn" onclick="go()"><svg class="ic" aria-hidden="true"><use href="#ic-log-in"/></svg> دخول</button>
+    <div class="lock-err" id="err"></div>
+    <div class="lock-hint"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> التحقق يتم داخل متصفحك — لا يُرسل الرمز لأي خادم</div>
   </div>
 </div>
+
 <header>
-  <h1>💰 نظامي المالي — من الرسايل للثروة</h1>
-  <p>الفترة: 2026-01-28 → 2026-09-19 &nbsp;•&nbsp; محدّث تلقائيًا من رسائل البنك</p>
+  <div class="hd">
+    <div class="brand">
+      <span class="logo"><svg class="ic" aria-hidden="true"><use href="#ic-wallet"/></svg></span>
+      <div>
+        <h1>نظامي المالي</h1>
+        <p class="sub">لوحة الثروة · 2026-01-28 — 2026-09-19</p>
+      </div>
+    </div>
+    <div class="chip"><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> تحديث تلقائي من رسائل البنك</div>
+  </div>
 </header>
+
 <div class="wrap">
 
   <div class="cards">
-    <div class="card r"><div class="v">88,387 ج.م</div><div class="l">صافي المصروف (الكامل)</div></div>
-    <div class="card g"><div class="v">92,245 ج.م</div><div class="l">إجمالي الوارد</div></div>
-    <div class="card"><div class="v">11,449 ج.م</div><div class="l">متوسط الصرف الشهري</div></div>
-    <div class="card y"><div class="v">2,900 ج.م</div><div class="l">هدف ادخار 2026-10</div></div>
+    <div class="card">
+      <span class="ci tone-red"><svg class="ic" aria-hidden="true"><use href="#ic-trending-down"/></svg></span>
+      <div class="v num">88,387 ج.م</div>
+      <div class="l">صافي المصروف (الفترة كاملة)</div>
+    </div>
+    <div class="card">
+      <span class="ci tone-green"><svg class="ic" aria-hidden="true"><use href="#ic-trending-up"/></svg></span>
+      <div class="v num">92,245 ج.م</div>
+      <div class="l">إجمالي الوارد</div>
+    </div>
+    <div class="card">
+      <span class="ci tone-navy"><svg class="ic" aria-hidden="true"><use href="#ic-gauge"/></svg></span>
+      <div class="v num">11,449 ج.م</div>
+      <div class="l">متوسط الصرف الشهري</div>
+    </div>
+    <div class="card">
+      <span class="ci tone-gold"><svg class="ic" aria-hidden="true"><use href="#ic-piggy-bank"/></svg></span>
+      <div class="v num">2,900 ج.م</div>
+      <div class="l">هدف ادخار 2026-10</div>
+    </div>
   </div>
 
-  <section>
-    <h2>✍️ تسجيل سريع — سحبت كام النهارده؟</h2>
-    <div class="logrow">
-      <input type="date" id="lg_d" title="التاريخ">
-      <input type="number" id="lg_a" placeholder="المبلغ (ج.م)" inputmode="numeric" min="1">
-      <input type="text" id="lg_n" placeholder="ملاحظة (بنزين / مطعم...)" maxlength="40">
-      <button class="btn gold" onclick="addEntry()">＋ سجّل</button>
+  <section id="market"><div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg><h2>نبض السوق — القاهرة</h2><span class="hint">آخر فحص: 27/09/2026</span></div><div class="mk"><div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg>بنزين 92 (رسمي)</span><b class="mk-v num">22.25 ج.م / لتر</b><span class="mk-s">محطات الوقود — 25/09/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg>الدولار (بيع البنوك)</span><b class="mk-v num">51.96 – 52.18 ج.م</b><span class="mk-s">البنوك المصرية — 21/09/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-trending-up"/></svg>التضخم السنوي</span><b class="mk-v num">12.7% عام / 14.5% مدن</b><span class="mk-s">المركزي للإحصاء — أغسطس 2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-basket"/></svg>فراخ بيضاء (تجزئة)</span><b class="mk-v num">78 – 81 ج.م / كجم</b><span class="mk-s">سوق القاهرة — 26/09/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-heart-pulse"/></svg>لحوم بلدية كندوز</span><b class="mk-v num">400 – 450 ج.م / كجم</b><span class="mk-s">أسواق المنافذ — سبتمبر 2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-utensils"/></svg>وجبة مطعم رخيصة</span><b class="mk-v num">250 ج.م (100 – 500)</b><span class="mk-s">Numbeo القاهرة — 21/09/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-coffee"/></svg>كابتشينو</span><b class="mk-v num">91 ج.م (35 – 150)</b><span class="mk-s">Numbeo القاهرة — 21/09/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-smartphone"/></svg>خطة موبايل شهرية</span><b class="mk-v num">436 ج.م (10 جيجا+)</b><span class="mk-s">Numbeo القاهرة — 21/09/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-wallet"/></svg>متوسط راتب صافي</span><b class="mk-v num">10,516 ج.م</b><span class="mk-s">Numbeo القاهرة — 21/09/2026</span></div></div><div class="mk-cols"><div><div class="mk-h"><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg> أثر الأسعار على خطتك</div><ul class="mk-ul"><li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>550 ج.م بنزين = 24.7 لتر بنزين 92 (حوالي 5.7 لتر في الأسبوع).</span></li>
+<li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>400 ج.م بقالة = حوالي 5 كجم فراخ + سلة خضار وحبوب — اللحوم الحمراء (479 ج.م/كجم) خارج الميزانية الشهرية.</span></li>
+<li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>400 ج.م مطاعم = 1.6 وجبة بالمتوسط أو 4 وجبات شعبية في الأسبوع (100 ج.م).</span></li>
+<li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>200 ج.م كافيهات = 2.2 كابتشينو بالمتوسط — تقريبًا نصف كوباية في الأسبوع.</span></li>
+<li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>200 ج.م اشتراكات = 3.8 دولار — لو عندك اشتراك دولي (نتفليكس حوالي 10 دولار) الميزانية مش هتكفيه.</span></li>
+<li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>التضخم الحضري 14.5% = قوة الشراء بتقل حوالي 1.1% كل شهر لو الراتب ما اترفعش.</span></li></ul></div><div><div class="mk-h"><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg> أخبار تؤثر في مصروفاتك</div><ul class="mk-ul"><li><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span>مراجعة أسعار الوقود: توقعات بزيادة خلال أكتوبر<span class="mk-date">21/09/2026 — لو الزيادة تمت يبقى ميزانية البنزين 550 ج.م هتقل 5-10% في اللي تقدر تشتريه.</span></span></li>
+<li><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span>رفع الفائدة الأمريكية 18/09/2026<span class="mk-date">18/09/2026 — ضغط على الجنيه وأثر محتمل على الاشتراكات والبضائع المستوردة بعد شهرين.</span></span></li>
+<li><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span>التضخم تراجع لـ12.7% عام و14.5% في المدن أغسطس<span class="mk-date">10/09/2026 — الغذاء انخفض 1.2% شهريًا (خضروات -7%) — أرخص وقت لترفع البقالة البيتية.</span></span></li></ul></div></div><div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> الأرقام دي بتتحدّث قبل كل خطة شهرية، والمصدر الكامل بتواريخه في وثيقة الأسعار داخل المجلد المحلي.</div></section>
+
+  <section id="log">
+    <div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#ic-square-pen"/></svg>
+      <h2>تسجيل سريع — سحب أو دخل</h2>
+      <span class="hint">يُحفظ في هذا الجهاز</span>
     </div>
-    <div id="lg_stats" class="lgstats"></div>
-    <ul id="lg_list"></ul>
-    <div class="logrow" style="margin-top:10px">
-      <button class="btn" onclick="copyReport()">📋 نسخ تقريري (وابعته للمحاسب)</button>
-      <button class="btn danger" onclick="wipeLog()">🗑 مسح السجل</button>
+
+    <div class="seg" role="tablist">
+      <button type="button" class="seg-btn on" id="seg_out" onclick="setType('out')"><svg class="ic" aria-hidden="true"><use href="#ic-trending-down"/></svg> سحب / مصروف</button>
+      <button type="button" class="seg-btn t-in" id="seg_in" onclick="setType('in')"><svg class="ic" aria-hidden="true"><use href="#ic-trending-up"/></svg> دخل / وارد</button>
     </div>
-    <div class="note">💾 تسجيلاتك بتتحفظ في نفس الجهاز/المتصفح — لو فتحت من جهاز تاني
-    هتلاقيه فاضي. أول ما تيجي للمحاسب: اضغط «نسخ تقريري» والصقه هنا بضغطة واحدة.</div>
+
+    <div class="form">
+      <input type="date" id="lg_d" aria-label="التاريخ">
+      <input type="number" id="lg_a" placeholder="المبلغ (ج.م)" inputmode="numeric" min="1" aria-label="المبلغ">
+      <input type="text" id="lg_n" placeholder="ملاحظة (بنزين / راتب...)" maxlength="40" aria-label="ملاحظة">
+      <button class="btn btn-pri" onclick="addEntry()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg> إضافة</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="sl"><svg class="ic" aria-hidden="true"><use href="#ic-gauge"/></svg> مصروف الأسبوع (من السبت)</div>
+        <div class="sv num" id="st_wk">—</div>
+        <div class="bar"><i id="bar_wk"></i></div>
+      </div>
+      <div class="stat">
+        <div class="sl"><svg class="ic" aria-hidden="true"><use href="#ic-trending-up"/></svg> دخل الشهر</div>
+        <div class="sv num v-green" id="st_in">—</div>
+      </div>
+      <div class="stat">
+        <div class="sl"><svg class="ic" aria-hidden="true"><use href="#ic-trending-down"/></svg> مصروف الشهر</div>
+        <div class="sv num v-red" id="st_out">—</div>
+      </div>
+      <div class="stat">
+        <div class="sl"><svg class="ic" aria-hidden="true"><use href="#ic-wallet"/></svg> صافي الشهر</div>
+        <div class="sv num" id="st_net">—</div>
+      </div>
+    </div>
+
+    <div class="log-list" id="lg_list"></div>
+
+    <div class="actions">
+      <button class="btn btn-pri" onclick="copyReport()"><svg class="ic" aria-hidden="true"><use href="#ic-copy"/></svg> نسخ التقرير للمحاسبة</button>
+      <button class="btn btn-danger" onclick="wipeLog()"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg> مسح السجل</button>
+    </div>
+
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> التسجيلات محفوظة داخل متصفح هذا الجهاز فقط — لو فتحت من جهاز
+    آخر هتلاقيه فاضي. أول ما تيجي للمحاسب: اضغط «نسخ التقرير» والصقه هنا بضغطة واحدة.</div>
   </section>
 
   <section>
-    <h2>📋 خطة 2026-10 — كل خانة بالجنيه</h2>
-    <table>
-      <tr><th>الخانة</th><th>شهريًا</th><th>أسبوعيًا</th></tr>
-      <tr><td>ادخار وطوارئ (وزّعه قبل أي صرف)</td><td class='num'>1,500</td><td class='num'>346</td></tr>
-<tr><td>سحب نقدي - مصروف يومي مسجّل</td><td class='num'>2,300</td><td class='num'>531</td></tr>
-<tr><td>موبايل وإنترنت</td><td class='num'>700</td><td class='num'>162</td></tr>
-<tr><td>بنزين وصيانة الموتوسيكل</td><td class='num'>600</td><td class='num'>139</td></tr>
-<tr><td>مشتريات ومحلات</td><td class='num'>900</td><td class='num'>208</td></tr>
-<tr><td>مطاعم وتوصيل</td><td class='num'>400</td><td class='num'>92</td></tr>
-<tr><td>كافيهات وترفيه</td><td class='num'>200</td><td class='num'>46</td></tr>
-<tr><td>بقالة وسوبر ماركت</td><td class='num'>400</td><td class='num'>92</td></tr>
-<tr><td>صحة وصيدليات</td><td class='num'>300</td><td class='num'>69</td></tr>
-<tr><td>تسوق أونلاين</td><td class='num'>250</td><td class='num'>58</td></tr>
-<tr><td>اشتراكات ومحتوى</td><td class='num'>200</td><td class='num'>46</td></tr>
-<tr><td>تحويلات ومدفوعات (أصدقاء)</td><td class='num'>400</td><td class='num'>92</td></tr>
-<tr><td>طوارئ غير متوقع (كل شهر)</td><td class='num'>450</td><td class='num'>104</td></tr>
-<tr><td>فائض حر -&gt; ادخار إضافي</td><td class='num'>1,400</td><td class='num'>323</td></tr>
-    </table>
-    <div class="note">📌 سقف السحب النقدي الأسبوعي: <b>531 ج.م</b> — كل سحبة تتسجل في نفس
-    اليوم (ابعتلي سطر: «اليوم: 150 - توكيل - بنزين»).</div>
+    <div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#ic-clipboard-list"/></svg>
+      <h2>خطة 2026-10 — كل خانة بالجنيه</h2>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>البند</th><th class="num">شهريًا</th><th class="num">أسبوعيًا</th></tr></thead>
+        <tbody><tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-piggy-bank"/></svg>ادخار وطوارئ (وزّعه قبل أي صرف)</span></td><td class="num">1,500</td><td class="num">346</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg>سحب نقدي - مصروف يومي مسجّل</span></td><td class="num">2,300</td><td class="num">531</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-smartphone"/></svg>موبايل وإنترنت</span></td><td class="num">700</td><td class="num">162</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg>بنزين وصيانة الموتوسيكل</span></td><td class="num">600</td><td class="num">139</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-cart"/></svg>مشتريات ومحلات</span></td><td class="num">900</td><td class="num">208</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-utensils"/></svg>مطاعم وتوصيل</span></td><td class="num">400</td><td class="num">92</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-coffee"/></svg>كافيهات وترفيه</span></td><td class="num">200</td><td class="num">46</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-basket"/></svg>بقالة وسوبر ماركت</span></td><td class="num">400</td><td class="num">92</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-heart-pulse"/></svg>صحة وصيدليات</span></td><td class="num">300</td><td class="num">69</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-shirt"/></svg>تسوق أونلاين</span></td><td class="num">250</td><td class="num">58</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg>اشتراكات ومحتوى</span></td><td class="num">200</td><td class="num">46</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-send"/></svg>تحويلات ومدفوعات (أصدقاء)</span></td><td class="num">400</td><td class="num">92</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg>طوارئ غير متوقع (كل شهر)</span></td><td class="num">450</td><td class="num">104</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-piggy-bank"/></svg>فائض حر -&gt; ادخار إضافي</span></td><td class="num">1,400</td><td class="num">323</td></tr></tbody>
+      </table>
+    </div>
+    <div class="note warn"><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg> سقف السحب النقدي الأسبوعي: <b class="num">531 ج.م</b> —
+    سجّل كل سحبة في نفس اليوم من قسم «تسجيل سريع».</div>
   </section>
 
   <section>
-    <h2>🔍 وين راحت الفلوس فعلاً — أكبر 8 تصنيفات</h2>
-    <table>
-      <tr><th>التصنيف</th><th>إجمالي (ج.م)</th><th>عدد المعاملات</th></tr>
-      <tr><td>سحب نقدي (ATM)</td><td class='num'>38,500</td><td class='num'>34</td></tr>
-<tr><td>مشتريات ومحلات</td><td class='num'>20,478</td><td class='num'>22</td></tr>
-<tr><td>مدفوعات وتحويلات</td><td class='num'>14,020</td><td class='num'>23</td></tr>
-<tr><td>موبايل وإنترنت</td><td class='num'>8,471</td><td class='num'>46</td></tr>
-<tr><td>مطاعم وتوصيل</td><td class='num'>5,751</td><td class='num'>25</td></tr>
-<tr><td>تسوق أونلاين</td><td class='num'>3,200</td><td class='num'>2</td></tr>
-<tr><td>أخرى (غير مصنف)</td><td class='num'>1,766</td><td class='num'>2</td></tr>
-<tr><td>بقالة وسوبر ماركت</td><td class='num'>1,670</td><td class='num'>7</td></tr>
-    </table>
+    <div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#ic-list-checks"/></svg>
+      <h2>وين راحت الفلوس فعلاً — أكبر التصنيفات</h2>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>التصنيف</th><th class="num">الإجمالي (ج.م)</th><th class="num">الحصة</th><th class="num">المعاملات</th></tr></thead>
+        <tbody><tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg>سحب نقدي (ATM)</span></td><td class="num">38,500</td><td class="num"><span class="share"><span class="share-bar"><i style="width:44%"></i></span>43.6%</span></td><td class="num">34</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-cart"/></svg>مشتريات ومحلات</span></td><td class="num">20,478</td><td class="num"><span class="share"><span class="share-bar"><i style="width:23%"></i></span>23.2%</span></td><td class="num">22</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-send"/></svg>مدفوعات وتحويلات</span></td><td class="num">14,020</td><td class="num"><span class="share"><span class="share-bar"><i style="width:16%"></i></span>15.9%</span></td><td class="num">23</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-smartphone"/></svg>موبايل وإنترنت</span></td><td class="num">8,471</td><td class="num"><span class="share"><span class="share-bar"><i style="width:10%"></i></span>9.6%</span></td><td class="num">46</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-utensils"/></svg>مطاعم وتوصيل</span></td><td class="num">5,751</td><td class="num"><span class="share"><span class="share-bar"><i style="width:7%"></i></span>6.5%</span></td><td class="num">25</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-shirt"/></svg>تسوق أونلاين</span></td><td class="num">3,200</td><td class="num"><span class="share"><span class="share-bar"><i style="width:4%"></i></span>3.6%</span></td><td class="num">2</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg>أخرى (غير مصنف)</span></td><td class="num">1,766</td><td class="num"><span class="share"><span class="share-bar"><i style="width:2%"></i></span>2.0%</span></td><td class="num">2</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-basket"/></svg>بقالة وسوبر ماركت</span></td><td class="num">1,670</td><td class="num"><span class="share"><span class="share-bar"><i style="width:2%"></i></span>1.9%</span></td><td class="num">7</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-heart-pulse"/></svg>صحة وصيدليات</span></td><td class="num">1,419</td><td class="num"><span class="share"><span class="share-bar"><i style="width:2%"></i></span>1.6%</span></td><td class="num">3</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg>بنزين ووقود</span></td><td class="num">1,192</td><td class="num"><span class="share"><span class="share-bar"><i style="width:1%"></i></span>1.3%</span></td><td class="num">4</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-coffee"/></svg>كافيهات وترفيه</span></td><td class="num">571</td><td class="num"><span class="share"><span class="share-bar"><i style="width:1%"></i></span>0.6%</span></td><td class="num">3</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg>اشتراكات ومحتوى</span></td><td class="num">349</td><td class="num"><span class="share"><span class="share-bar"><i style="width:0%"></i></span>0.4%</span></td><td class="num">1</td></tr></tbody>
+      </table>
+    </div>
   </section>
 
   <section>
-    <h2>⬇️ حمّل تقاريري</h2>
-    <ul><li><a href='33151d2496_dashboard_2026.html' download>لوحة التحكم التفاعلية</a></li>
-<li><a href='57cfe36beb_Financial_Analysis_2026.xlsx' download>تقرير التحليل الكامل</a></li>
-<li><a href='5c906c6244_transactions_2026.csv' download>كل المعاملات (CSV)</a></li>
-<li><a href='1a6c073a15_summary_2026.json' download>الأرقام المجمعة (JSON)</a></li>
-<li><a href='7215c039a2_plan_2026-10.xlsx' download>خطة الشهر (إكسل)</a></li></ul>
+    <div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#ic-download"/></svg>
+      <h2>تحميل تقاريري</h2>
+    </div>
+    <div class="dl"><a href="33151d2496_dashboard_2026.html" download><svg class="ic" aria-hidden="true"><use href="#ic-layout-dashboard"/></svg>لوحة التحكم التفاعلية<span class="sz">4.6 MB</span></a>
+<a href="57cfe36beb_Financial_Analysis_2026.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-file-spreadsheet"/></svg>تقرير التحليل الكامل<span class="sz">27 KB</span></a>
+<a href="5c906c6244_transactions_2026.csv" download><svg class="ic" aria-hidden="true"><use href="#ic-table"/></svg>كل المعاملات (CSV)<span class="sz">16 KB</span></a>
+<a href="1a6c073a15_summary_2026.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>الأرقام المجمعة (JSON)<span class="sz">23 KB</span></a>
+<a href="7215c039a2_plan_2026-10.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>خطة الشهر (إكسل)<span class="sz">10 KB</span></a>
+<a href="94044d7e24_market_watch.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>أسعار السوق والأخبار (JSON)<span class="sz">3 KB</span></a></div>
   </section>
 
 </div>
-<footer>🔒 بياناتك — مبنية على جهازك، تُحدَّث من الرسايل الخام. صُنعت بتاريخ 27/09/2026.</footer>
+<footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام · تاريخ البناء 27/09/2026</footer>
+
 <script>
-/* gate: sha256("youss-vault") — local check, nothing sent anywhere */
+/* ===== gate: sha256("youss-vault") — local check, nothing sent anywhere ===== */
 var H = "e6b83992cf5af5f70d6506017e96c0fa83f39700611ec687ffa8171b513977bf";
 function sha(s) {
-  var c = new TextEncoder().encode(s), h = [];
+  var c = new TextEncoder().encode(s);
   return crypto.subtle.digest("SHA-256", c).then(function (b) {
     return Array.from(new Uint8Array(b)).map(function (x) {
       return x.toString(16).padStart(2, "0");
     }).join("");
   });
 }
+function unlock() {
+  document.body.classList.remove("locked");
+  document.getElementById("lock").style.display = "none";
+}
 function go() {
   var v = document.getElementById("pw").value;
   sha(v).then(function (d) {
     if (d === H) {
-      document.body.classList.remove("locked");
-      document.getElementById("lock").style.display = "none";
+      unlock();
       try { sessionStorage.setItem("mf_ok", "1"); } catch (e) {}
     } else {
       document.getElementById("err").textContent = "الرمز غلط — جرّب تاني";
@@ -195,87 +503,118 @@ function go() {
 document.getElementById("pw").addEventListener("keydown", function (e) {
   if (e.key === "Enter") go();
 });
-try { if (sessionStorage.getItem("mf_ok") === "1") {
-  document.body.classList.remove("locked");
-  document.getElementById("lock").style.display = "none";
-} } catch (e) {}
+try {
+  if (sessionStorage.getItem("mf_ok") === "1") unlock();
+} catch (e) {}
 
-/* ===== تسجيل سريع: يتحفظ محليًا في المتصفح (localStorage) ===== */
-var CAP = 531.18;            /* السقف الأسبوعي للسحب بالجنيه */
-var LKEY = "mf_log_2026-10";   /* سجل الشهر الحالي */
+/* ===== quick log: expenses AND income, saved in localStorage ===== */
+var CAP = 531.18;
+var LKEY = "mf_log_2026-10";
+var TYPE = "out";
 
+function setType(t) {
+  TYPE = t;
+  document.getElementById("seg_out").classList.toggle("on", t === "out");
+  document.getElementById("seg_in").classList.toggle("on", t === "in");
+}
+function localISO() {
+  var d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") +
+         "-" + String(d.getDate()).padStart(2, "0");
+}
 function loadLog() {
-  try { return JSON.parse(localStorage.getItem(LKEY) || "[]"); }
-  catch (e) { return []; }
+  try {
+    var a = JSON.parse(localStorage.getItem(LKEY) || "[]");
+    return Array.isArray(a) ? a : [];
+  } catch (e) { return []; }
 }
 function saveLog(a) {
   try { localStorage.setItem(LKEY, JSON.stringify(a)); } catch (e) {}
 }
-function localISO() {
-  var d = new Date();
-  return d.getFullYear() + "-" +
-    String(d.getMonth() + 1).padStart(2, "0") + "-" +
-    String(d.getDate()).padStart(2, "0");
-}
 function fmtDate(iso) {
-  var p = iso.split("-");
+  var p = String(iso).split("-");
   return p[2] + "/" + p[1];
 }
 function weekStartISO() {
-  /* الأسبوع يبدأ السبت (الويكند المصري) */
   var d = new Date();
   d.setHours(0, 0, 0, 0);
   d.setDate(d.getDate() - ((d.getDay() + 1) % 7));
-  return d.getFullYear() + "-" +
-    String(d.getMonth() + 1).padStart(2, "0") + "-" +
-    String(d.getDate()).padStart(2, "0");
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") +
+         "-" + String(d.getDate()).padStart(2, "0");
+}
+function escj(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function totals() {
+  var arr = loadLog(), ws = weekStartISO(), mpre = ws.slice(0, 7);
+  var wk = 0, mIn = 0, mOut = 0;
+  for (var i = 0; i < arr.length; i++) {
+    var e = arr[i], isIn = (e.t === "in");
+    if (e.d >= ws && !isIn) wk += e.a;
+    if (String(e.d).slice(0, 7) === mpre) {
+      if (isIn) mIn += e.a; else mOut += e.a;
+    }
+  }
+  return { wk: wk, mIn: mIn, mOut: mOut, mpre: mpre, n: arr.length, arr: arr };
 }
 function renderLog() {
-  var arr = loadLog();
-  var ws = weekStartISO(), wk = 0, mon = 0;
-  var mpre = ws.slice(0, 7);
-  arr.forEach(function (e) {
-    if (e.d >= ws) wk += e.a;
-    if (e.d.slice(0, 7) === mpre) mon += e.a;
-  });
-  var left = Math.round(CAP - wk);
-  var stat = "📅 أسبوعك (من السبت): صرفت <b>" + Math.round(wk) + "</b> من <b>" +
-    Math.round(CAP) + "</b> ج.م — ";
-  stat += (left >= 0)
-    ? "المتبقي: <b style='color:#2E7D32'>" + left + "</b> ج.م ✅"
-    : "<span class='bad'>تجاوزت السقف بـ " + (-left) + " ج.م ⚠️</span>";
-  stat += " &nbsp;|&nbsp; 🗓 الشهر: <b>" + Math.round(mon) + "</b> ج.م";
-  document.getElementById("lg_stats").innerHTML = stat;
+  var T = totals();
 
-  var ul = document.getElementById("lg_list");
-  if (!arr.length) {
-    ul.innerHTML = "<li style='color:#7b8aa3'>لسه مفيش تسجيلات — سجّل أول سحبة ليك 👆</li>";
+  document.getElementById("st_wk").textContent = Math.round(T.wk) + " / " + Math.round(CAP);
+  var pct = CAP > 0 ? (T.wk / CAP) * 100 : 0;
+  var bar = document.getElementById("bar_wk");
+  bar.style.width = Math.min(100, pct) + "%";
+  bar.className = pct > 100 ? "over" : (pct > 75 ? "warn" : "");
+
+  document.getElementById("st_in").textContent = Math.round(T.mIn) + " ج.م";
+  document.getElementById("st_out").textContent = Math.round(T.mOut) + " ج.م";
+  var net = Math.round(T.mIn - T.mOut);
+  var netEl = document.getElementById("st_net");
+  netEl.textContent = (net > 0 ? "+" : "") + net + " ج.م";
+  netEl.className = "sv num " + (net >= 0 ? "v-green" : "v-red");
+
+  var box = document.getElementById("lg_list");
+  if (!T.n) {
+    box.innerHTML = '<div class="empty">لا توجد تسجيلات بعد — أضف أول عملية من الأعلى</div>';
     return;
   }
-  ul.innerHTML = arr.map(function (e, i) {
-    return "<li><span>📅 " + fmtDate(e.d) + " — <b>" + e.a + "</b> ج.م</span>" +
-      (e.n ? "<span style='color:#5b6b82'>" + e.n + "</span>" : "") +
-      "<button class='del' onclick='delEntry(" + i + ")' title='حذف'>✕</button></li>";
-  }).join("");
+  var rows = "";
+  for (var i = T.arr.length - 1; i >= 0; i--) {
+    var e = T.arr[i], isIn = (e.t === "in");
+    rows += '<div class="log-row">' +
+      '<span class="lic ' + (isIn ? "tone-green" : "tone-red") + '">' +
+        '<svg class="ic" aria-hidden="true"><use href="#ic-' +
+        (isIn ? "trending-up" : "trending-down") + '"/></svg></span>' +
+      '<div class="li-main">' +
+        '<div class="li-t">' + (isIn ? "دخل" : "سحب") + " · " + fmtDate(e.d) + '</div>' +
+        (e.n ? '<div class="li-s">' + escj(e.n) + '</div>' : '') +
+      '</div>' +
+      '<span class="li-amt ' + (isIn ? "v-green" : "v-red") + '">' +
+        (isIn ? "+" : "-") + e.a + ' ج.م</span>' +
+      '<button class="del" onclick="delEntry(' + i + ')" aria-label="حذف" title="حذف">' +
+        '<svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button>' +
+      '</div>';
+  }
+  box.innerHTML = rows;
 }
 function addEntry() {
-  var v = document.getElementById("lg_a").value;
-  var d = document.getElementById("lg_d").value;
+  var a = parseInt(document.getElementById("lg_a").value, 10);
+  var d = document.getElementById("lg_d").value || localISO();
   var n = document.getElementById("lg_n").value.trim();
-  var a = parseInt(v, 10);
-  if (!d) d = localISO();
   if (!a || a <= 0) {
-    document.getElementById("lg_a").focus();
-    document.getElementById("lg_a").style.borderColor = "#C62828";
+    var f = document.getElementById("lg_a");
+    f.style.borderColor = "var(--red)";
+    f.focus();
     return;
   }
   document.getElementById("lg_a").style.borderColor = "";
   var arr = loadLog();
-  arr.push({ d: d, a: a, n: n });
+  arr.push({ d: d, a: a, n: n, t: TYPE });
   arr.sort(function (x, y) { return x.d < y.d ? -1 : (x.d > y.d ? 1 : 0); });
   saveLog(arr);
   document.getElementById("lg_a").value = "";
   document.getElementById("lg_n").value = "";
+  document.getElementById("lg_a").focus();
   renderLog();
 }
 function delEntry(i) {
@@ -286,29 +625,30 @@ function delEntry(i) {
 }
 function wipeLog() {
   if (confirm("هتمسح كل تسجيلات الشهر ده — متأكد؟")) {
-    saveLog([]); renderLog();
+    saveLog([]);
+    renderLog();
   }
 }
 function copyReport() {
-  var arr = loadLog();
-  if (!arr.length) {
-    alert("لسه مفيش تسجيلات تنسخها");
-    return;
+  var T = totals();
+  if (!T.n) { alert("لا توجد تسجيلات بعد"); return; }
+  var outs = [], ins = [];
+  for (var i = 0; i < T.arr.length; i++) {
+    var e = T.arr[i], line = "- " + fmtDate(e.d) + ": " + e.a + " ج.م" +
+      (e.n ? " (" + e.n + ")" : "");
+    if (e.t === "in") ins.push(line); else outs.push(line);
   }
-  var ws = weekStartISO(), wk = 0, mon = 0, mpre = ws.slice(0, 7);
-  arr.forEach(function (e) {
-    if (e.d >= ws) wk += e.a;
-    if (e.d.slice(0, 7) === mpre) mon += e.a;
-  });
-  var txt = "تقرير تسجيلي — الشهر " + mpre + "\n";
-  txt += arr.map(function (e) {
-    return "- " + fmtDate(e.d) + ": " + e.a + (e.n ? " (" + e.n + ")" : "");
-  }).join("\n");
-  txt += "\nأسبوعيًا: " + Math.round(wk) + " من " + Math.round(CAP) +
-         " (المتبقي " + Math.round(CAP - wk) + ") | الشهر: " + Math.round(mon);
+  var txt = "تقرير التسجيل — الشهر " + T.mpre + "\n\n";
+  if (ins.length) txt += "الدخل:\n" + ins.join("\n") + "\n\n";
+  if (outs.length) txt += "المصروفات:\n" + outs.join("\n") + "\n\n";
+  txt += "مصروف الأسبوع: " + Math.round(T.wk) + " من " + Math.round(CAP) +
+         " (المتبقي " + Math.round(CAP - T.wk) + ")\n" +
+         "الشهر: دخل " + Math.round(T.mIn) + " | مصروف " + Math.round(T.mOut) +
+         " | الصافي " + (T.mIn - T.mOut > 0 ? "+" : "") +
+         Math.round(T.mIn - T.mOut) + " ج.م";
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(txt).then(function () {
-      alert("تم النسخ ✔ دلوقتي افتح المحادثة والصقها بس");
+      alert("تم نسخ التقرير — افتح المحادثة والصقه");
     }, function () { prompt("انسخ يدويًا:", txt); });
   } else {
     prompt("انسخ يدويًا:", txt);
