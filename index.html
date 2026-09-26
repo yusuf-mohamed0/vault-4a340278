@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نظامي المالي — لوحة الثروة</title>
+<style>
+  :root { --navy:#1F3864; --gold:#C9A227; --green:#2E7D32; --red:#C62828;
+           --bg:#F4F7FB; --card:#fff; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:"Segoe UI",Tahoma,Arial,sans-serif; background:var(--bg);
+          color:#1a2333; direction:rtl; line-height:1.6; }
+  header { background:linear-gradient(135deg,var(--navy),#2c5282); color:#fff;
+            padding:26px 18px; text-align:center; }
+  header h1 { font-size:1.5rem; }
+  header p { opacity:.85; font-size:.9rem; margin-top:4px; }
+  .wrap { max-width:960px; margin:0 auto; padding:18px; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+            gap:12px; margin:18px 0; }
+  .card { background:var(--card); border-radius:12px; padding:16px;
+           box-shadow:0 2px 8px rgba(31,56,100,.08); border-top:4px solid var(--navy); }
+  .card.g { border-top-color:var(--green); }
+  .card.r { border-top-color:var(--red); }
+  .card.y { border-top-color:var(--gold); }
+  .card .v { font-size:1.5rem; font-weight:700; }
+  .card .l { font-size:.85rem; color:#5b6b82; }
+  .card.g .v { color:var(--green); } .card.r .v { color:var(--red); }
+  .card.y .v { color:var(--gold); }
+  section { background:var(--card); border-radius:12px; padding:18px; margin:16px 0;
+             box-shadow:0 2px 8px rgba(31,56,100,.08); }
+  h2 { color:var(--navy); font-size:1.1rem; margin-bottom:10px;
+        border-inline-start:5px solid var(--gold); padding-inline-start:10px; }
+  table { width:100%; border-collapse:collapse; font-size:.92rem; }
+  th { background:var(--navy); color:#fff; padding:9px 8px; font-weight:600; }
+  td { padding:8px; border-bottom:1px solid #e4eaf3; }
+  tr:nth-child(even) td { background:#f7f9fd; }
+  .num { text-align:center; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  ul { list-style:none; }
+  ul li { padding:8px; border-bottom:1px solid #e4eaf3; }
+  a { color:var(--navy); font-weight:600; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  .note { background:#FFF8E1; border:1px solid var(--gold); border-radius:10px;
+           padding:12px; font-size:.9rem; margin-top:14px; }
+  footer { text-align:center; color:#7b8aa3; font-size:.8rem; padding:18px; }
+  /* ---- lock gate ---- */
+  #lock { position:fixed; inset:0; background:linear-gradient(135deg,var(--navy),#0f1f3d);
+           display:flex; align-items:center; justify-content:center; z-index:50; }
+  #lock .box { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.18);
+                border-radius:16px; padding:32px 26px; text-align:center; width:min(340px,90vw);
+                backdrop-filter:blur(6px); }
+  #lock h1 { color:#fff; font-size:1.3rem; margin-bottom:6px; }
+  #lock p { color:#c8d4e8; font-size:.85rem; margin-bottom:16px; }
+  #lock input { width:100%; padding:12px; border-radius:10px; border:1px solid #46618f;
+                 background:#0d1b33; color:#fff; font-size:1rem; text-align:center;
+                 letter-spacing:3px; outline:none; }
+  #lock button { margin-top:14px; width:100%; padding:12px; border:0; border-radius:10px;
+                  background:var(--gold); color:#1a2333; font-weight:700; font-size:1rem;
+                  cursor:pointer; }
+  #lock .err { color:#ff9d9d; font-size:.8rem; min-height:1.2em; margin-top:10px; }
+  #lock .hint { color:#8fa5c9; font-size:.72rem; margin-top:14px; }
+  body.locked .wrap, body.locked header, body.locked footer { display:none; }
+</style>
+</head>
+<body class="locked">
+<div id="lock">
+  <div class="box">
+    <h1>🔒 خزنة أموالي</h1>
+    <p>أدخل رمز الدخول عشان تشوف لوحتك المالية</p>
+    <input id="pw" type="password" inputmode="numeric" placeholder="••••" autocomplete="off">
+    <button onclick="go()">دخول</button>
+    <div class="err" id="err"></div>
+    <div class="hint">الخزنة محلية على جهازك — مفيش رمز بيتبعت لأي سيرفر</div>
+  </div>
+</div>
+<header>
+  <h1>💰 نظامي المالي — من الرسايل للثروة</h1>
+  <p>الفترة: 2026-01-28 → 2026-09-19 &nbsp;•&nbsp; محدّث تلقائيًا من رسائل البنك</p>
+</header>
+<div class="wrap">
+
+  <div class="cards">
+    <div class="card r"><div class="v">88,387 ج.م</div><div class="l">صافي المصروف (الكامل)</div></div>
+    <div class="card g"><div class="v">92,245 ج.م</div><div class="l">إجمالي الوارد</div></div>
+    <div class="card"><div class="v">11,449 ج.م</div><div class="l">متوسط الصرف الشهري</div></div>
+    <div class="card y"><div class="v">2,900 ج.م</div><div class="l">هدف ادخار 2026-10</div></div>
+  </div>
+
+  <section>
+    <h2>📋 خطة 2026-10 — كل خانة بالجنيه</h2>
+    <table>
+      <tr><th>الخانة</th><th>شهريًا</th><th>أسبوعيًا</th></tr>
+      <tr><td>ادخار وطوارئ (وزّعه قبل أي صرف)</td><td class='num'>1,500</td><td class='num'>346</td></tr>
+<tr><td>سحب نقدي - مصروف يومي مسجّل</td><td class='num'>2,300</td><td class='num'>531</td></tr>
+<tr><td>موبايل وإنترنت</td><td class='num'>700</td><td class='num'>162</td></tr>
+<tr><td>بنزين وصيانة الموتوسيكل</td><td class='num'>600</td><td class='num'>139</td></tr>
+<tr><td>مشتريات ومحلات</td><td class='num'>900</td><td class='num'>208</td></tr>
+<tr><td>مطاعم وتوصيل</td><td class='num'>400</td><td class='num'>92</td></tr>
+<tr><td>كافيهات وترفيه</td><td class='num'>200</td><td class='num'>46</td></tr>
+<tr><td>بقالة وسوبر ماركت</td><td class='num'>400</td><td class='num'>92</td></tr>
+<tr><td>صحة وصيدليات</td><td class='num'>300</td><td class='num'>69</td></tr>
+<tr><td>تسوق أونلاين</td><td class='num'>250</td><td class='num'>58</td></tr>
+<tr><td>اشتراكات ومحتوى</td><td class='num'>200</td><td class='num'>46</td></tr>
+<tr><td>تحويلات ومدفوعات (أصدقاء)</td><td class='num'>400</td><td class='num'>92</td></tr>
+<tr><td>طوارئ غير متوقع (كل شهر)</td><td class='num'>450</td><td class='num'>104</td></tr>
+<tr><td>فائض حر -&gt; ادخار إضافي</td><td class='num'>1,400</td><td class='num'>323</td></tr>
+    </table>
+    <div class="note">📌 سقف السحب النقدي الأسبوعي: <b>531 ج.م</b> — كل سحبة تتسجل في نفس
+    اليوم (ابعتلي سطر: «اليوم: 150 - توكيل - بنزين»).</div>
+  </section>
+
+  <section>
+    <h2>🔍 وين راحت الفلوس فعلاً — أكبر 8 تصنيفات</h2>
+    <table>
+      <tr><th>التصنيف</th><th>إجمالي (ج.م)</th><th>عدد المعاملات</th></tr>
+      <tr><td>سحب نقدي (ATM)</td><td class='num'>38,500</td><td class='num'>34</td></tr>
+<tr><td>مشتريات ومحلات</td><td class='num'>20,478</td><td class='num'>22</td></tr>
+<tr><td>مدفوعات وتحويلات</td><td class='num'>14,020</td><td class='num'>23</td></tr>
+<tr><td>موبايل وإنترنت</td><td class='num'>8,471</td><td class='num'>46</td></tr>
+<tr><td>مطاعم وتوصيل</td><td class='num'>5,751</td><td class='num'>25</td></tr>
+<tr><td>تسوق أونلاين</td><td class='num'>3,200</td><td class='num'>2</td></tr>
+<tr><td>أخرى (غير مصنف)</td><td class='num'>1,766</td><td class='num'>2</td></tr>
+<tr><td>بقالة وسوبر ماركت</td><td class='num'>1,670</td><td class='num'>7</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>⬇️ حمّل تقاريري</h2>
+    <ul><li><a href='33151d2496_dashboard_2026.html' download>لوحة التحكم التفاعلية</a></li>
+<li><a href='57cfe36beb_Financial_Analysis_2026.xlsx' download>تقرير التحليل الكامل</a></li>
+<li><a href='5c906c6244_transactions_2026.csv' download>كل المعاملات (CSV)</a></li>
+<li><a href='1a6c073a15_summary_2026.json' download>الأرقام المجمعة (JSON)</a></li>
+<li><a href='7215c039a2_plan_2026-10.xlsx' download>خطة الشهر (إكسل)</a></li></ul>
+  </section>
+
+</div>
+<footer>🔒 بياناتك — مبنية على جهازك، تُحدَّث من الرسايل الخام. صُنعت بتاريخ 27/09/2026.</footer>
+<script>
+/* gate: sha256("youss-vault") — local check, nothing sent anywhere */
+var H = "e6b83992cf5af5f70d6506017e96c0fa83f39700611ec687ffa8171b513977bf";
+function sha(s) {
+  var c = new TextEncoder().encode(s), h = [];
+  return crypto.subtle.digest("SHA-256", c).then(function (b) {
+    return Array.from(new Uint8Array(b)).map(function (x) {
+      return x.toString(16).padStart(2, "0");
+    }).join("");
+  });
+}
+function go() {
+  var v = document.getElementById("pw").value;
+  sha(v).then(function (d) {
+    if (d === H) {
+      document.body.classList.remove("locked");
+      document.getElementById("lock").style.display = "none";
+      try { sessionStorage.setItem("mf_ok", "1"); } catch (e) {}
+    } else {
+      document.getElementById("err").textContent = "الرمز غلط — جرّب تاني";
+      document.getElementById("pw").value = "";
+    }
+  });
+}
+document.getElementById("pw").addEventListener("keydown", function (e) {
+  if (e.key === "Enter") go();
+});
+try { if (sessionStorage.getItem("mf_ok") === "1") {
+  document.body.classList.remove("locked");
+  document.getElementById("lock").style.display = "none";
+} } catch (e) {}
+</script>
+</body>
+</html>
