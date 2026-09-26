@@ -59,6 +59,22 @@
   #lock .err { color:#ff9d9d; font-size:.8rem; min-height:1.2em; margin-top:10px; }
   #lock .hint { color:#8fa5c9; font-size:.72rem; margin-top:14px; }
   body.locked .wrap, body.locked header, body.locked footer { display:none; }
+  /* ---- quick log ---- */
+  .logrow { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .logrow input { flex:1 1 130px; padding:10px; border:1px solid #cdd8ea;
+                   border-radius:9px; font-size:.95rem; background:#fff; min-width:0; }
+  .btn { padding:10px 14px; border:0; border-radius:9px; cursor:pointer;
+          font-weight:700; font-size:.9rem; background:var(--navy); color:#fff; }
+  .btn.gold { background:var(--gold); color:#1a2333; }
+  .btn.danger { background:#fdecea; color:var(--red); border:1px solid #f5c6c2; }
+  .lgstats { background:#EAF2FF; border:1px solid #cdd8ea; border-radius:10px;
+              padding:10px 12px; font-size:.95rem; margin-bottom:8px; }
+  .lgstats b { color:var(--navy); }
+  .lgstats .bad { color:var(--red); font-weight:700; }
+  #lg_list li { display:flex; justify-content:space-between; gap:8px;
+                 align-items:center; font-size:.9rem; }
+  #lg_list .del { background:none; border:0; color:var(--red); cursor:pointer;
+                   font-size:1.05rem; padding:2px 6px; }
 </style>
 </head>
 <body class="locked">
@@ -84,6 +100,24 @@
     <div class="card"><div class="v">11,449 ج.م</div><div class="l">متوسط الصرف الشهري</div></div>
     <div class="card y"><div class="v">2,900 ج.م</div><div class="l">هدف ادخار 2026-10</div></div>
   </div>
+
+  <section>
+    <h2>✍️ تسجيل سريع — سحبت كام النهارده؟</h2>
+    <div class="logrow">
+      <input type="date" id="lg_d" title="التاريخ">
+      <input type="number" id="lg_a" placeholder="المبلغ (ج.م)" inputmode="numeric" min="1">
+      <input type="text" id="lg_n" placeholder="ملاحظة (بنزين / مطعم...)" maxlength="40">
+      <button class="btn gold" onclick="addEntry()">＋ سجّل</button>
+    </div>
+    <div id="lg_stats" class="lgstats"></div>
+    <ul id="lg_list"></ul>
+    <div class="logrow" style="margin-top:10px">
+      <button class="btn" onclick="copyReport()">📋 نسخ تقريري (وابعته للمحاسب)</button>
+      <button class="btn danger" onclick="wipeLog()">🗑 مسح السجل</button>
+    </div>
+    <div class="note">💾 تسجيلاتك بتتحفظ في نفس الجهاز/المتصفح — لو فتحت من جهاز تاني
+    هتلاقيه فاضي. أول ما تيجي للمحاسب: اضغط «نسخ تقريري» والصقه هنا بضغطة واحدة.</div>
+  </section>
 
   <section>
     <h2>📋 خطة 2026-10 — كل خانة بالجنيه</h2>
@@ -165,6 +199,126 @@ try { if (sessionStorage.getItem("mf_ok") === "1") {
   document.body.classList.remove("locked");
   document.getElementById("lock").style.display = "none";
 } } catch (e) {}
+
+/* ===== تسجيل سريع: يتحفظ محليًا في المتصفح (localStorage) ===== */
+var CAP = 531.18;            /* السقف الأسبوعي للسحب بالجنيه */
+var LKEY = "mf_log_2026-10";   /* سجل الشهر الحالي */
+
+function loadLog() {
+  try { return JSON.parse(localStorage.getItem(LKEY) || "[]"); }
+  catch (e) { return []; }
+}
+function saveLog(a) {
+  try { localStorage.setItem(LKEY, JSON.stringify(a)); } catch (e) {}
+}
+function localISO() {
+  var d = new Date();
+  return d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2, "0") + "-" +
+    String(d.getDate()).padStart(2, "0");
+}
+function fmtDate(iso) {
+  var p = iso.split("-");
+  return p[2] + "/" + p[1];
+}
+function weekStartISO() {
+  /* الأسبوع يبدأ السبت (الويكند المصري) */
+  var d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - ((d.getDay() + 1) % 7));
+  return d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2, "0") + "-" +
+    String(d.getDate()).padStart(2, "0");
+}
+function renderLog() {
+  var arr = loadLog();
+  var ws = weekStartISO(), wk = 0, mon = 0;
+  var mpre = ws.slice(0, 7);
+  arr.forEach(function (e) {
+    if (e.d >= ws) wk += e.a;
+    if (e.d.slice(0, 7) === mpre) mon += e.a;
+  });
+  var left = Math.round(CAP - wk);
+  var stat = "📅 أسبوعك (من السبت): صرفت <b>" + Math.round(wk) + "</b> من <b>" +
+    Math.round(CAP) + "</b> ج.م — ";
+  stat += (left >= 0)
+    ? "المتبقي: <b style='color:#2E7D32'>" + left + "</b> ج.م ✅"
+    : "<span class='bad'>تجاوزت السقف بـ " + (-left) + " ج.م ⚠️</span>";
+  stat += " &nbsp;|&nbsp; 🗓 الشهر: <b>" + Math.round(mon) + "</b> ج.م";
+  document.getElementById("lg_stats").innerHTML = stat;
+
+  var ul = document.getElementById("lg_list");
+  if (!arr.length) {
+    ul.innerHTML = "<li style='color:#7b8aa3'>لسه مفيش تسجيلات — سجّل أول سحبة ليك 👆</li>";
+    return;
+  }
+  ul.innerHTML = arr.map(function (e, i) {
+    return "<li><span>📅 " + fmtDate(e.d) + " — <b>" + e.a + "</b> ج.م</span>" +
+      (e.n ? "<span style='color:#5b6b82'>" + e.n + "</span>" : "") +
+      "<button class='del' onclick='delEntry(" + i + ")' title='حذف'>✕</button></li>";
+  }).join("");
+}
+function addEntry() {
+  var v = document.getElementById("lg_a").value;
+  var d = document.getElementById("lg_d").value;
+  var n = document.getElementById("lg_n").value.trim();
+  var a = parseInt(v, 10);
+  if (!d) d = localISO();
+  if (!a || a <= 0) {
+    document.getElementById("lg_a").focus();
+    document.getElementById("lg_a").style.borderColor = "#C62828";
+    return;
+  }
+  document.getElementById("lg_a").style.borderColor = "";
+  var arr = loadLog();
+  arr.push({ d: d, a: a, n: n });
+  arr.sort(function (x, y) { return x.d < y.d ? -1 : (x.d > y.d ? 1 : 0); });
+  saveLog(arr);
+  document.getElementById("lg_a").value = "";
+  document.getElementById("lg_n").value = "";
+  renderLog();
+}
+function delEntry(i) {
+  var arr = loadLog();
+  arr.splice(i, 1);
+  saveLog(arr);
+  renderLog();
+}
+function wipeLog() {
+  if (confirm("هتمسح كل تسجيلات الشهر ده — متأكد؟")) {
+    saveLog([]); renderLog();
+  }
+}
+function copyReport() {
+  var arr = loadLog();
+  if (!arr.length) {
+    alert("لسه مفيش تسجيلات تنسخها");
+    return;
+  }
+  var ws = weekStartISO(), wk = 0, mon = 0, mpre = ws.slice(0, 7);
+  arr.forEach(function (e) {
+    if (e.d >= ws) wk += e.a;
+    if (e.d.slice(0, 7) === mpre) mon += e.a;
+  });
+  var txt = "تقرير تسجيلي — الشهر " + mpre + "\n";
+  txt += arr.map(function (e) {
+    return "- " + fmtDate(e.d) + ": " + e.a + (e.n ? " (" + e.n + ")" : "");
+  }).join("\n");
+  txt += "\nأسبوعيًا: " + Math.round(wk) + " من " + Math.round(CAP) +
+         " (المتبقي " + Math.round(CAP - wk) + ") | الشهر: " + Math.round(mon);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(function () {
+      alert("تم النسخ ✔ دلوقتي افتح المحادثة والصقها بس");
+    }, function () { prompt("انسخ يدويًا:", txt); });
+  } else {
+    prompt("انسخ يدويًا:", txt);
+  }
+}
+(function initLog() {
+  var di = document.getElementById("lg_d");
+  if (di && !di.value) di.value = localISO();
+  renderLog();
+})();
 </script>
 </body>
 </html>
