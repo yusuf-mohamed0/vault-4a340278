@@ -208,6 +208,26 @@
   }
   .del:hover{background:var(--red-bg); color:var(--red);}
   .del .ic{width:16px; height:16px;}
+  .del.ed:hover{background:var(--blue-bg); color:var(--blue);}
+  .del.ok{color:var(--green);}
+  .del.ok:hover{background:var(--green-bg); color:var(--green);}
+
+  /* ---------- inline edit row ---------- */
+  .log-row.editing{background:#F8FAFD; align-items:flex-start; border-radius:10px; padding:12px 8px;}
+  .log-row.editing .lic{margin-top:2px;}
+  .ed-f{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:7px;}
+  .ed-f input{
+    flex:1 1 84px; min-width:0; padding:7px 9px; font:inherit; font-size:.86rem;
+    border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--text);
+  }
+  .ed-f input[type=date]{flex:1 1 100%;}
+  .ed-f input:focus{outline:0; border-color:var(--navy2);}
+  .ed-t{display:flex; gap:6px;}
+  .ed-b{
+    border:1px solid var(--line); background:#fff; color:var(--muted);
+    border-radius:999px; padding:3px 14px; font-size:.75rem; font-weight:600; cursor:pointer;
+  }
+  .ed-b.on{background:var(--navy); border-color:var(--navy); color:#fff;}
   .empty{
     text-align:center; color:var(--muted); font-size:.88rem; padding:20px 12px;
     border:1px dashed var(--line); border-radius:12px;
@@ -511,6 +531,7 @@ try {
 var CAP = 531.18;
 var LKEY = "mf_log_2026-10";
 var TYPE = "out";
+var EDIT = -1, EDTYPE = "out";
 
 function setType(t) {
   TYPE = t;
@@ -544,6 +565,9 @@ function weekStartISO() {
 }
 function escj(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function escAttr(s) {
+  return escj(s).replace(/"/g, "&quot;");
 }
 function totals() {
   var arr = loadLog(), ws = weekStartISO(), mpre = ws.slice(0, 7);
@@ -581,6 +605,34 @@ function renderLog() {
   var rows = "";
   for (var i = T.arr.length - 1; i >= 0; i--) {
     var e = T.arr[i], isIn = (e.t === "in");
+    if (i === EDIT) {
+      rows += '<div class="log-row editing">' +
+        '<span class="lic ' + (EDTYPE === "in" ? "tone-green" : "tone-red") + '">' +
+          '<svg class="ic" aria-hidden="true"><use href="#ic-' +
+          (EDTYPE === "in" ? "trending-up" : "trending-down") + '"/></svg></span>' +
+        '<div class="li-main">' +
+          '<div class="ed-f">' +
+            '<input type="date" id="ed_d" value="' + String(e.d) +
+              '" aria-label="التاريخ" onkeydown="if(event.key==\'Enter\')saveEdit();if(event.key==\'Escape\')cancelEdit();">' +
+            '<input type="number" id="ed_a" value="' + e.a +
+              '" min="1" inputmode="numeric" aria-label="المبلغ" onkeydown="if(event.key==\'Enter\')saveEdit();if(event.key==\'Escape\')cancelEdit();">' +
+            '<input type="text" id="ed_n" value="' + escAttr(e.n || "") +
+              '" maxlength="40" placeholder="ملاحظة" aria-label="ملاحظة" onkeydown="if(event.key==\'Enter\')saveEdit();if(event.key==\'Escape\')cancelEdit();">' +
+          '</div>' +
+          '<div class="ed-t">' +
+            '<button type="button" class="ed-b' + (EDTYPE === "out" ? " on" : "") +
+              '" id="edt_out" onclick="setEdType(\'out\')">سحب / مصروف</button>' +
+            '<button type="button" class="ed-b' + (EDTYPE === "in" ? " on" : "") +
+              '" id="edt_in" onclick="setEdType(\'in\')">دخل / وارد</button>' +
+          '</div>' +
+        '</div>' +
+        '<button class="del ok" onclick="saveEdit()" aria-label="حفظ التعديل" title="حفظ">' +
+          '<svg class="ic" aria-hidden="true"><use href="#ic-circle-check"/></svg></button>' +
+        '<button class="del" onclick="cancelEdit()" aria-label="إلغاء" title="إلغاء">' +
+          '<svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button>' +
+        '</div>';
+      continue;
+    }
     rows += '<div class="log-row">' +
       '<span class="lic ' + (isIn ? "tone-green" : "tone-red") + '">' +
         '<svg class="ic" aria-hidden="true"><use href="#ic-' +
@@ -591,6 +643,8 @@ function renderLog() {
       '</div>' +
       '<span class="li-amt ' + (isIn ? "v-green" : "v-red") + '">' +
         (isIn ? "+" : "-") + e.a + ' ج.م</span>' +
+      '<button class="del ed" onclick="editEntry(' + i + ')" aria-label="تعديل" title="تعديل">' +
+        '<svg class="ic" aria-hidden="true"><use href="#ic-square-pen"/></svg></button>' +
       '<button class="del" onclick="delEntry(' + i + ')" aria-label="حذف" title="حذف">' +
         '<svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button>' +
       '</div>';
@@ -612,6 +666,7 @@ function addEntry() {
   arr.push({ d: d, a: a, n: n, t: TYPE });
   arr.sort(function (x, y) { return x.d < y.d ? -1 : (x.d > y.d ? 1 : 0); });
   saveLog(arr);
+  EDIT = -1;
   document.getElementById("lg_a").value = "";
   document.getElementById("lg_n").value = "";
   document.getElementById("lg_a").focus();
@@ -621,11 +676,51 @@ function delEntry(i) {
   var arr = loadLog();
   arr.splice(i, 1);
   saveLog(arr);
+  if (EDIT === i) EDIT = -1;
+  renderLog();
+}
+function editEntry(i) {
+  var arr = loadLog();
+  if (i < 0 || i >= arr.length) return;
+  EDIT = i;
+  EDTYPE = arr[i].t === "in" ? "in" : "out";
+  renderLog();
+  var f = document.getElementById("ed_a");
+  if (f) { f.focus(); f.select(); }
+}
+function setEdType(t) {
+  EDTYPE = t;
+  var o = document.getElementById("edt_out"), n = document.getElementById("edt_in");
+  if (o) o.classList.toggle("on", t === "out");
+  if (n) n.classList.toggle("on", t === "in");
+}
+function cancelEdit() {
+  EDIT = -1;
+  renderLog();
+}
+function saveEdit() {
+  var arr = loadLog();
+  if (EDIT < 0 || EDIT >= arr.length) { EDIT = -1; renderLog(); return; }
+  var f = document.getElementById("ed_a");
+  var a = parseInt(f ? f.value : "", 10);
+  if (!a || a <= 0) {
+    if (f) { f.style.borderColor = "var(--red)"; f.focus(); }
+    return;
+  }
+  if (f) f.style.borderColor = "";
+  var dEl = document.getElementById("ed_d"), nEl = document.getElementById("ed_n");
+  var d = (dEl && dEl.value) || arr[EDIT].d;
+  var n = nEl ? nEl.value.trim() : (arr[EDIT].n || "");
+  arr[EDIT] = { d: d, a: a, n: n, t: EDTYPE };
+  arr.sort(function (x, y) { return x.d < y.d ? -1 : (x.d > y.d ? 1 : 0); });
+  saveLog(arr);
+  EDIT = -1;
   renderLog();
 }
 function wipeLog() {
   if (confirm("هتمسح كل تسجيلات الشهر ده — متأكد؟")) {
     saveLog([]);
+    EDIT = -1;
     renderLog();
   }
 }
