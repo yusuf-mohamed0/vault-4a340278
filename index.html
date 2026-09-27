@@ -646,12 +646,35 @@ function copyReport() {
          "الشهر: دخل " + Math.round(T.mIn) + " | مصروف " + Math.round(T.mOut) +
          " | الصافي " + (T.mIn - T.mOut > 0 ? "+" : "") +
          Math.round(T.mIn - T.mOut) + " ج.م";
+  function manualCopy(t) {
+    var ta = document.createElement("textarea");
+    ta.value = t;
+    ta.setAttribute("readonly", "readonly");
+    ta.style.cssText = "position:fixed;left:0;right:0;bottom:0;height:38vh;width:100%;" +
+      "z-index:70;direction:rtl;text-align:right;font:14px/1.6 'Segoe UI',Tahoma,sans-serif;" +
+      "padding:12px;border:0;border-top:3px solid #C9A227;background:#fff;" +
+      "box-shadow:0 -8px 24px rgba(14,42,71,.25);";
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try { ta.setSelectionRange(0, t.length); } catch (e) {}
+    var copied = false;
+    try { copied = document.execCommand("copy"); } catch (e) {}
+    if (copied) {
+      document.body.removeChild(ta);
+      alert("تم نسخ التقرير — افتح المحادثة والصقه");
+    } else {
+      ta.addEventListener("blur", function () {
+        if (ta.parentNode) ta.parentNode.removeChild(ta);
+      });
+      alert("التقرير ظاهر في أسفل الشاشة — حدّده بالكامل وانسخه");
+    }
+  }
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(txt).then(function () {
       alert("تم نسخ التقرير — افتح المحادثة والصقه");
-    }, function () { prompt("انسخ يدويًا:", txt); });
+    }, function () { manualCopy(txt); });
   } else {
-    prompt("انسخ يدويًا:", txt);
+    manualCopy(txt);
   }
 }
 (function initLog() {
