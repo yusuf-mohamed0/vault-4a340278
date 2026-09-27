@@ -11,8 +11,8 @@
   "total_debits": 97386.53,
   "total_refunds": 9000.0,
   "net_out": 88386.53,
-  "cash_out": 38500.0,
-  "card_out": 49886.53,
+  "cash_out": 30500.0,
+  "card_out": 57886.53,
   "total_credits": 92245.0,
   "net_flow": 3858.47,
   "opening": 743.94,
@@ -79,16 +79,16 @@
   },
   "categories": {
     "سحب نقدي (ATM)": {
-      "amount": 38500.0,
-      "n": 34
+      "amount": 30500.0,
+      "n": 33
     },
     "مشتريات ومحلات": {
       "amount": 20477.9,
       "n": 22
     },
     "مدفوعات وتحويلات": {
-      "amount": 14020.0,
-      "n": 23
+      "amount": 13020.0,
+      "n": 22
     },
     "موبايل وإنترنت": {
       "amount": 8470.62,
@@ -128,10 +128,6 @@
     }
   },
   "top_merchants": {
-    "NBE ATM713": {
-      "amount": 13500.0,
-      "n": 4
-    },
     "NBE ATM714": {
       "amount": 7600.0,
       "n": 5
@@ -143,6 +139,10 @@
     "Vodafone Top Up APP Sma": {
       "amount": 5645.0,
       "n": 25
+    },
+    "NBE ATM713": {
+      "amount": 5500.0,
+      "n": 3
     },
     "NBE ATM583": {
       "amount": 4000.0,
