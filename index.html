@@ -669,10 +669,14 @@ function copyReport() {
       alert("التقرير ظاهر في أسفل الشاشة — حدّده بالكامل وانسخه");
     }
   }
+  var done = false;
+  function finishCopy() { if (done) return; done = true; alert("تم نسخ التقرير — افتح المحادثة والصقه"); }
+  function fallbackCopy() { if (done) return; done = true; manualCopy(txt); }
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(txt).then(function () {
-      alert("تم نسخ التقرير — افتح المحادثة والصقه");
-    }, function () { manualCopy(txt); });
+    try {
+      navigator.clipboard.writeText(txt).then(finishCopy, fallbackCopy);
+      setTimeout(fallbackCopy, 1500);   // clipboard APIs may hang without user gesture
+    } catch (e) { fallbackCopy(); }
   } else {
     manualCopy(txt);
   }
