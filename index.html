@@ -7,25 +7,32 @@
 <title>نظامي المالي — لوحة الثروة</title>
 <style>
   :root{
-    --navy:#0E2A47; --navy2:#163A5F; --gold:#C9A227;
+    --navy:#0E2A47; --navy2:#163A5F; --navy3:#0A1E36;
+    --gold:#C9A227; --gold2:#E3BC45;
     --green:#15803D; --green-bg:#ECFDF3;
     --red:#B91C1C; --red-bg:#FEF2F2;
     --blue:#1D4ED8; --blue-bg:#EFF4FF;
     --amber:#B7791F; --amber-bg:#FFFBEB;
-    --bg:#F4F6F9; --surface:#fff; --line:#E4E9F0;
-    --text:#16212E; --muted:#5D6B80;
-    --radius:14px;
-    --shadow:0 1px 2px rgba(14,42,71,.05), 0 10px 26px -16px rgba(14,42,71,.25);
+    --bg:#F2F5FA; --surface:#fff; --line:#E3E9F2;
+    --text:#13202F; --muted:#5B6A80;
+    --radius:16px;
+    --shadow:0 1px 2px rgba(14,42,71,.06), 0 12px 30px -18px rgba(14,42,71,.28);
+    --shadow-l:0 2px 8px rgba(14,42,71,.10), 0 26px 52px -26px rgba(14,42,71,.45);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{-webkit-text-size-adjust:100%;}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth;}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none !important; animation:none !important;}
+  }
   body{
     font-family:"Segoe UI","Noto Sans Arabic","Helvetica Neue",Tahoma,Arial,sans-serif;
     background:var(--bg); color:var(--text); line-height:1.65; direction:rtl;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color:transparent; padding-bottom:78px;
   }
   .ic{width:18px; height:18px; flex:none;}
   .num{font-variant-numeric:tabular-nums;}
+  .v-green{color:var(--green);} .v-red{color:var(--red);} .v-amber{color:var(--amber);}
 
   /* ---------- lock gate ---------- */
   #lock{
@@ -51,12 +58,11 @@
     width:100%; margin-top:20px; padding:13px; border-radius:12px;
     border:1px solid rgba(255,255,255,.24); background:rgba(255,255,255,.08);
     color:#fff; text-align:center; font-size:1.05rem; letter-spacing:4px;
+    font-family:inherit;
   }
   #lock input:focus{outline:none; border-color:var(--gold);}
-  .lock-btn{
-    margin-top:12px; width:100%; justify-content:center;
-    background:var(--gold); color:#1A2333; border:0;
-  }
+  .lock-btn{margin-top:12px; width:100%; justify-content:center;
+    background:var(--gold); color:#1A2333; border:0;}
   .lock-btn:hover{background:#D9B23A;}
   .lock-err{min-height:1.3em; font-size:.85rem; color:#FCA5A5; margin-top:10px;}
   .lock-hint{
@@ -64,253 +70,345 @@
     font-size:.75rem; color:rgba(255,255,255,.55); margin-top:16px;
   }
 
+  .locked header, .locked .wrap, .locked footer, .locked .tabbar{display:none;}
+
   /* ---------- header ---------- */
-  header{background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%); color:#fff;}
+  header{
+    position:sticky; top:0; z-index:50; color:#fff;
+    background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 60%, var(--navy) 100%);
+    box-shadow:0 8px 22px -14px rgba(7,21,39,.75);
+  }
   .hd{
-    max-width:1040px; margin:0 auto; padding:18px 16px;
+    max-width:1080px; margin:0 auto; padding:13px 16px;
     display:flex; align-items:center; justify-content:space-between;
-    gap:14px; flex-wrap:wrap;
+    gap:12px; flex-wrap:wrap;
   }
-  .brand{display:flex; align-items:center; gap:12px;}
+  .brand{display:flex; align-items:center; gap:11px;}
   .logo{
-    width:44px; height:44px; border-radius:13px; display:grid; place-items:center;
-    background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.18);
-    color:var(--gold);
+    width:40px; height:40px; border-radius:12px; display:grid; place-items:center;
+    background:rgba(201,162,39,.16); border:1px solid rgba(201,162,39,.45);
+    color:var(--gold); flex:none;
   }
-  .logo .ic{width:23px; height:23px;}
-  .brand h1{font-size:1.22rem; font-weight:700; letter-spacing:-.2px;}
-  .brand .sub{font-size:.8rem; color:rgba(255,255,255,.72);}
-  .chip{
-    display:inline-flex; align-items:center; gap:7px; font-size:.78rem;
-    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16);
-    padding:7px 13px; border-radius:999px; color:rgba(255,255,255,.9);
+  .logo .ic{width:21px; height:21px;}
+  .brand h1{font-size:1.02rem; font-weight:700;}
+  .brand .sub{font-size:.73rem; color:rgba(255,255,255,.72);}
+  .hd-right{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+  .chip,.pill{
+    display:inline-flex; align-items:center; gap:6px; font-size:.72rem;
+    padding:6px 11px; border-radius:999px;
+    background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.16);
+    color:rgba(255,255,255,.9);
   }
-  .chip .ic{width:14px; height:14px; color:var(--gold);}
+  .pill{
+    background:rgba(201,162,39,.15); border-color:rgba(201,162,39,.5);
+    color:#F0D489; font-weight:600;
+  }
+  .chip .ic,.pill .ic{width:14px; height:14px;}
 
   /* ---------- layout ---------- */
-  .wrap{max-width:1040px; margin:0 auto; padding:20px 16px 6px;}
-  section{
+  .wrap{max-width:1080px; margin:0 auto; padding:18px 14px 30px;
+    display:flex; flex-direction:column; gap:16px;}
+  section{scroll-margin-top:80px;}
+  .sec{
     background:var(--surface); border:1px solid var(--line);
-    border-radius:var(--radius); padding:18px; margin-bottom:16px;
-    box-shadow:var(--shadow);
-    animation:fade .35s ease both;
+    border-radius:var(--radius); padding:18px 16px; box-shadow:var(--shadow);
   }
-  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
-  @media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important;}}
-  .sec-h{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
-  .sec-h .ic{width:19px; height:19px; color:var(--navy);}
-  .sec-h h2{font-size:1.02rem; font-weight:700; color:var(--navy);}
-  .sec-h .hint{margin-inline-start:auto; font-size:.76rem; color:var(--muted);}
+  .sec-h{display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
+  .sec-h .sic{
+    width:34px; height:34px; border-radius:10px; display:grid; place-items:center;
+    background:var(--amber-bg); color:#8A6F14; flex:none;
+  }
+  .sec-h h2{font-size:1.02rem; font-weight:700;}
+  .sec-h .hint{font-size:.73rem; color:var(--muted); margin-inline-start:auto;}
+  .note{
+    font-size:.78rem; color:var(--muted); background:#F7F9FC;
+    border:1px dashed var(--line); border-radius:10px; padding:9px 12px;
+    margin-top:12px; display:flex; gap:7px; align-items:flex-start;
+  }
+  .note.warn{background:var(--amber-bg); border-color:#EAD9A6; color:#7A5B12;}
+  .note .ic{width:15px; height:15px; margin-top:2px; flex:none;}
+  .empty{font-size:.85rem; color:var(--muted); text-align:center; padding:18px 10px;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:radial-gradient(1200px 420px at 88% -40%, #1E4B7A 0%,
+      var(--navy2) 42%, var(--navy) 76%, var(--navy3) 100%);
+    border-radius:18px; color:#fff; padding:20px 18px;
+    box-shadow:var(--shadow-l); border:1px solid rgba(255,255,255,.08);
+  }
+  .hero-top{display:flex; justify-content:space-between; align-items:flex-start;
+    gap:12px; flex-wrap:wrap;}
+  .hero-l{font-size:.8rem; color:rgba(255,255,255,.75); display:flex; gap:7px; align-items:center;}
+  .hero-v{font-size:2.55rem; font-weight:800; line-height:1.15; margin-top:4px;
+    color:var(--gold2); font-variant-numeric:tabular-nums;}
+  .hero-v.over{color:#FCA5A5;}
+  .hero-sub{font-size:.78rem; color:rgba(255,255,255,.7); margin-top:4px;}
+  .hero .bar{background:rgba(255,255,255,.14); height:11px;}
+  .hero .bar i{background:linear-gradient(90deg, var(--gold2), var(--gold));}
+  .hero .bar i.warn{background:#F59E0B;}
+  .hero .bar i.over{background:#EF4444;}
+  .bar{height:9px; border-radius:999px; background:#EDF1F7; overflow:hidden;
+    margin-top:13px;}
+  .bar i{display:block; height:100%; border-radius:999px; background:var(--navy2);
+    transition:width .5s ease;}
+  .bar i.warn{background:var(--amber);}
+  .bar i.over{background:var(--red);}
+  .hero-chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:13px;}
+  .hchip{
+    font-size:.73rem; background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.14); padding:6px 11px;
+    border-radius:9px; color:rgba(255,255,255,.85);
+  }
+  .hchip b{color:var(--gold2); font-weight:700; font-variant-numeric:tabular-nums;}
 
   /* ---------- KPI cards ---------- */
-  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-         gap:14px; margin-bottom:16px;}
+  .cards{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
   .card{
     background:var(--surface); border:1px solid var(--line);
-    border-radius:var(--radius); padding:16px; box-shadow:var(--shadow);
-    animation:fade .35s ease both;
+    border-radius:14px; padding:14px; box-shadow:var(--shadow);
   }
-  .ci{width:36px; height:36px; border-radius:11px; display:grid; place-items:center; margin-bottom:10px;}
-  .ci .ic{width:19px; height:19px;}
+  .ci{width:34px; height:34px; border-radius:10px; display:grid;
+    place-items:center; margin-bottom:9px;}
   .tone-red{background:var(--red-bg); color:var(--red);}
   .tone-green{background:var(--green-bg); color:var(--green);}
-  .tone-navy{background:#EAF0F7; color:var(--navy);}
-  .tone-gold{background:var(--amber-bg); color:var(--amber);}
-  .tone-blue{background:var(--blue-bg); color:var(--blue);}
-  .card .v{font-size:1.5rem; font-weight:700; letter-spacing:-.4px;}
-  .card .l{font-size:.82rem; color:var(--muted); margin-top:2px;}
+  .tone-navy{background:var(--blue-bg); color:var(--blue);}
+  .tone-gold{background:var(--amber-bg); color:#8A6F14;}
+  .card .v{font-size:1.26rem; font-weight:800; line-height:1.2;
+    font-variant-numeric:tabular-nums;}
+  .card .l{font-size:.73rem; color:var(--muted); margin-top:3px;}
 
-  /* ---------- market pulse (prices & news) ---------- */
-  .mk{display:grid; grid-template-columns:repeat(auto-fit,minmax(175px,1fr)); gap:10px;}
-  .mk-i{
-    background:#F8FAFD; border:1px solid var(--line); border-radius:12px;
-    padding:12px 13px; display:flex; flex-direction:column; gap:3px; min-width:0;
-  }
-  .mk-l{display:flex; align-items:center; gap:6px; font-size:.76rem; color:var(--muted);}
-  .mk-l .ic{width:14px; height:14px; color:var(--navy);}
-  .mk-v{font-size:1.02rem; font-weight:700; color:var(--navy); font-variant-numeric:tabular-nums;}
-  .mk-s{font-size:.7rem; color:#8A97A8;}
-  .mk-cols{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px;}
-  .mk-h{display:flex; align-items:center; gap:7px; font-size:.85rem;
-         font-weight:700; color:var(--navy); margin-bottom:8px;}
-  .mk-h .ic{width:15px; height:15px; color:var(--gold);}
-  .mk-ul{list-style:none; display:flex; flex-direction:column; gap:8px;}
-  .mk-ul li{
-    display:flex; gap:8px; align-items:flex-start; font-size:.82rem; color:#3A4A5E;
-    background:#F8FAFD; border:1px solid var(--line); border-radius:10px; padding:9px 11px;
-  }
-  .mk-ul li .ic{width:14px; height:14px; color:var(--muted); margin-top:3px; flex:none;}
-  .mk-date{display:block; font-size:.72rem; color:#8A97A8; margin-top:2px;}
-
-  /* ---------- quick log ---------- */
-  .seg{
-    display:inline-flex; gap:4px; padding:4px; margin-bottom:12px;
-    background:#EDF1F7; border:1px solid var(--line); border-radius:12px;
-    width:100%;
-  }
+  /* ---------- forms / buttons ---------- */
+  .seg{display:flex; gap:8px; margin-bottom:12px;}
   .seg-btn{
-    flex:1; display:flex; align-items:center; justify-content:center; gap:8px;
-    min-height:42px; padding:9px 14px; border:0; border-radius:9px;
-    background:transparent; color:var(--muted); font-size:.92rem; font-weight:700;
-    font-family:inherit; cursor:pointer;
+    flex:1; padding:10px; border-radius:11px; border:1px solid var(--line);
+    background:#F7F9FC; font:inherit; font-size:.85rem; font-weight:600;
+    color:var(--muted); display:flex; align-items:center; justify-content:center;
+    gap:7px; cursor:pointer;
   }
-  .seg-btn.on{background:#fff; color:var(--navy); box-shadow:0 1px 3px rgba(14,42,71,.16);}
-  .seg-btn.on.t-in{color:var(--green);}
-  .form{display:flex; flex-wrap:wrap; gap:10px;}
-  .form input{
-    padding:11px 12px; min-height:44px; border:1px solid var(--line);
-    border-radius:11px; font-size:.95rem; font-family:inherit; background:#fff;
-    color:var(--text);
+  .seg-btn.on{background:var(--navy); border-color:var(--navy); color:#fff;}
+  .seg-btn.t-in.on{background:var(--green); border-color:var(--green);}
+  .f-row{display:grid; grid-template-columns:1fr 1fr; gap:9px;}
+  .f-row input,.tx-search input{
+    padding:11px 12px; border:1px solid var(--line); border-radius:11px;
+    font:inherit; font-size:.92rem; background:#fff; width:100%; color:var(--text);
   }
-  .form input:focus{outline:none; border-color:var(--blue);
-    box-shadow:0 0 0 3px rgba(29,78,216,.14);}
-  #lg_d{width:165px;}
-  #lg_a{width:150px;}
-  #lg_n{flex:1 1 180px; min-width:0;}
+  .f-row .full{grid-column:1 / -1;}
+  input:focus{outline:none; border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(201,162,39,.22);}
+  .qchips{display:flex; gap:7px; flex-wrap:wrap; margin:10px 0 2px;}
+  .qchip{
+    font-size:.75rem; padding:6px 12px; border-radius:999px;
+    border:1px solid var(--line); background:#fff; color:var(--muted);
+    cursor:pointer; font-family:inherit;
+  }
+  .qchip:active{background:var(--navy); color:#fff; border-color:var(--navy);}
   .btn{
     display:inline-flex; align-items:center; justify-content:center; gap:8px;
-    min-height:44px; padding:11px 18px; border-radius:11px; border:1px solid transparent;
-    font-size:.93rem; font-weight:700; font-family:inherit; cursor:pointer;
+    padding:11px 16px; border-radius:11px; border:0; background:var(--navy);
+    color:#fff; font:inherit; font-size:.9rem; font-weight:700; cursor:pointer;
   }
-  .btn-pri{background:var(--navy); color:#fff;}
-  .btn-pri:hover{background:var(--navy2);}
-  .btn-out{background:#fff; border-color:var(--line); color:var(--muted);}
-  .btn-out:hover{border-color:#C9D3E0; color:var(--text);}
-  .btn-danger{background:#fff; border-color:#F0C9C9; color:var(--red);}
-  .btn-danger:hover{background:var(--red-bg);}
-  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(165px,1fr));
-         gap:10px; margin-top:14px;}
-  .stat{background:#F8FAFD; border:1px solid var(--line); border-radius:12px; padding:12px 13px;}
-  .stat .sl{display:flex; align-items:center; gap:6px; font-size:.76rem; color:var(--muted);}
-  .stat .sl .ic{width:14px; height:14px;}
-  .stat .sv{font-size:1.16rem; font-weight:700; margin-top:3px;}
-  .bar{height:7px; background:#E6ECF3; border-radius:99px; margin-top:9px; overflow:hidden;}
-  .bar i{display:block; height:100%; border-radius:99px; width:0;
-         background:var(--green); transition:width .35s ease;}
-  .bar i.warn{background:var(--gold);}
-  .bar i.over{background:var(--red);}
-  .v-green{color:var(--green);} .v-red{color:var(--red);}
-  .log-list{margin-top:6px;}
-  .log-row{
-    display:flex; align-items:center; gap:11px; padding:11px 2px;
-    border-bottom:1px solid var(--line);
+  .btn:hover{background:var(--navy2);}
+  .btn.gold{background:var(--gold); color:#1A2333;}
+  .btn.gold:hover{background:#D9B23A;}
+  .btn.block{width:100%; margin-top:10px;}
+  .ghost{
+    display:inline-flex; align-items:center; gap:7px; padding:9px 14px;
+    border-radius:10px; border:1px solid var(--line); background:#fff;
+    color:var(--muted); font:inherit; font-size:.82rem; font-weight:600;
+    cursor:pointer; font-family:inherit;
   }
-  .log-row:last-child{border-bottom:0;}
-  .lic{width:34px; height:34px; border-radius:10px; display:grid; place-items:center; flex:none;}
-  .lic .ic{width:17px; height:17px;}
-  .li-main{flex:1; min-width:0;}
-  .li-t{font-size:.92rem; font-weight:600;}
-  .li-s{font-size:.77rem; color:var(--muted);}
-  .li-amt{font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap; font-size:.95rem;}
-  .del{
-    background:none; border:0; color:#9AA7B8; cursor:pointer;
-    padding:8px; border-radius:9px; display:grid; place-items:center;
-  }
-  .del:hover{background:var(--red-bg); color:var(--red);}
-  .del .ic{width:16px; height:16px;}
-  .del.ed:hover{background:var(--blue-bg); color:var(--blue);}
-  .del.ok{color:var(--green);}
-  .del.ok:hover{background:var(--green-bg); color:var(--green);}
+  .ghost:hover{border-color:var(--navy2); color:var(--navy);}
+  .sec-actions{display:flex; gap:9px; flex-wrap:wrap; margin-top:14px;}
 
-  /* ---------- inline edit row ---------- */
-  .log-row.editing{background:#F8FAFD; align-items:flex-start; border-radius:10px; padding:12px 8px;}
-  .log-row.editing .lic{margin-top:2px;}
-  .ed-f{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:7px;}
-  .ed-f input{
-    flex:1 1 84px; min-width:0; padding:7px 9px; font:inherit; font-size:.86rem;
-    border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--text);
+  /* ---------- stats ---------- */
+  .st-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:9px; margin-top:14px;}
+  .st{background:#F7F9FC; border:1px solid var(--line); border-radius:12px;
+    padding:10px 12px;}
+  .st .k{font-size:.7rem; color:var(--muted);}
+  .st .sv{font-size:1.02rem; font-weight:800; margin-top:2px;
+    font-variant-numeric:tabular-nums;}
+
+  /* ---------- envelopes ---------- */
+  .env-list{display:flex; flex-direction:column; gap:9px;}
+  .env{border:1px solid var(--line); border-radius:12px; padding:11px 13px; background:#fff;}
+  .env-h{display:flex; align-items:center; gap:9px;}
+  .env-h .ic{color:var(--navy2); width:17px; height:17px;}
+  .env-n{font-size:.87rem; font-weight:600; flex:1; min-width:0;}
+  .env-a{font-size:.8rem; color:var(--muted); white-space:nowrap;}
+  .env-a b{font-size:.97rem; color:var(--text); font-weight:800;}
+  .env .bar{height:8px; margin-top:9px;}
+  .env-f{display:flex; justify-content:space-between; gap:8px; font-size:.71rem;
+    color:var(--muted); margin-top:7px; flex-wrap:wrap;}
+  .env.loose{background:var(--amber-bg); border-color:#EAD9A6;}
+
+  /* ---------- market ---------- */
+  .mk{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:9px;}
+  .mk-i{
+    background:#F7F9FC; border:1px solid var(--line); border-radius:12px;
+    padding:11px 12px; display:flex; flex-direction:column; gap:3px;
   }
-  .ed-f input[type=date]{flex:1 1 100%;}
-  .ed-f input:focus{outline:0; border-color:var(--navy2);}
-  .ed-t{display:flex; gap:6px;}
-  .ed-b{
-    border:1px solid var(--line); background:#fff; color:var(--muted);
-    border-radius:999px; padding:3px 14px; font-size:.75rem; font-weight:600; cursor:pointer;
+  .mk-l{font-size:.73rem; color:var(--muted); display:flex; gap:6px; align-items:center;}
+  .mk-l .ic{width:14px; height:14px; color:var(--gold);}
+  .mk-v{font-size:1rem; font-weight:800;}
+  .mk-s{font-size:.66rem; color:var(--muted);}
+  .mk-cols{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;}
+  .mk-h{font-size:.83rem; font-weight:700; margin-bottom:8px;
+    display:flex; gap:7px; align-items:center;}
+  .mk-ul{list-style:none; display:flex; flex-direction:column; gap:8px;}
+  .mk-ul li{
+    display:flex; gap:8px; font-size:.8rem; background:#fff;
+    border:1px solid var(--line); border-radius:10px; padding:8px 10px;
   }
-  .ed-b.on{background:var(--navy); border-color:var(--navy); color:#fff;}
-  .empty{
-    text-align:center; color:var(--muted); font-size:.88rem; padding:20px 12px;
-    border:1px dashed var(--line); border-radius:12px;
+  .mk-ul li .ic{flex:none; color:var(--navy2); width:15px; height:15px; margin-top:2px;}
+  .mk-date{display:block; font-size:.7rem; color:var(--muted); margin-top:3px;}
+
+  /* ---------- insights ---------- */
+  .chart-wrap{background:#F7F9FC; border:1px solid var(--line);
+    border-radius:12px; padding:12px 8px 4px;}
+  .chart{width:100%; height:auto; display:block;}
+  .alerts{display:flex; flex-direction:column; gap:9px; margin-top:14px;}
+  .alert{
+    display:flex; align-items:center; gap:10px; background:#FFF8F7;
+    border:1px solid #F3D9D6; border-inline-start:3px solid var(--red);
+    border-radius:11px; padding:10px 12px;
   }
-  .actions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
-  .actions .btn{flex:1 1 190px;}
+  .a-ic{width:30px; height:30px; border-radius:9px; background:#fff;
+    display:grid; place-items:center; color:var(--red); flex:none;}
+  .a-ic .ic{width:16px; height:16px;}
+  .a-m{flex:1; min-width:0;}
+  .a-m b{font-size:.85rem; display:block;}
+  .a-s{font-size:.72rem; color:var(--muted);}
+  .a-amt{font-weight:800; font-size:.9rem; color:var(--red); white-space:nowrap;}
+
+  /* ---------- transactions explorer ---------- */
+  .tx-tools{display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-bottom:12px;}
+  .tx-search{position:relative; flex:1; min-width:210px;}
+  .tx-search .ic{position:absolute; inset-inline-start:11px; top:50%;
+    transform:translateY(-50%); color:var(--muted); width:16px; height:16px;}
+  .tx-search input{padding-inline-start:35px;}
+  .tx-filters{display:flex; gap:6px;}
+  .chip-b{
+    font-size:.76rem; padding:7px 13px; border-radius:999px;
+    border:1px solid var(--line); background:#fff; cursor:pointer;
+    font-family:inherit; color:var(--muted); font-weight:600;
+  }
+  .chip-b.on{background:var(--navy); border-color:var(--navy); color:#fff;}
+  .tx-list{display:flex; flex-direction:column; gap:7px; max-height:430px; overflow-y:auto;}
+  .tx-row{display:flex; align-items:center; gap:10px; padding:9px 11px;
+    border:1px solid var(--line); border-radius:11px; background:#fff;}
+  .tx-d{font-size:.72rem; color:var(--muted); width:44px; flex:none;
+    font-variant-numeric:tabular-nums;}
+  .tx-m{flex:1; min-width:0;}
+  .tx-m b{display:block; font-size:.86rem; white-space:nowrap; overflow:hidden;
+    text-overflow:ellipsis;}
+  .tx-c{font-size:.7rem; color:var(--blue); background:var(--blue-bg);
+    padding:1px 8px; border-radius:99px; display:inline-block; margin-top:2px;}
+  .tx-a{font-weight:800; font-size:.88rem; font-variant-numeric:tabular-nums;}
 
   /* ---------- tables ---------- */
-  .tw{overflow-x:auto; -webkit-overflow-scrolling:touch;}
-  table{width:100%; border-collapse:collapse; font-size:.92rem; min-width:430px;}
-  thead th{
-    background:var(--navy); color:#fff; font-size:.83rem; font-weight:600;
-    padding:11px 12px; text-align:right; white-space:nowrap;
-  }
-  tbody td{padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:middle;}
-  tbody tr:last-child td{border-bottom:0;}
-  tbody tr:hover td{background:#F8FAFD;}
-  td.num{text-align:center; font-weight:700; font-variant-numeric:tabular-nums;
-         white-space:nowrap; color:var(--navy);}
-  .cell-cat{display:flex; align-items:center; gap:9px; font-weight:600;}
-  .cell-cat .ic{width:17px; height:17px; color:var(--muted);}
-  .share{display:flex; align-items:center; gap:8px; justify-content:center;}
-  .share-bar{width:56px; height:6px; background:#E6ECF3; border-radius:99px; overflow:hidden;}
-  .share-bar i{display:block; height:100%; background:var(--blue); border-radius:99px;}
+  .tw{overflow-x:auto; border:1px solid var(--line); border-radius:12px;}
+  table{width:100%; border-collapse:collapse; font-size:.86rem;}
+  th,td{padding:10px 12px; text-align:start;}
+  thead th{background:#F2F5FA; font-size:.74rem; color:var(--muted);
+    font-weight:700; border-bottom:1px solid var(--line); white-space:nowrap;}
+  tbody tr+tr td{border-top:1px solid #EEF2F7;}
+  tbody tr:hover{background:#FAFBFD;}
+  td.num,th.num{text-align:end; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .cell-cat{display:flex; align-items:center; gap:8px;}
+  .cell-cat .ic{color:var(--navy2); width:16px; height:16px;}
+  .share{display:flex; align-items:center; gap:8px; justify-content:flex-end;}
+  .share-bar{width:64px; height:6px; background:#EDF1F7; border-radius:99px;
+    overflow:hidden; flex:none;}
+  .share-bar i{display:block; height:100%; background:var(--navy2); border-radius:99px;}
+
+  /* ---------- log list ---------- */
+  .log-list{display:flex; flex-direction:column; gap:8px; margin-top:14px;
+    max-height:340px; overflow-y:auto;}
+  .log-row{display:flex; align-items:center; gap:10px; background:#fff;
+    border:1px solid var(--line); border-radius:12px; padding:9px 11px;}
+  .lic{width:32px; height:32px; border-radius:9px; display:grid;
+    place-items:center; flex:none;}
+  .li-main{flex:1; min-width:0;}
+  .li-t{font-size:.78rem; color:var(--muted);}
+  .li-s{font-size:.88rem; font-weight:600; white-space:nowrap; overflow:hidden;
+    text-overflow:ellipsis;}
+  .li-amt{font-weight:800; font-size:.9rem; font-variant-numeric:tabular-nums;
+    white-space:nowrap;}
+  .del{width:32px; height:32px; border-radius:9px; border:1px solid var(--line);
+    background:#fff; display:grid; place-items:center; cursor:pointer;
+    color:var(--muted); flex:none; padding:0;}
+  .del.ed{color:var(--navy2);}
+  .del:hover{border-color:var(--navy2); color:var(--navy);}
+  .del .ic{width:15px; height:15px;}
+  .log-row.editing{background:#FAFBFD; flex-wrap:wrap;}
+  .ed-f{display:flex; gap:7px; flex:1; min-width:0; flex-wrap:wrap; width:100%;}
+  .ed-f input{padding:7px 9px; border:1px solid var(--line); border-radius:9px;
+    font:inherit; font-size:.85rem; min-width:0; color:var(--text); background:#fff;}
+  .ed-f input[type=date]{width:132px;}
+  .ed-f input[type=number]{width:96px;}
+  .ed-f input[type=text]{flex:1; min-width:110px;}
+  .ed-t{display:flex; gap:6px; margin-top:7px; width:100%;}
+  .ed-b{flex:1; font-size:.75rem; padding:6px; border-radius:8px;
+    border:1px solid var(--line); background:#fff; cursor:pointer;
+    font-family:inherit; color:var(--muted);}
+  .ed-b.on{background:var(--navy); color:#fff; border-color:var(--navy);}
 
   /* ---------- downloads ---------- */
-  .dl{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:10px;}
+  .dl{display:grid; grid-template-columns:repeat(auto-fill,minmax(235px,1fr)); gap:9px;}
   .dl a{
-    display:flex; align-items:center; gap:11px; padding:13px 14px;
+    display:flex; align-items:center; gap:9px; padding:12px 13px;
     border:1px solid var(--line); border-radius:12px; background:#fff;
-    color:var(--text); text-decoration:none; font-size:.9rem; font-weight:600;
-    transition:border-color .15s ease, box-shadow .15s ease;
+    color:var(--text); text-decoration:none; font-size:.85rem; font-weight:600;
   }
-  .dl a:hover{border-color:var(--navy); box-shadow:var(--shadow); text-decoration:none;}
-  .dl a .ic{color:var(--navy);}
-  .dl a .sz{margin-inline-start:auto; font-size:.74rem; color:var(--muted); font-weight:500;}
+  .dl a:hover{border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,162,39,.15);}
+  .dl a .ic{color:var(--navy2);}
+  .dl .sz{margin-inline-start:auto; font-size:.7rem; color:var(--muted); font-weight:500;}
 
-  /* ---------- notes / footer ---------- */
-  .note{
-    display:flex; gap:10px; align-items:flex-start; margin-top:14px;
-    background:var(--blue-bg); border:1px solid #D6E2F5; color:#28405F;
-    border-radius:12px; padding:12px 14px; font-size:.86rem;
+  /* ---------- bottom tab bar ---------- */
+  .tabbar{
+    position:fixed; inset-inline:0; bottom:0; z-index:45; display:flex;
+    background:rgba(255,255,255,.95); backdrop-filter:blur(10px);
+    border-top:1px solid var(--line); padding:7px 6px calc(7px + env(safe-area-inset-bottom));
+    box-shadow:0 -8px 24px -16px rgba(14,42,71,.4);
   }
-  .note .ic{color:var(--blue); margin-top:3px;}
-  .note.warn{background:var(--amber-bg); border-color:#EFDFAE; color:#6B5310;}
-  .note.warn .ic{color:var(--amber);}
+  .tab{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+    font-size:.66rem; color:var(--muted); text-decoration:none; padding:4px 2px;
+    border-radius:10px; font-weight:600;
+  }
+  .tab .ic{width:20px; height:20px;}
+  .tab.on{color:var(--navy); font-weight:800;}
+  .tab.on .ic{color:var(--gold);}
+
   footer{
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    flex-wrap:wrap; text-align:center; color:var(--muted);
-    font-size:.79rem; padding:20px 16px 26px;
+    max-width:1080px; margin:0 auto; padding:4px 16px 20px; text-align:center;
+    font-size:.75rem; color:var(--muted); display:flex; gap:7px;
+    justify-content:center; align-items:center; flex-wrap:wrap;
   }
-  footer .ic{width:14px; height:14px;}
 
-  /* ---------- mobile ---------- */
-  @media (max-width:640px){
-    .hd{padding:15px 14px;}
-    .brand h1{font-size:1.08rem;}
-    .chip{display:none;}
-    .wrap{padding:14px 12px 4px;}
-    section{padding:14px; border-radius:12px;}
-    .cards{grid-template-columns:repeat(2,1fr); gap:10px;}
-    .card{padding:13px;}
-    .card .v{font-size:1.22rem;}
-    .ci{width:32px; height:32px; margin-bottom:8px;}
-    .stats{grid-template-columns:repeat(2,1fr);}
-    .mk{grid-template-columns:repeat(2,1fr); gap:8px;}
-    .mk-i{padding:10px 11px;}
-    .mk-v{font-size:.92rem;}
+  @media (min-width:861px){
+    .tabbar{display:none;}
+    body{padding-bottom:0;}
+  }
+  @media (max-width:760px){
+    .cards{grid-template-columns:repeat(2,1fr);}
+    .st-grid{grid-template-columns:repeat(2,1fr);}
     .mk-cols{grid-template-columns:1fr;}
-    #lg_d{width:100%;}
-    #lg_a{width:calc(50% - 5px);}
-    #lg_n{flex:1 1 calc(50% - 5px);}
-    .form .btn{width:100%;}
-    table{font-size:.86rem; min-width:360px;}
-    thead th, tbody td{padding:9px 8px;}
-    .share-bar{display:none;}
-    .actions .btn{flex:1 1 100%;}
-    .lock-card{padding:28px 20px;}
+  }
+  @media (max-width:640px){
+    .wrap{padding:14px 11px 26px;}
+    .sec{padding:15px 13px;}
+    .hero{padding:17px 15px;}
+    .hero-v{font-size:2.1rem;}
+    .f-row{grid-template-columns:1fr 1fr;}
+    .hd{padding:11px 13px;}
+    .brand h1{font-size:.95rem;}
+    .sec-h .hint{width:100%; margin-inline-start:0;}
   }
 </style>
 </head>
 <body class="locked">
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="ic-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol><symbol id="ic-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol><symbol id="ic-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 1-1 1v3a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V5"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></symbol><symbol id="ic-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></symbol><symbol id="ic-trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17h6v-6"/><path d="m22 17-8.5-8.5-5 5L2 7"/></symbol><symbol id="ic-piggy-bank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17h3v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a3.16 3.16 0 0 0 2-2h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-1a5 5 0 0 0-2-4V3a4 4 0 0 0-3.2 1.6l-.3.4H11a6 6 0 0 0-6 6v1a5 5 0 0 0 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1z"/><path d="M16 10h.01"/><path d="M2 8v1a2 2 0 0 0 2 2h1"/></symbol><symbol id="ic-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></symbol><symbol id="ic-calendar-days" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M8 13h.01"/><path d="M12 13h.01"/><path d="M16 13h.01"/><path d="M8 17h.01"/><path d="M12 17h.01"/><path d="M16 17h.01"/></symbol><symbol id="ic-calendar-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="m9 15 2 2 4-4"/></symbol><symbol id="ic-clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></symbol><symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol><symbol id="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol><symbol id="ic-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></symbol><symbol id="ic-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol><symbol id="ic-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol><symbol id="ic-circle-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></symbol><symbol id="ic-circle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></symbol><symbol id="ic-triangle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol><symbol id="ic-banknote" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></symbol><symbol id="ic-fuel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0v-6.998a2 2 0 0 0-.59-1.42L18 5"/><path d="M14 21V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v16"/><path d="M2 21h13"/><path d="M3 9h11"/></symbol><symbol id="ic-smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></symbol><symbol id="ic-shopping-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></symbol><symbol id="ic-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol><symbol id="ic-coffee" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></symbol><symbol id="ic-shopping-basket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></symbol><symbol id="ic-heart-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/><path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></symbol><symbol id="ic-shirt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></symbol><symbol id="ic-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol><symbol id="ic-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></symbol><symbol id="ic-file-spreadsheet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M8 13h2"/><path d="M14 13h2"/><path d="M8 17h2"/><path d="M14 17h2"/></symbol><symbol id="ic-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol><symbol id="ic-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></symbol><symbol id="ic-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></symbol><symbol id="ic-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol><symbol id="ic-list-checks" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/></symbol><symbol id="ic-square-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></symbol><symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol><symbol id="ic-log-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/></symbol><symbol id="ic-circle-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="12" r="10"/></symbol><symbol id="ic-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></symbol></svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="ic-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol><symbol id="ic-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol><symbol id="ic-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V5"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></symbol><symbol id="ic-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></symbol><symbol id="ic-trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17h6v-6"/><path d="m22 17-8.5-8.5-5 5L2 7"/></symbol><symbol id="ic-piggy-bank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17h3v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a3.16 3.16 0 0 0 2-2h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-1a5 5 0 0 0-2-4V3a4 4 0 0 0-3.2 1.6l-.3.4H11a6 6 0 0 0-6 6v1a5 5 0 0 0 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1z"/><path d="M16 10h.01"/><path d="M2 8v1a2 2 0 0 0 2 2h1"/></symbol><symbol id="ic-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></symbol><symbol id="ic-calendar-days" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M8 13h.01"/><path d="M12 13h.01"/><path d="M16 13h.01"/><path d="M8 17h.01"/><path d="M12 17h.01"/><path d="M16 17h.01"/></symbol><symbol id="ic-calendar-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="m9 15 2 2 4-4"/></symbol><symbol id="ic-clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></symbol><symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol><symbol id="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol><symbol id="ic-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></symbol><symbol id="ic-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol><symbol id="ic-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol><symbol id="ic-circle-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></symbol><symbol id="ic-circle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></symbol><symbol id="ic-triangle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol><symbol id="ic-banknote" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></symbol><symbol id="ic-fuel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0v-6.998a2 2 0 0 0-.59-1.42L18 5"/><path d="M14 21V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v16"/><path d="M2 21h13"/><path d="M3 9h11"/></symbol><symbol id="ic-smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></symbol><symbol id="ic-shopping-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></symbol><symbol id="ic-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol><symbol id="ic-coffee" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></symbol><symbol id="ic-shopping-basket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></symbol><symbol id="ic-heart-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/><path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></symbol><symbol id="ic-shirt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></symbol><symbol id="ic-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol><symbol id="ic-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></symbol><symbol id="ic-file-spreadsheet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M8 13h2"/><path d="M14 13h2"/><path d="M8 17h2"/><path d="M14 17h2"/></symbol><symbol id="ic-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol><symbol id="ic-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></symbol><symbol id="ic-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></symbol><symbol id="ic-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol><symbol id="ic-list-checks" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/></symbol><symbol id="ic-square-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></symbol><symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol><symbol id="ic-log-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/></symbol><symbol id="ic-circle-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="12" r="10"/></symbol><symbol id="ic-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></symbol><symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="ic-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol><symbol id="ic-chart-column" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol></svg>
 
 <div id="lock">
   <div class="lock-card">
@@ -333,11 +431,36 @@
         <p class="sub">لوحة الثروة · 2026-01-28 — 2026-09-19</p>
       </div>
     </div>
-    <div class="chip"><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> تحديث تلقائي من رسائل البنك</div>
+    <div class="hd-right"><span class="pill"><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>الراتب المتوقع: بعد 4 يوم (01/10)</span><div class="chip"><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> من رسائل البنك</div></div>
   </div>
 </header>
 
-<div class="wrap">
+<nav class="tabbar" aria-label="تنقل سريع">
+  <a class="tab on" href="#hero"><svg class="ic" aria-hidden="true"><use href="#ic-gauge"/></svg> الرئيسية</a>
+  <a class="tab" href="#log"><svg class="ic" aria-hidden="true"><use href="#ic-square-pen"/></svg> تسجيل</a>
+  <a class="tab" href="#envelopes"><svg class="ic" aria-hidden="true"><use href="#ic-list-checks"/></svg> الأظرف</a>
+  <a class="tab" href="#market"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> السوق</a>
+  <a class="tab" href="#insights"><svg class="ic" aria-hidden="true"><use href="#ic-chart-column"/></svg> تحليل</a>
+</nav>
+
+<div class="wrap" id="top">
+
+  <section class="hero" id="hero">
+    <div class="hero-top">
+      <div>
+        <div class="hero-l"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg> فاضلك هذا الأسبوع (من تسجيلاتك)</div>
+        <div class="hero-v" id="hero_left">—</div>
+        <div class="hero-sub" id="hero_sub">الأسبوع من السبت · حد السحب النقدي</div>
+      </div>
+      <div class="hchip">اليوم الآمن <b id="hero_day">—</b></div>
+    </div>
+    <div class="bar"><i id="hero_bar" style="width:0%"></i></div>
+    <div class="hero-chips">
+      <span class="hchip">السقف <b id="hero_cap">—</b></span>
+      <span class="hchip">صرفت <b id="hero_spent">—</b></span>
+      <span class="hchip">أيام متبقية <b id="hero_days">—</b></span>
+    </div>
+  </section>
 
   <div class="cards">
     <div class="card">
@@ -362,7 +485,63 @@
     </div>
   </div>
 
-  <section id="market"><div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg><h2>نبض السوق — القاهرة</h2><span class="hint">آخر فحص: 27/09/2026 — تحديث أسبوعي</span></div><div class="mk"><div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg>بنزين 92 (رسمي)</span><b class="mk-v num">22.25 ج.م / لتر</b><span class="mk-s">محطات الوقود — 25/09/2026</span></div>
+  <section class="sec" id="log">
+    <div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-square-pen"/></svg></span>
+      <h2>تسجيل سريع</h2>
+      <span class="hint">سجّل في نفس اليوم — الأخطر على الخطة</span>
+    </div>
+    <div class="seg">
+      <button type="button" class="seg-btn on" id="seg_out" onclick="setType('out')"><svg class="ic" aria-hidden="true"><use href="#ic-trending-down"/></svg> سحب / مصروف</button>
+      <button type="button" class="seg-btn t-in" id="seg_in" onclick="setType('in')"><svg class="ic" aria-hidden="true"><use href="#ic-trending-up"/></svg> دخل / وارد</button>
+    </div>
+    <div class="f-row">
+      <input type="date" id="lg_d" aria-label="التاريخ">
+      <input type="number" id="lg_a" placeholder="المبلغ (ج.م)" inputmode="numeric" min="1" aria-label="المبلغ">
+      <input class="full" type="text" id="lg_n" placeholder="ملاحظة (بنزين / راتب...)" maxlength="40" aria-label="ملاحظة">
+    </div>
+    <div class="qchips" aria-label="اختصارات ملاحظة">
+      <button type="button" class="qchip" onclick="quickNote('بنزين')">بنزين</button>
+      <button type="button" class="qchip" onclick="quickNote('مطاعم')">مطاعم</button>
+      <button type="button" class="qchip" onclick="quickNote('بقالة')">بقالة</button>
+      <button type="button" class="qchip" onclick="quickNote('كافيهات')">كافيهات</button>
+      <button type="button" class="qchip" onclick="quickNote('مشتريات')">مشتريات</button>
+      <button type="button" class="qchip" onclick="quickNote('صحة')">صحة</button>
+      <button type="button" class="qchip" onclick="quickNote('سحب نقدي')">سحب نقدي</button>
+    </div>
+    <button class="btn gold block" onclick="addEntry()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg> إضافة للسجل</button>
+
+    <div class="st-grid">
+      <div class="st"><div class="k">مصروف الأسبوع</div><div class="sv num" id="st_wk">—</div>
+        <div class="bar"><i id="bar_wk" style="width:0%"></i></div></div>
+      <div class="st"><div class="k">دخل الشهر</div><div class="sv num v-green" id="st_in">—</div></div>
+      <div class="st"><div class="k">مصروف الشهر</div><div class="sv num v-red" id="st_out">—</div></div>
+      <div class="st"><div class="k">صافي الشهر</div><div class="sv num" id="st_net">—</div></div>
+    </div>
+
+    <div class="log-list" id="lg_list"></div>
+
+    <div class="sec-actions">
+      <button class="ghost" onclick="copyReport()"><svg class="ic" aria-hidden="true"><use href="#ic-copy"/></svg> نسخ التقرير</button>
+      <button class="ghost" onclick="wipeLog()"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg> مسح الشهر</button>
+    </div>
+
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> التسجيلات محفوظة داخل متصفح هذا الجهاز فقط — لو فتحت من جهاز
+    آخر هتلاقيه فاضي. أول ما تيجي للمحاسب: اضغط «نسخ التقرير» والصقه هنا بضغطة واحدة.</div>
+  </section>
+
+  <section class="sec" id="envelopes">
+    <div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-list-checks"/></svg></span>
+      <h2>الأظرف 2026-10 — فعلي مقابل مخطط</h2>
+      <span class="hint">بنك حتى 2026-09-19 + تسجيلاتك</span>
+    </div>
+    <div class="env-list" id="env_list"><div class="env" data-k="ادخار وطوارئ (وزّعه قبل أي صرف)" data-b="1500" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-piggy-bank"/></svg><span class="env-n">ادخار وطوارئ (وزّعه قبل أي صرف)</span><span class="env-a num"><b class="env-done">0</b> / 1,500 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 1,500 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 346</span></div></div><div class="env" data-k="سحب نقدي - مصروف يومي مسجّل" data-b="2100" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg><span class="env-n">سحب نقدي - مصروف يومي مسجّل</span><span class="env-a num"><b class="env-done">0</b> / 2,100 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 2,100 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 485</span></div></div><div class="env" data-k="موبايل وإنترنت" data-b="700" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-smartphone"/></svg><span class="env-n">موبايل وإنترنت</span><span class="env-a num"><b class="env-done">0</b> / 700 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 700 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 162</span></div></div><div class="env" data-k="بنزين وصيانة الموتوسيكل" data-b="2200" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg><span class="env-n">بنزين وصيانة الموتوسيكل</span><span class="env-a num"><b class="env-done">0</b> / 2,200 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 2,200 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 508</span></div></div><div class="env" data-k="مشتريات ومحلات" data-b="700" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-cart"/></svg><span class="env-n">مشتريات ومحلات</span><span class="env-a num"><b class="env-done">0</b> / 700 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 700 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 162</span></div></div><div class="env" data-k="مطاعم وتوصيل" data-b="300" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-utensils"/></svg><span class="env-n">مطاعم وتوصيل</span><span class="env-a num"><b class="env-done">0</b> / 300 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 300 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 69</span></div></div><div class="env" data-k="كافيهات وترفيه" data-b="100" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-coffee"/></svg><span class="env-n">كافيهات وترفيه</span><span class="env-a num"><b class="env-done">0</b> / 100 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 100 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 23</span></div></div><div class="env" data-k="بقالة وسوبر ماركت" data-b="400" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-basket"/></svg><span class="env-n">بقالة وسوبر ماركت</span><span class="env-a num"><b class="env-done">0</b> / 400 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 400 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 92</span></div></div><div class="env" data-k="صحة وصيدليات" data-b="300" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-heart-pulse"/></svg><span class="env-n">صحة وصيدليات</span><span class="env-a num"><b class="env-done">0</b> / 300 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 300 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 69</span></div></div><div class="env" data-k="تسوق أونلاين" data-b="150" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-shirt"/></svg><span class="env-n">تسوق أونلاين</span><span class="env-a num"><b class="env-done">0</b> / 150 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 150 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 35</span></div></div><div class="env" data-k="اشتراكات ومحتوى" data-b="200" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg><span class="env-n">اشتراكات ومحتوى</span><span class="env-a num"><b class="env-done">0</b> / 200 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 200 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 46</span></div></div><div class="env" data-k="تحويلات ومدفوعات (أصدقاء)" data-b="300" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-send"/></svg><span class="env-n">تحويلات ومدفوعات (أصدقاء)</span><span class="env-a num"><b class="env-done">0</b> / 300 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 300 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 69</span></div></div><div class="env" data-k="طوارئ غير متوقع (كل شهر)" data-b="350" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg><span class="env-n">طوارئ غير متوقع (كل شهر)</span><span class="env-a num"><b class="env-done">0</b> / 350 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 350 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 81</span></div></div><div class="env" data-k="فائض حر -&gt; ادخار إضافي" data-b="700" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-piggy-bank"/></svg><span class="env-n">فائض حر -&gt; ادخار إضافي</span><span class="env-a num"><b class="env-done">0</b> / 700 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 700 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 162</span></div></div><div class="env loose" id="env_loose" style="display:none">
+      <div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span class="env-n">بدون ظرف (ملاحظات غير مصنفة)</span>
+      <span class="env-a num"><b id="env_loose_a">0 ج.م</b></span></div></div></div>
+    <div class="note warn"><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg> الأظرف سقف مش هدف: لو خلصت خانة بدري استلف من الفائض الحر
+    مش من الادخار. بيانات البنك بتتحدث بعد استيراد رسائل الشهر الجديد.</div>
+  </section>
+
+  <section id="market" class="sec"><div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg></span><h2>نبض السوق — القاهرة</h2><span class="hint">آخر فحص: 27/09/2026</span></div><div class="mk"><div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg>بنزين 92 (رسمي)</span><b class="mk-v num">22.25 ج.م / لتر</b><span class="mk-s">محطات الوقود — 25/09/2026</span></div>
 <div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg>تعبئة بنزين الموتوسيكل</span><b class="mk-v num">445 ج.م (20 لتر) — كل 10–14 يوم</b><span class="mk-s">بنزين 92 × 20 لتر — 27/09/2026</span></div>
 <div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-gauge"/></svg>زيت وصيانة دورية</span><b class="mk-v num">620 ج.م/1000 كم + 350 دوري</b><span class="mk-s">بيان المستخدم — 27/09/2026</span></div>
 <div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg>الدولار (بيع البنوك)</span><b class="mk-v num">51.96 – 52.18 ج.م</b><span class="mk-s">البنوك المصرية — 21/09/2026</span></div>
@@ -382,57 +561,37 @@
 <li><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span>رفع الفائدة الأمريكية 18/09/2026<span class="mk-date">18/09/2026 — ضغط على الجنيه وأثر محتمل على الاشتراكات والبضائع المستوردة بعد شهرين.</span></span></li>
 <li><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span>التضخم تراجع لـ12.7% عام و14.5% في المدن أغسطس<span class="mk-date">10/09/2026 — الغذاء انخفض 1.2% شهريًا (خضروات -7%) — أرخص وقت لترفع البقالة البيتية.</span></span></li></ul></div></div><div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> الأرقام دي بتتحدّث أسبوعيًا كل سبت وأمام أي خطة شهرية، والمصدر الكامل بتواريخه في وثيقة الأسعار داخل المجلد المحلي.</div></section>
 
-  <section id="log">
-    <div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#ic-square-pen"/></svg>
-      <h2>تسجيل سريع — سحب أو دخل</h2>
-      <span class="hint">يُحفظ في هذا الجهاز</span>
+  <section class="sec" id="insights">
+    <div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-chart-column"/></svg></span>
+      <h2>صورة شهرية — الصرف والتنبيهات</h2>
+      <span class="hint">من 2026-01-28 إلى 2026-09-19</span>
     </div>
-
-    <div class="seg" role="tablist">
-      <button type="button" class="seg-btn on" id="seg_out" onclick="setType('out')"><svg class="ic" aria-hidden="true"><use href="#ic-trending-down"/></svg> سحب / مصروف</button>
-      <button type="button" class="seg-btn t-in" id="seg_in" onclick="setType('in')"><svg class="ic" aria-hidden="true"><use href="#ic-trending-up"/></svg> دخل / وارد</button>
-    </div>
-
-    <div class="form">
-      <input type="date" id="lg_d" aria-label="التاريخ">
-      <input type="number" id="lg_a" placeholder="المبلغ (ج.م)" inputmode="numeric" min="1" aria-label="المبلغ">
-      <input type="text" id="lg_n" placeholder="ملاحظة (بنزين / راتب...)" maxlength="40" aria-label="ملاحظة">
-      <button class="btn btn-pri" onclick="addEntry()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg> إضافة</button>
-    </div>
-
-    <div class="stats">
-      <div class="stat">
-        <div class="sl"><svg class="ic" aria-hidden="true"><use href="#ic-gauge"/></svg> مصروف الأسبوع (من السبت)</div>
-        <div class="sv num" id="st_wk">—</div>
-        <div class="bar"><i id="bar_wk"></i></div>
-      </div>
-      <div class="stat">
-        <div class="sl"><svg class="ic" aria-hidden="true"><use href="#ic-trending-up"/></svg> دخل الشهر</div>
-        <div class="sv num v-green" id="st_in">—</div>
-      </div>
-      <div class="stat">
-        <div class="sl"><svg class="ic" aria-hidden="true"><use href="#ic-trending-down"/></svg> مصروف الشهر</div>
-        <div class="sv num v-red" id="st_out">—</div>
-      </div>
-      <div class="stat">
-        <div class="sl"><svg class="ic" aria-hidden="true"><use href="#ic-wallet"/></svg> صافي الشهر</div>
-        <div class="sv num" id="st_net">—</div>
-      </div>
-    </div>
-
-    <div class="log-list" id="lg_list"></div>
-
-    <div class="actions">
-      <button class="btn btn-pri" onclick="copyReport()"><svg class="ic" aria-hidden="true"><use href="#ic-copy"/></svg> نسخ التقرير للمحاسبة</button>
-      <button class="btn btn-danger" onclick="wipeLog()"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg> مسح السجل</button>
-    </div>
-
-    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> التسجيلات محفوظة داخل متصفح هذا الجهاز فقط — لو فتحت من جهاز
-    آخر هتلاقيه فاضي. أول ما تيجي للمحاسب: اضغط «نسخ التقرير» والصقه هنا بضغطة واحدة.</div>
+    <div class="chart-wrap"><svg class="chart" viewBox="0 0 680 232" role="img" aria-label="مصروف آخر تسعة شهور" preserveAspectRatio="xMidYMid meet"><line x1="10" y1="98.2" x2="670" y2="98.2" stroke="#C9A227" stroke-width="1.5" stroke-dasharray="5 4" opacity=".9"/><text x="668" y="92.2" fill="#8A6F14" font-size="11" text-anchor="start">المتوسط 11,449</text><rect x="27.6" y="183.3" width="38.1" height="14.7" rx="6" fill="#163A5F"/><text x="46.7" y="176.3" fill="#5B6A80" font-size="10" text-anchor="middle">1,681</text><text x="46.7" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">ينا</text><rect x="100.9" y="91.4" width="38.1" height="106.6" rx="6" fill="#163A5F"/><text x="120.0" y="84.4" fill="#5B6A80" font-size="10" text-anchor="middle">12,232</text><text x="120.0" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">فبر</text><rect x="174.3" y="34.0" width="38.1" height="164.0" rx="6" fill="#163A5F"/><text x="193.3" y="27.0" fill="#5B6A80" font-size="10" text-anchor="middle">18,810</text><text x="193.3" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">مار</text><rect x="247.6" y="40.4" width="38.1" height="157.6" rx="6" fill="#163A5F"/><text x="266.7" y="33.4" fill="#5B6A80" font-size="10" text-anchor="middle">18,071</text><text x="266.7" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">أبر</text><rect x="320.9" y="120.5" width="38.1" height="77.5" rx="6" fill="#163A5F"/><text x="340.0" y="113.5" fill="#5B6A80" font-size="10" text-anchor="middle">8,886</text><text x="340.0" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">ماي</text><rect x="394.3" y="104.4" width="38.1" height="93.6" rx="6" fill="#163A5F"/><text x="413.3" y="97.4" fill="#5B6A80" font-size="10" text-anchor="middle">10,741</text><text x="413.3" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">يون</text><rect x="467.6" y="133.2" width="38.1" height="64.8" rx="6" fill="#163A5F"/><text x="486.7" y="126.2" fill="#5B6A80" font-size="10" text-anchor="middle">7,428</text><text x="486.7" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">يول</text><rect x="540.9" y="102.8" width="38.1" height="95.2" rx="6" fill="#163A5F"/><text x="560.0" y="95.8" fill="#5B6A80" font-size="10" text-anchor="middle">10,921</text><text x="560.0" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">أغس</text><rect x="614.3" y="122.9" width="38.1" height="75.1" rx="6" fill="#C9A227"/><text x="633.3" y="115.9" fill="#5B6A80" font-size="10" text-anchor="middle">8,617</text><text x="633.3" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">سبت</text><line x1="10" y1="198" x2="670" y2="198" stroke="#E3E9F2" stroke-width="1"/></svg></div>
+    <div class="alerts"><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>NBE ATM713</b><span class="a-s">04/03 · سحب نقدي (ATM) · أعلى من متوسط التصنيف ×7.1</span></div><span class="a-amt num">8,000 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>NBE ATM666</b><span class="a-s">09/03 · سحب نقدي (ATM) · أعلى من متوسط التصنيف ×2.9</span></div><span class="a-amt num">3,300 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>NBE ATM713</b><span class="a-s">04/03 · سحب نقدي (ATM) · أعلى من متوسط التصنيف ×2.6</span></div><span class="a-amt num">3,000 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>NBE ATM714</b><span class="a-s">01/06 · سحب نقدي (ATM) · أعلى من متوسط التصنيف ×2.6</span></div><span class="a-amt num">3,000 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>NBE ATM714</b><span class="a-s">11/06 · سحب نقدي (ATM) · أعلى من متوسط التصنيف ×2.6</span></div><span class="a-amt num">3,000 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>FAWRY*RUMBLE BYM store</b><span class="a-s">03/02 · مدفوعات وتحويلات · أعلى من متوسط التصنيف ×3.3</span></div><span class="a-amt num">2,000 ج.م</span></div></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> التنبيهات بتحسب من متوسط كل تصنيف: أي مبلغ أعلى بكتير من
+    المعتاد بيتسجل هنا عشان تراجعه في مراجعة الجمعة.</div>
   </section>
 
-  <section>
-    <div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#ic-clipboard-list"/></svg>
+  <section class="sec" id="txns">
+    <div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-table"/></svg></span>
+      <h2>سجل المعاملات</h2>
+      <span class="hint"><b id="tx_count" class="num">0</b> عملية معروضة</span>
+    </div>
+    <div class="tx-tools">
+      <div class="tx-search"><svg class="ic" aria-hidden="true"><use href="#ic-search"/></svg><input type="search" id="tx_q" placeholder="ابحث باسم أو تصنيف..." aria-label="بحث" oninput="renderTx()"></div>
+      <div class="tx-filters" id="tx_f">
+        <button type="button" class="chip-b on" data-k="all" onclick="setTxK('all')">الكل</button>
+        <button type="button" class="chip-b" data-k="debit" onclick="setTxK('debit')">مصروفات</button>
+        <button type="button" class="chip-b" data-k="credit" onclick="setTxK('credit')">وارد</button>
+      </div>
+    </div>
+    <div class="tx-list" id="tx_list"></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-search"/></svg> البحث بيشمل اسم التاجر والتصنيف — كل المعاملات موجودة
+    كمان في ملف CSV من قسم التحميل.</div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-clipboard-list"/></svg></span>
       <h2>خطة 2026-10 — كل خانة بالجنيه</h2>
     </div>
     <div class="tw">
@@ -458,8 +617,8 @@
     سجّل كل سحبة في نفس اليوم من قسم «تسجيل سريع».</div>
   </section>
 
-  <section>
-    <div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#ic-list-checks"/></svg>
+  <section class="sec">
+    <div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-list-checks"/></svg></span>
       <h2>وين راحت الفلوس فعلاً — أكبر التصنيفات</h2>
     </div>
     <div class="tw">
@@ -481,8 +640,8 @@
     </div>
   </section>
 
-  <section>
-    <div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#ic-download"/></svg>
+  <section class="sec" id="dl">
+    <div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-download"/></svg></span>
       <h2>تحميل تقاريري</h2>
     </div>
     <div class="dl"><a href="33151d2496_dashboard_2026.html" download><svg class="ic" aria-hidden="true"><use href="#ic-layout-dashboard"/></svg>لوحة التحكم التفاعلية<span class="sz">4.6 MB</span></a>
@@ -497,7 +656,7 @@
 <footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام · تاريخ البناء 27/09/2026</footer>
 
 <script>
-/* ===== gate: sha256("youss-vault") — local check, nothing sent anywhere ===== */
+/* ===== gate: sha256 of the passcode — local check, nothing sent anywhere ===== */
 var H = "e6b83992cf5af5f70d6506017e96c0fa83f39700611ec687ffa8171b513977bf";
 function sha(s) {
   var c = new TextEncoder().encode(s);
@@ -535,6 +694,7 @@ var CAP = 484.99;
 var LKEY = "mf_log_2026-10";
 var TYPE = "out";
 var EDIT = -1, EDTYPE = "out";
+var OVER = [];
 
 function setType(t) {
   TYPE = t;
@@ -555,6 +715,7 @@ function loadLog() {
 function saveLog(a) {
   try { localStorage.setItem(LKEY, JSON.stringify(a)); } catch (e) {}
 }
+function nf(n) { return Math.round(n).toLocaleString("en-US"); }
 function fmtDate(iso) {
   var p = String(iso).split("-");
   return p[2] + "/" + p[1];
@@ -584,6 +745,120 @@ function totals() {
   }
   return { wk: wk, mIn: mIn, mOut: mOut, mpre: mpre, n: arr.length, arr: arr };
 }
+
+/* ===== hero: remaining this week, safe per day, days left ===== */
+function renderHero() {
+  var T = totals();
+  var left = CAP - T.wk;
+  var pct = CAP > 0 ? (T.wk / CAP) * 100 : 0;
+  document.getElementById("hero_cap").textContent = Math.round(CAP) + " ج.م";
+  document.getElementById("hero_spent").textContent = Math.round(T.wk) + " ج.م";
+  var el = document.getElementById("hero_left");
+  el.textContent = (left < 0 ? "-" : "") + Math.abs(Math.round(left)) + " ج.م";
+  el.className = "hero-v" + (left < 0 ? " over" : "");
+  var idx = (new Date().getDay() + 1) % 7;   /* 0 = Saturday */
+  var daysLeft = 7 - idx;
+  document.getElementById("hero_days").textContent = daysLeft;
+  var day = daysLeft > 0 ? Math.max(0, Math.round(left / daysLeft))
+                         : Math.max(0, Math.round(left));
+  document.getElementById("hero_day").textContent = day + " ج.م";
+  var bar = document.getElementById("hero_bar");
+  bar.style.width = Math.min(100, pct) + "%";
+  bar.className = pct > 100 ? "over" : (pct > 75 ? "warn" : "");
+  document.getElementById("hero_sub").textContent = T.n
+    ? ("سجّلت " + T.n + " عملية هذا الشهر · الأسبوع من السبت")
+    : "سجّل أول عملية تحت عشان يحسبلك فاضلك";
+}
+
+/* ===== envelopes: budget vs bank actual vs manual log ===== */
+var SYM = {
+  "بنزين": "بنزين وصيانة الموتوسيكل", "موبايل": "موبايل وإنترنت",
+  "انترنت": "موبايل وإنترنت", "نت": "موبايل وإنترنت", "فودافون": "موبايل وإنترنت",
+  "مشتريات": "مشتريات ومحلات", "محل": "مشتريات ومحلات",
+  "مطعم": "مطاعم وتوصيل", "مطاعم": "مطاعم وتوصيل", "اكل": "مطاعم وتوصيل",
+  "طلبات": "مطاعم وتوصيل", "توصيل": "مطاعم وتوصيل",
+  "كافيه": "كافيهات وترفيه", "كافيهات": "كافيهات وترفيه", "قهوة": "كافيهات وترفيه",
+  "بقالة": "بقالة وسوبر ماركت", "سوبر": "بقالة وسوبر ماركت", "سوق": "بقالة وسوبر ماركت",
+  "صحة": "صحة وصيدليات", "صيدلية": "صحة وصيدليات", "دواء": "صحة وصيدليات",
+  "تسوق": "تسوق أونلاين", "هدوم": "تسوق أونلاين", "ملابس": "تسوق أونلاين",
+  "اشتراك": "اشتراكات ومحتوى", "اشتراكات": "اشتراكات ومحتوى",
+  "حوالة": "تحويلات ومدفوعات (أصدقاء)", "تحويل": "تحويلات ومدفوعات (أصدقاء)",
+  "طوارئ": "طوارئ غير متوقع (كل شهر)",
+  "ادخار": "ادخار وطوارئ (وزّعه قبل أي صرف)", "صندوق": "ادخار وطوارئ (وزّعه قبل أي صرف)",
+  "سحب": "سحب نقدي - مصروف يومي مسجّل", "كاش": "سحب نقدي - مصروف يومي مسجّل",
+  "سحب نقدي": "سحب نقدي - مصروف يومي مسجّل"
+};
+function envToks(s) {
+  var raw = String(s).replace(/[^\u0621-\u064AA-Za-z0-9]+/g, " ").trim();
+  if (!raw) return [];
+  return raw.split(/\s+/).map(function (t) { return t.replace(/^و/, ""); })
+            .filter(function (t) { return t.length > 1; });
+}
+function matchEnv(note, key) {
+  if (!note) return false;
+  var n = String(note).trim();
+  if (SYM[n] && SYM[n] === key) return true;
+  if (SYM[n]) return false;
+  var a = envToks(n), b = envToks(key), i, j;
+  for (i = 0; i < a.length; i++) if (b.indexOf(a[i]) >= 0) return true;
+  for (i = 0; i < a.length; i++)
+    for (j = 0; j < b.length; j++) {
+      if (a[i].length >= 4 && b[j].indexOf(a[i]) >= 0) return true;
+      if (b[j].length >= 4 && a[i].indexOf(b[j]) >= 0) return true;
+    }
+  return false;
+}
+function renderEnvelopes() {
+  var arr = loadLog();
+  var envs = document.getElementById("env_list").querySelectorAll(".env[data-k]");
+  var em = {}, i, j;
+  for (j = 0; j < arr.length; j++) {
+    em[j] = null;
+    if (arr[j].t !== "out") continue;
+    for (i = 0; i < envs.length; i++) {
+      var k = envs[i].getAttribute("data-k");
+      if (matchEnv(arr[j].n, k)) { em[j] = k; break; }
+    }
+  }
+  OVER = [];
+  for (i = 0; i < envs.length; i++) {
+    var box = envs[i], key = box.getAttribute("data-k");
+    var bank = parseFloat(box.getAttribute("data-bank")) || 0;
+    var b = parseFloat(box.getAttribute("data-b")) || 0;
+    var man = 0;
+    for (j = 0; j < arr.length; j++)
+      if (arr[j].t === "out" && em[j] === key) man += arr[j].a;
+    var done = bank + man;
+    var pct = b > 0 ? (done / b) * 100 : 0;
+    box.querySelector(".env-done").textContent = nf(done);
+    var bar = box.querySelector(".bar i");
+    bar.style.width = Math.min(100, pct) + "%";
+    bar.className = pct > 100 ? "over" : (pct > 75 ? "warn" : "");
+    var leftEl = box.querySelector(".env-left");
+    if (done > b) {
+      leftEl.textContent = "تجاوز " + nf(done - b) + " ج.م";
+      leftEl.className = "env-left v-red";
+      OVER.push(key + ": تجاوز " + nf(done - b) + " ج.م");
+    } else {
+      leftEl.textContent = "متبقي " + nf(b - done) + " ج.م";
+      leftEl.className = "env-left" + (pct > 75 ? " v-amber" : "");
+    }
+    box.querySelector(".env-src").textContent =
+      "بنك " + nf(bank) + " · يدوي " + nf(man) +
+      " · أسبوع " + nf(b / 4.33);
+  }
+  var loose = 0;
+  for (j = 0; j < arr.length; j++)
+    if (arr[j].t === "out" && !em[j]) loose += arr[j].a;
+  var lrow = document.getElementById("env_loose");
+  if (loose > 0) {
+    lrow.style.display = "";
+    document.getElementById("env_loose_a").textContent = nf(loose) + " ج.م";
+  } else {
+    lrow.style.display = "none";
+  }
+}
+
 function renderLog() {
   var T = totals();
 
@@ -599,6 +874,9 @@ function renderLog() {
   var netEl = document.getElementById("st_net");
   netEl.textContent = (net > 0 ? "+" : "") + net + " ج.م";
   netEl.className = "sv num " + (net >= 0 ? "v-green" : "v-red");
+
+  renderHero();
+  renderEnvelopes();
 
   var box = document.getElementById("lg_list");
   if (!T.n) {
@@ -653,6 +931,11 @@ function renderLog() {
       '</div>';
   }
   box.innerHTML = rows;
+}
+function quickNote(v) {
+  var f = document.getElementById("lg_n");
+  f.value = v;
+  f.focus();
 }
 function addEntry() {
   var a = parseInt(document.getElementById("lg_a").value, 10);
@@ -743,7 +1026,9 @@ function copyReport() {
          " (المتبقي " + Math.round(CAP - T.wk) + ")\n" +
          "الشهر: دخل " + Math.round(T.mIn) + " | مصروف " + Math.round(T.mOut) +
          " | الصافي " + (T.mIn - T.mOut > 0 ? "+" : "") +
-         Math.round(T.mIn - T.mOut) + " ج.م";
+         Math.round(T.mIn - T.mOut) + " ج.م\n\n" +
+         "الأظرف المتجاوزة:\n" +
+         (OVER.length ? OVER.join("\n") : "لا يوجد — كل الأظرف في حدودها");
   function manualCopy(t) {
     var ta = document.createElement("textarea");
     ta.value = t;
@@ -773,16 +1058,68 @@ function copyReport() {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     try {
       navigator.clipboard.writeText(txt).then(finishCopy, fallbackCopy);
-      setTimeout(fallbackCopy, 1500);   // clipboard APIs may hang without user gesture
+      setTimeout(fallbackCopy, 1500);   /* clipboard APIs may hang without user gesture */
     } catch (e) { fallbackCopy(); }
   } else {
     manualCopy(txt);
   }
 }
+
+/* ===== transactions explorer ===== */
+var TX = [{"d": "2026-09-19", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 20.0}, {"d": "2026-09-14", "k": "credit", "n": "ESSAM MOHAMED TAHA MAHROUS IBRAHIM", "c": "وارد", "a": 40.0}, {"d": "2026-09-14", "k": "credit", "n": "نجلاء فتحى محمد ايوب", "c": "وارد", "a": 500.0}, {"d": "2026-09-14", "k": "debit", "n": "NBE ATM020", "c": "سحب نقدي (ATM)", "a": 500.0}, {"d": "2026-09-14", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 43.0}, {"d": "2026-09-11", "k": "debit", "n": "WATANIYA ABOU ELDARG SUE", "c": "بقالة وسوبر ماركت", "a": 720.0}, {"d": "2026-09-11", "k": "debit", "n": "FAWRY*WINK DOLPHIN S", "c": "مدفوعات وتحويلات", "a": 100.0}, {"d": "2026-09-10", "k": "debit", "n": "BDC ELHARAM C", "c": "مشتريات ومحلات", "a": 1000.0}, {"d": "2026-09-10", "k": "debit", "n": "FAWRY*SAHB ALSAADH", "c": "مدفوعات وتحويلات", "a": 200.0}, {"d": "2026-09-10", "k": "debit", "n": "Market Khier wa Baraka 52", "c": "بقالة وسوبر ماركت", "a": 135.0}, {"d": "2026-09-09", "k": "debit", "n": "CHILL OUT DAR ELSALAM", "c": "كافيهات وترفيه", "a": 184.0}, {"d": "2026-09-07", "k": "credit", "n": "IBRAHIM SAEED ABD ELAZIZ ABD ELNAGY", "c": "وارد", "a": 30.0}, {"d": "2026-09-06", "k": "debit", "n": "CHILL OUT DAR ELSALAM", "c": "كافيهات وترفيه", "a": 232.0}, {"d": "2026-09-06", "k": "debit", "n": "CAIROXXX CAI", "c": "أخرى (غير مصنف)", "a": 616.0}, {"d": "2026-09-05", "k": "debit", "n": "BDC ELHARAM C", "c": "مشتريات ومحلات", "a": 2000.0}, {"d": "2026-09-03", "k": "debit", "n": "BDC HARAM H", "c": "مشتريات ومحلات", "a": 100.0}, {"d": "2026-09-03", "k": "debit", "n": "FAWRY*SAHB ALSAADH", "c": "مدفوعات وتحويلات", "a": 150.0}, {"d": "2026-09-03", "k": "debit", "n": "BDC ELHARAM C", "c": "مشتريات ومحلات", "a": 200.0}, {"d": "2026-09-03", "k": "debit", "n": "BDC ELHARAM C", "c": "مشتريات ومحلات", "a": 200.0}, {"d": "2026-09-02", "k": "debit", "n": "NBE ATM020", "c": "سحب نقدي (ATM)", "a": 50.0}, {"d": "2026-09-02", "k": "debit", "n": "VODAFONE EGYPT Cai", "c": "موبايل وإنترنت", "a": 164.29}, {"d": "2026-09-01", "k": "credit", "n": "يوسف نبيل نصيف رزق", "c": "وارد", "a": 8000.0}, {"d": "2026-09-01", "k": "debit", "n": "talabat.com PostPaid cai", "c": "مطاعم وتوصيل", "a": 362.99}, {"d": "2026-09-01", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 274.99}, {"d": "2026-09-01", "k": "debit", "n": "OLA ENERGY RING RD GI", "c": "بنزين ووقود", "a": 265.0}, {"d": "2026-09-01", "k": "debit", "n": "BDC HARAM H", "c": "مشتريات ومحلات", "a": 1100.0}, {"d": "2026-08-31", "k": "credit", "n": "كريم جميل جوهرى عبدالفتاح الجوهرى", "c": "وارد", "a": 70.0}, {"d": "2026-08-25", "k": "credit", "n": "يوسف نبيل نصيف رزق", "c": "وارد", "a": 1000.0}, {"d": "2026-08-25", "k": "debit", "n": "KFH-Egypt CAI", "c": "مدفوعات وتحويلات", "a": 1000.0}, {"d": "2026-08-23", "k": "debit", "n": "AWBE CAI", "c": "مشتريات ومحلات", "a": 60.0}, {"d": "2026-08-20", "k": "debit", "n": "NBE ATM020", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-08-20", "k": "debit", "n": "HDB-ATM4807", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-08-20", "k": "debit", "n": "HDB-ATM4807", "c": "سحب نقدي (ATM)", "a": 100.0}, {"d": "2026-08-18", "k": "debit", "n": "CIB-OLA Diplomat N", "c": "مدفوعات وتحويلات", "a": 500.0}, {"d": "2026-08-18", "k": "credit", "n": "ESSAM MOHAMED TAHA MAHROUS IBRAHIM", "c": "وارد", "a": 400.0}, {"d": "2026-08-18", "k": "debit", "n": "VODAFONE EGYPT Cai", "c": "موبايل وإنترنت", "a": 164.29}, {"d": "2026-08-16", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 395.74}, {"d": "2026-08-12", "k": "debit", "n": "GEIDEAE*Animalia Ne", "c": "مشتريات ومحلات", "a": 43.0}, {"d": "2026-08-12", "k": "debit", "n": "FAWRY*THE STAR SUPER", "c": "بقالة وسوبر ماركت", "a": 20.0}, {"d": "2026-08-12", "k": "debit", "n": "BM HUB OLA DEBOMAT 2TH C", "c": "مشتريات ومحلات", "a": 1500.0}, {"d": "2026-08-12", "k": "debit", "n": "Orange - Home InternetNIL", "c": "موبايل وإنترنت", "a": 143.0}, {"d": "2026-08-12", "k": "debit", "n": "Orange - Home InternetNIL", "c": "موبايل وإنترنت", "a": 43.0}, {"d": "2026-08-11", "k": "debit", "n": "NBE ATM435", "c": "سحب نقدي (ATM)", "a": 500.0}, {"d": "2026-08-09", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 500.98}, {"d": "2026-08-09", "k": "credit", "n": "ESSAM MOHAMED TAHA MAHROUS IBRAHIM", "c": "وارد", "a": 250.0}, {"d": "2026-08-09", "k": "debit", "n": "OLA ENERGY RING RD GI", "c": "بنزين ووقود", "a": 310.0}, {"d": "2026-08-07", "k": "debit", "n": "BANK NXT ATM ATM", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-08-06", "k": "debit", "n": "FAWRY*ROMIO STORE MO", "c": "مدفوعات وتحويلات", "a": 250.0}, {"d": "2026-08-06", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 286.0}, {"d": "2026-08-05", "k": "credit", "n": "JANA AHMED", "c": "وارد", "a": 50.0}, {"d": "2026-08-05", "k": "debit", "n": "FAWRY*ALQRYTY", "c": "مدفوعات وتحويلات", "a": 440.0}, {"d": "2026-08-04", "k": "debit", "n": "OPAY_PF*Gamety Ca", "c": "مدفوعات وتحويلات", "a": 60.0}, {"d": "2026-08-04", "k": "debit", "n": "QNBS-0838 GIZ", "c": "مدفوعات وتحويلات", "a": 500.0}, {"d": "2026-08-04", "k": "debit", "n": "FAWRY*ALQRYTY", "c": "مدفوعات وتحويلات", "a": 610.0}, {"d": "2026-08-03", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 181.19}, {"d": "2026-08-02", "k": "debit", "n": "BDC ELHARAM C", "c": "مشتريات ومحلات", "a": 1000.0}, {"d": "2026-08-02", "k": "debit", "n": "VODAFONE EGYPT Cai", "c": "موبايل وإنترنت", "a": 164.29}, {"d": "2026-08-02", "k": "debit", "n": "BDC ELHARAM C", "c": "مشتريات ومحلات", "a": 400.0}, {"d": "2026-08-01", "k": "debit", "n": "U TURN GI", "c": "أخرى (غير مصنف)", "a": 1150.0}, {"d": "2026-07-27", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 80.0}, {"d": "2026-07-26", "k": "credit", "n": "KARIM GAMIL GOHARI ABDELFATAH EL GOHRI", "c": "وارد", "a": 200.0}, {"d": "2026-07-26", "k": "debit", "n": "NBE ATM435", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-07-25", "k": "debit", "n": "NBE ATM714", "c": "سحب نقدي (ATM)", "a": 100.0}, {"d": "2026-07-23", "k": "debit", "n": "VODAFONE EGYPT Cai", "c": "موبايل وإنترنت", "a": 164.29}, {"d": "2026-07-22", "k": "debit", "n": "EC H AL AHRAM TRF", "c": "اشتراكات ومحتوى", "a": 348.68}, {"d": "2026-07-21", "k": "debit", "n": "Uber Dow", "c": "مطاعم وتوصيل", "a": 5.0}, {"d": "2026-07-21", "k": "debit", "n": "Uber Dow", "c": "مطاعم وتوصيل", "a": 159.97}, {"d": "2026-07-20", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 127.64}, {"d": "2026-07-16", "k": "debit", "n": "TOTAL TERSA FUEL 510515", "c": "بنزين ووقود", "a": 475.0}, {"d": "2026-07-13", "k": "credit", "n": "MENNALLAH WAEL", "c": "وارد", "a": 395.0}, {"d": "2026-07-13", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 625.34}, {"d": "2026-07-13", "k": "credit", "n": "MENNATALLAH RAFIK MOHAMED GAAFAR", "c": "وارد", "a": 160.0}, {"d": "2026-07-13", "k": "credit", "n": "ESSAM MOHAMED TAHA MAHROUS IBRAHIM", "c": "وارد", "a": 170.0}, {"d": "2026-07-09", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 143.0}, {"d": "2026-07-09", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 143.0}, {"d": "2026-07-07", "k": "debit", "n": "AMAZON Cai", "c": "تسوق أونلاين", "a": 813.99}, {"d": "2026-07-07", "k": "debit", "n": "NBE ATM713", "c": "سحب نقدي (ATM)", "a": 2000.0}, {"d": "2026-07-06", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 541.98}, {"d": "2026-07-06", "k": "credit", "n": "KARIM GAMIL GOHARI ABDELFATAH EL GOHRI", "c": "وارد", "a": 250.0}, {"d": "2026-07-05", "k": "debit", "n": "NBE ATM977", "c": "سحب نقدي (ATM)", "a": 1000.0}];
+var TXK = "all";
+function setTxK(k) {
+  TXK = k;
+  var btns = document.querySelectorAll("#tx_f .chip-b");
+  for (var i = 0; i < btns.length; i++)
+    btns[i].classList.toggle("on", btns[i].getAttribute("data-k") === k);
+  renderTx();
+}
+function renderTx() {
+  var qEl = document.getElementById("tx_q");
+  var q = ((qEl && qEl.value) || "").trim().toLowerCase();
+  var out = "", n = 0;
+  for (var i = 0; i < TX.length && n < 80; i++) {
+    var t = TX[i];
+    if (TXK !== "all" && t.k !== TXK) continue;
+    if (q && (String(t.n) + " " + String(t.c)).toLowerCase().indexOf(q) < 0) continue;
+    n++;
+    out += '<div class="tx-row">' +
+      '<span class="tx-d num">' + fmtDate(t.d) + '</span>' +
+      '<div class="tx-m"><b>' + escj(t.n) + '</b>' +
+      '<span class="tx-c">' + escj(t.c) + '</span></div>' +
+      '<span class="tx-a ' + (t.k === "credit" ? "v-green" : "") + '">' +
+      (t.k === "credit" ? "+" : "-") + Math.round(t.a) + ' ج.م</span></div>';
+  }
+  document.getElementById("tx_list").innerHTML =
+    out || '<div class="empty">لا توجد نتائج مطابقة</div>';
+  document.getElementById("tx_count").textContent = n;
+}
+
+/* ===== bottom tab bar scroll-spy ===== */
+(function tabSpy() {
+  if (!("IntersectionObserver" in window)) return;
+  var ids = ["hero", "log", "envelopes", "market", "insights"];
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var links = document.querySelectorAll(".tab");
+      for (var i = 0; i < links.length; i++)
+        links[i].classList.toggle("on",
+          links[i].getAttribute("href") === "#" + e.target.id);
+    });
+  }, { rootMargin: "-35% 0px -55% 0px" });
+  ids.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) io.observe(el);
+  });
+})();
+
 (function initLog() {
   var di = document.getElementById("lg_d");
   if (di && !di.value) di.value = localISO();
   renderLog();
+  renderTx();
 })();
 </script>
 </body>
