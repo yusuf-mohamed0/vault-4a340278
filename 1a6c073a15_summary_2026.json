@@ -1,26 +1,26 @@
 {
-  "period": "2026-01-28 .. 2026-09-19",
-  "days": 235,
-  "n_lines": 256,
-  "n_otp": 54,
+  "period": "2026-01-28 .. 2026-10-01",
+  "days": 247,
+  "n_lines": 268,
+  "n_otp": 57,
   "n_failed": 2,
-  "n_txns": 199,
-  "n_debits": 172,
-  "n_credits": 25,
+  "n_txns": 208,
+  "n_debits": 178,
+  "n_credits": 28,
   "n_refunds": 2,
-  "total_debits": 97386.53,
+  "total_debits": 101381.53,
   "total_refunds": 9000.0,
-  "net_out": 88386.53,
+  "net_out": 92381.53,
   "cash_out": 30500.0,
-  "card_out": 57886.53,
-  "total_credits": 92245.0,
-  "net_flow": 3858.47,
+  "card_out": 61881.53,
+  "total_credits": 111725.0,
+  "net_flow": 19343.47,
   "opening": 743.94,
-  "closing_calc": 4602.41,
-  "closing_reported": 0.79,
-  "drift": 4601.62,
-  "avg_daily_out": 376.11,
-  "avg_monthly_out": 11448.88,
+  "closing_calc": 20087.41,
+  "closing_reported": 15475.79,
+  "drift": 4611.62,
+  "avg_daily_out": 374.01,
+  "avg_monthly_out": 11385.0,
   "monthly": {
     "2026-01": {
       "debit": 1681.29,
@@ -71,10 +71,16 @@
       "n": 33
     },
     "2026-09": {
-      "debit": 8617.27,
-      "credit": 8570.0,
+      "debit": 10612.27,
+      "credit": 11050.0,
       "refund": 0.0,
-      "n": 26
+      "n": 33
+    },
+    "2026-10": {
+      "debit": 2000.0,
+      "credit": 17000.0,
+      "refund": 0.0,
+      "n": 2
     }
   },
   "categories": {
@@ -83,16 +89,16 @@
       "n": 33
     },
     "مشتريات ومحلات": {
-      "amount": 20477.9,
-      "n": 22
+      "amount": 22477.9,
+      "n": 23
     },
     "مدفوعات وتحويلات": {
-      "amount": 13020.0,
-      "n": 22
+      "amount": 14520.0,
+      "n": 24
     },
     "موبايل وإنترنت": {
-      "amount": 8470.62,
-      "n": 46
+      "amount": 8739.62,
+      "n": 48
     },
     "مطاعم وتوصيل": {
       "amount": 5750.55,
@@ -119,8 +125,8 @@
       "n": 4
     },
     "كافيهات وترفيه": {
-      "amount": 571.0,
-      "n": 3
+      "amount": 797.0,
+      "n": 4
     },
     "اشتراكات ومحتوى": {
       "amount": 348.68,
@@ -132,13 +138,13 @@
       "amount": 7600.0,
       "n": 5
     },
+    "Vodafone Top Up APP Sma": {
+      "amount": 5914.0,
+      "n": 27
+    },
     "BDC ELHARAM C": {
       "amount": 5800.0,
       "n": 7
-    },
-    "Vodafone Top Up APP Sma": {
-      "amount": 5645.0,
-      "n": 25
     },
     "NBE ATM713": {
       "amount": 5500.0,
@@ -188,6 +194,10 @@
       "amount": 2000.0,
       "n": 1
     },
+    "BDC ELSTODYOHAT ALANTA 6": {
+      "amount": 2000.0,
+      "n": 1
+    },
     "AL NASSER GI": {
       "amount": 1985.0,
       "n": 1
@@ -223,20 +233,16 @@
     "U TURN GI": {
       "amount": 1150.0,
       "n": 1
-    },
-    "EL EZABY HEL": {
-      "amount": 1109.4,
-      "n": 1
     }
   },
   "senders": {
     "يوسف نبيل نصيف رزق": {
-      "amount": 89000.0,
-      "n": 9
+      "amount": 108000.0,
+      "n": 11
     },
     "ESSAM MOHAMED TAHA MAHROUS IBRAHIM": {
-      "amount": 960.0,
-      "n": 5
+      "amount": 1440.0,
+      "n": 6
     },
     "نجلاء فتحى محمد ايوب": {
       "amount": 500.0,
@@ -1468,6 +1474,48 @@
       4602.41,
       0.79,
       4601.62
+    ],
+    [
+      "2026-09-26",
+      "CIB-FAWRY PLUS FAISAL G",
+      5602.41,
+      995.79,
+      4606.62
+    ],
+    [
+      "2026-09-26",
+      "FAWRY*DOCTOR BIKE AU",
+      5102.41,
+      495.79,
+      4606.62
+    ],
+    [
+      "2026-09-28",
+      "Vodafone Top Up APP Sma",
+      4959.41,
+      352.79,
+      4606.62
+    ],
+    [
+      "2026-09-28",
+      "CHILL OUT DAR ELSALAM",
+      4733.41,
+      126.79,
+      4606.62
+    ],
+    [
+      "2026-09-28",
+      "Vodafone Top Up APP Sma",
+      4607.41,
+      0.79,
+      4606.62
+    ],
+    [
+      "2026-10-01",
+      "BDC ELSTODYOHAT ALANTA 6",
+      20087.41,
+      15475.79,
+      4611.62
     ]
   ]
 }
