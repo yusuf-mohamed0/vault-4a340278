@@ -9,7 +9,10 @@
     "fill_interval_days": [10, 14],
     "service_cost": 350,
     "service_interval_months": [1, 2],
-    "oil_per_1000km": 620
+    "oil_per_1000km": 620,
+    "mechanic_fee": 50,
+    "mechanic_fee_note": "user fact 01/10/2026 - commission taken by mechanic on the 400 EGP job",
+    "km_per_fill": null
   },
   "items": [
     {"icon": "fuel", "label": "بنزين 92 (رسمي)", "value": "22.25 ج.م / لتر", "src": "محطات الوقود — 25/09/2026", "conf": "عالية"},
