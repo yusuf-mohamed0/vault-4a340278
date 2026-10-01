@@ -322,9 +322,10 @@ text-overflow:ellipsis}
 .li-amt{font-weight:800; font-size:13px; font-variant-numeric:tabular-nums;
 white-space:nowrap}
 .del{width:44px; height:44px; border-radius:var(--r-s); border:0;
-background:transparent; display:grid; place-items:center;
-color:var(--label-3); flex:none; padding:0}
+background:transparent; display:inline-grid; place-items:center;
+vertical-align:middle; color:var(--label-3); flex:none; padding:0}
 .del.ed{color:var(--tint)}
+td.rw .del{margin-inline-start:2px}
 .del .ic{width:16px; height:16px}
 .log-row.editing{background:rgba(0,0,0,.03); flex-wrap:wrap; align-items:flex-start}
 .ed-f{display:flex; gap:7px; flex:1; min-width:0; flex-wrap:wrap; width:100%}
@@ -734,7 +735,7 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
 <a href="1a6c073a15_summary_2026.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>الأرقام المجمعة (JSON)<span class="sz">24 KB</span></a>
 <a href="7215c039a2_plan_2026-10.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>خطة الشهر (إكسل)<span class="sz">10 KB</span></a>
 <a href="94044d7e24_market_watch.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>أسعار السوق والأخبار (JSON)<span class="sz">5 KB</span></a></div>
-    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-01 22:26</b></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-01 22:36</b></div>
     <div class="note warn" id="stale_hint" style="display:none"><svg class="ic" aria-hidden="true"><use href="#ic-clock"/></svg>
       اللوحة دي متبنيّة على شهر <b>2026-10</b> — بس تاريخ النهارده <b class="stale-m num"></b>.
       لو الشهر اتغيّر شغّل <b>plan_month</b> عشان الخطة والتنبيهات تتحدّث.</div>
@@ -742,7 +743,7 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
 
 </main>
 <footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام
-  <span>آخر توليد <b id="gentime" class="num">2026-10-01 22:26</b></span>
+  <span>آخر توليد <b id="gentime" class="num">2026-10-01 22:36</b></span>
   <span>تاريخ البناء 01/10/2026</span></footer>
 
 <button class="fab" id="fab" aria-label="إضافة قيد" onclick="jumpAdd()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button>
@@ -1987,7 +1988,7 @@ function renderTx() {
   /* stale hint: build older than 6h, or calendar moved past the built month */
   var hint = document.getElementById("stale_hint");
   if (hint) {
-    var gt = Date.parse("2026-10-01 22:26".replace(" ", "T") + ":00");
+    var gt = Date.parse("2026-10-01 22:36".replace(" ", "T") + ":00");
     var old = isFinite(gt) && (Date.now() - gt > 6 * 3600 * 1000);
     var moved = localISO().slice(0, 7) > "2026-10";
     if (old || moved) {
