@@ -206,7 +206,16 @@ transition:background .25s var(--ease), color .25s var(--ease), box-shadow .25s 
 box-shadow:0 1px 3px rgba(0,0,0,.12); font-weight:700}
 .seg-btn.t-in.on{color:#1B8F3E}
 .seg-btn.t-tr.on{color:var(--tint)}
-label.fl{display:block; font-size:13px; font-weight:600; color:var(--label-2); margin-bottom:6px}
+label.fl{display:block; font-size:12px; font-weight:600; color:var(--label-3);
+ letter-spacing:.01em; margin-bottom:6px}
+/* the quick-log block reads as one grouped card, not a stack of loose rows */
+#log > .seg{margin-top:0}
+#log > .f-row,#log > .cat-pick,#log > .acc-grid,#log > details.det{margin-top:11px}
+#log .cat-pick{margin-top:11px}
+.acc-cell select{height:48px; padding:11px 12px; border:0; border-radius:var(--r-s);
+ font:inherit; font-size:15px; width:100%; background:var(--surface-2);
+ color:var(--label); min-width:0}
+.acc-cell select:focus-visible{outline:2px solid var(--tint); outline-offset:1px}
 .f-row{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:9px}
 .f-row input,.f-row select,.ed-f input,.ed-f select,.sheet-b input,.sheet-b select{
 height:48px; padding:11px 12px; border:0; border-radius:var(--r-s);
@@ -690,11 +699,11 @@ th,td{padding:9px 8px}
   </section>
 
   <!-- 2. LOG -->
-  <div class="lt"><h1>تسجيل</h1><p>ضغطتين: مبلغ + تصنيف</p></div>
+  <div class="lt"><h1>تسجيل</h1></div>
   <section class="sec" id="log">
     <div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-square-pen"/></svg></span>
       <h2>تسجيل سريع</h2>
-      <span class="hint">ضغطتين: مبلغ + تصنيف</span>
+      <span class="hint">مبلغ + تصنيف</span>
     </div>
     <div class="seg">
       <button type="button" class="seg-btn t-out on" id="seg_out" onclick="setType('out')"><svg class="ic" aria-hidden="true"><use href="#ic-trending-down"/></svg> صادر</button>
@@ -719,7 +728,7 @@ th,td{padding:9px 8px}
       </div>
     </div>
     <div class="f-row" style="margin-top:9px">
-      <input class="full" type="text" id="lg_n" placeholder="ملاحظة قصيرة (اختياري)" maxlength="40" aria-label="ملاحظة" onkeydown="if(event.key=='Enter')addEntry();">
+      <input class="full" type="text" id="lg_n" placeholder="مين اتعاملت معاه؟ (اختياري)" maxlength="40" aria-label="جهة" onkeydown="if(event.key=='Enter')addEntry();">
     </div>
     <details class="det" id="lg_det">
       <summary><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> تفاصيل إضافية (اختياري)</summary>
@@ -887,7 +896,7 @@ th,td{padding:9px 8px}
 <a href="1a6c073a15_summary_2026.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>الأرقام المجمعة (JSON)<span class="sz">24 KB</span></a>
 <a href="7215c039a2_plan_2026-10.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>خطة الشهر (إكسل)<span class="sz">10 KB</span></a>
 <a href="94044d7e24_market_watch.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>أسعار السوق والأخبار (JSON)<span class="sz">5 KB</span></a></div>
-    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 21:26</b></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 21:30</b></div>
     <div class="note warn" id="stale_hint" style="display:none"><svg class="ic" aria-hidden="true"><use href="#ic-clock"/></svg>
       اللوحة دي متبنيّة على شهر <b>2026-10</b> — بس تاريخ النهارده <b class="stale-m num"></b>.
       لو الشهر اتغيّر شغّل <b>plan_month</b> عشان الخطة والتنبيهات تتحدّث.</div>
@@ -895,7 +904,7 @@ th,td{padding:9px 8px}
 
 </main>
 <footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام
-  <span>آخر توليد <b id="gentime" class="num">2026-10-02 21:26</b></span>
+  <span>آخر توليد <b id="gentime" class="num">2026-10-02 21:30</b></span>
   <span>تاريخ البناء 02/10/2026</span></footer>
 
 <button class="fab" id="fab" aria-label="إضافة قيد" onclick="jumpAdd()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button>
@@ -2484,7 +2493,7 @@ function peekOnce(kind, n) {
   /* stale hint: build older than 6h, or calendar moved past the built month */
   var hint = document.getElementById("stale_hint");
   if (hint) {
-    var gt = Date.parse("2026-10-02 21:26".replace(" ", "T") + ":00");
+    var gt = Date.parse("2026-10-02 21:30".replace(" ", "T") + ":00");
     var old = isFinite(gt) && (Date.now() - gt > 6 * 3600 * 1000);
     var moved = localISO().slice(0, 7) > "2026-10";
     if (old || moved) {
