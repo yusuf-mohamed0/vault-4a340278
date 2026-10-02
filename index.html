@@ -456,12 +456,10 @@ box-shadow:var(--sh-l); backdrop-filter:saturate(180%) blur(14px);
 .assistant > *{pointer-events:auto}
 .as-av{width:52px; height:52px; border-radius:50%; border:.5px solid var(--sep);
  background:linear-gradient(145deg,#0E6BA8,#0E2A47); color:#fff;
- display:grid; place-items:center; cursor:pointer; padding:0; overflow:hidden;
+ display:grid; place-items:center; cursor:pointer; padding:0;
  box-shadow:0 8px 22px rgba(14,42,71,.28); transition:transform .2s var(--ease)}
 .as-av:active{transform:scale(.94)}
 .as-av svg{width:24px; height:24px}
-.as-av img{width:100%; height:100%; object-fit:cover; object-position:50% 24%;
-  display:block}
 /* character peek: slides in from the page edge for a few seconds, then leaves */
 .peek{position:fixed; inset-block-end:278px; left:14px; z-index:44;
   display:flex; align-items:center; gap:10px; pointer-events:none;
@@ -845,7 +843,7 @@ th,td{padding:9px 8px}
 <a href="1a6c073a15_summary_2026.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>الأرقام المجمعة (JSON)<span class="sz">24 KB</span></a>
 <a href="7215c039a2_plan_2026-10.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>خطة الشهر (إكسل)<span class="sz">10 KB</span></a>
 <a href="94044d7e24_market_watch.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>أسعار السوق والأخبار (JSON)<span class="sz">5 KB</span></a></div>
-    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 19:21</b></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 20:37</b></div>
     <div class="note warn" id="stale_hint" style="display:none"><svg class="ic" aria-hidden="true"><use href="#ic-clock"/></svg>
       اللوحة دي متبنيّة على شهر <b>2026-10</b> — بس تاريخ النهارده <b class="stale-m num"></b>.
       لو الشهر اتغيّر شغّل <b>plan_month</b> عشان الخطة والتنبيهات تتحدّث.</div>
@@ -853,7 +851,7 @@ th,td{padding:9px 8px}
 
 </main>
 <footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام
-  <span>آخر توليد <b id="gentime" class="num">2026-10-02 19:21</b></span>
+  <span>آخر توليد <b id="gentime" class="num">2026-10-02 20:37</b></span>
   <span>تاريخ البناء 02/10/2026</span></footer>
 
 <button class="fab" id="fab" aria-label="إضافة قيد" onclick="jumpAdd()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button>
@@ -863,9 +861,7 @@ th,td{padding:9px 8px}
 
 <!-- Lightweight in-app assistant (no Spline, SVG only) -->
 <div class="assistant" id="assistant" role="status" aria-live="polite">
-  <button class="as-av" id="assistantFab" type="button" aria-label="مساعد المالي" onclick="assistantOpen()">
-    <img src="art/avatar-piggy.png" width="128" height="128" alt="" aria-hidden="true">
-  </button>
+  <button class="as-av" id="assistantFab" type="button" aria-label="مساعد المالي" onclick="assistantOpen()"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg></button>
   <div class="as-b" id="assistantBubble" hidden>
     <div class="as-h"><span class="as-ttl">مساعد المالي</span>
       <span class="as-hb">
@@ -2444,7 +2440,7 @@ function peekOnce(kind, n) {
   /* stale hint: build older than 6h, or calendar moved past the built month */
   var hint = document.getElementById("stale_hint");
   if (hint) {
-    var gt = Date.parse("2026-10-02 19:21".replace(" ", "T") + ":00");
+    var gt = Date.parse("2026-10-02 20:37".replace(" ", "T") + ":00");
     var old = isFinite(gt) && (Date.now() - gt > 6 * 3600 * 1000);
     var moved = localISO().slice(0, 7) > "2026-10";
     if (old || moved) {
