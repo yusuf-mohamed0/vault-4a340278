@@ -793,7 +793,7 @@ th,td{padding:9px 8px}
 <a href="1a6c073a15_summary_2026.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>الأرقام المجمعة (JSON)<span class="sz">24 KB</span></a>
 <a href="7215c039a2_plan_2026-10.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>خطة الشهر (إكسل)<span class="sz">10 KB</span></a>
 <a href="94044d7e24_market_watch.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>أسعار السوق والأخبار (JSON)<span class="sz">5 KB</span></a></div>
-    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 15:03</b></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 15:08</b></div>
     <div class="note warn" id="stale_hint" style="display:none"><svg class="ic" aria-hidden="true"><use href="#ic-clock"/></svg>
       اللوحة دي متبنيّة على شهر <b>2026-10</b> — بس تاريخ النهارده <b class="stale-m num"></b>.
       لو الشهر اتغيّر شغّل <b>plan_month</b> عشان الخطة والتنبيهات تتحدّث.</div>
@@ -801,7 +801,7 @@ th,td{padding:9px 8px}
 
 </main>
 <footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام
-  <span>آخر توليد <b id="gentime" class="num">2026-10-02 15:03</b></span>
+  <span>آخر توليد <b id="gentime" class="num">2026-10-02 15:08</b></span>
   <span>تاريخ البناء 02/10/2026</span></footer>
 
 <button class="fab" id="fab" aria-label="إضافة قيد" onclick="jumpAdd()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button>
@@ -2258,7 +2258,7 @@ function renderTx() {
   /* stale hint: build older than 6h, or calendar moved past the built month */
   var hint = document.getElementById("stale_hint");
   if (hint) {
-    var gt = Date.parse("2026-10-02 15:03".replace(" ", "T") + ":00");
+    var gt = Date.parse("2026-10-02 15:08".replace(" ", "T") + ":00");
     var old = isFinite(gt) && (Date.now() - gt > 6 * 3600 * 1000);
     var moved = localISO().slice(0, 7) > "2026-10";
     if (old || moved) {
@@ -2278,7 +2278,119 @@ function renderTx() {
 })();
 
 /* ---------- lightweight in-app assistant (SVG only, no external hosts) ---------- */
-/* Persistent avatar FAB + speech bubble. Reacts to real ledger values (T.wk / CAP / mSav). */
+/* Rule-based buddy: reads REAL ledger numbers, varies its lines every time.
+   No AI, no network. A shuffled bag prevents repeating the same reply twice. */
+var _asBag = [], _asBagKey = "", _asBagLen = 0, _asLast = "";
+function _asPick(key, list) {
+  if (!list || !list.length) return null;
+  if (_asBagKey !== key || !_asBag.length || _asBagLen !== list.length) {
+    var b = [], i;
+    for (i = 0; i < list.length; i++) b.push(i);
+    for (i = b.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1)), tm = b[i]; b[i] = b[j]; b[j] = tm;
+    }
+    _asBag = b; _asBagKey = key; _asBagLen = list.length;
+  }
+  var cand = list[_asBag.pop()];
+  if (cand && list.length > 1 && cand.text === _asLast && _asBag.length) cand = list[_asBag.pop()];
+  if (cand) _asLast = cand.text;
+  return cand || null;
+}
+function _asFmt(t, map) {
+  return String(t).replace(/\{(\w+)\}/g, function (_, k) {
+    return (map[k] != null) ? map[k] : "";
+  });
+}
+function _asLatest() {
+  var arr = loadLog(), best = null;
+  for (var i = 0; i < arr.length; i++)
+    if (!best || String(arr[i].d) > String(best.d)) best = arr[i];
+  return best;
+}
+function _asCat() {
+  var tr = document.querySelector("#cat_tbl tbody tr");
+  if (!tr) return "";
+  var td = tr.querySelector("td");
+  return td ? td.textContent.replace(/\s+/g, " ").trim() : "";
+}
+function _asDaysLeft() {
+  var n = new Date(), end = new Date(n.getFullYear(), n.getMonth() + 1, 0);
+  var d = Math.round((end - n) / 86400000);
+  return d < 0 ? 0 : d;
+}
+/* build every line that fits the CURRENT state, then let the bag choose one */
+function assistantCandidates() {
+  var T = totals(), h = new Date().getHours();
+  var wk = Math.round(T.wk), cap = Math.round(CAP);
+  var left = Math.round(Math.max(0, CAP - T.wk));
+  var net = Math.round(T.mIn - T.mOut);
+  var days = _asDaysLeft();
+  var cat = _asCat(), latest = _asLatest();
+  var daily = days > 0 ? Math.round(left / days) : left;
+  var M = {
+    greet: h < 12 ? "صباح الفل" : "مساء الخير",
+    wk: wk, cap: cap, left: left, net: net, sav: 3840, days: days,
+    cat: cat, daily: daily,
+    last: latest ? (latest.n || "قيد") : "", lastA: latest ? Math.round(latest.a) : 0
+  };
+  var list = [];
+  function add(key, opts) {
+    var acts;
+    if (key === "over") acts = '<button class="as-a pri" onclick="jumpAdd()">سجّل قيد</button><button class="as-a" onclick="assistantCat()">التصنيفات</button>';
+    else if (key === "save") acts = '<button class="as-a pri" onclick="assistantSave()">التفاصيل</button>';
+    else if (key === "market") acts = '<button class="as-a pri" onclick="assistantMarket()">نبض السوق</button>';
+    else if (key === "cat") acts = '<button class="as-a pri" onclick="assistantCat()">شوف التصنيفات</button>';
+    else acts = '<button class="as-a pri" onclick="jumpAdd()">أضف قيد</button><button class="as-a" onclick="assistantCat()">التصنيفات</button>';
+    for (var i = 0; i < opts.length; i++) list.push({ text: _asFmt(opts[i], M), acts: acts });
+  }
+  if (CAP > 0 && T.wk > CAP) {
+    add("over", [
+      "خد بالك — مصروف الأسبوع {wk} ج.م عدّى السقف ({cap}). باقي الأسبوع هدّي شوية.",
+      "السقف اتكسر: {wk} مقابل {cap} ج.م. خلّي القيود الجاية أساسيات بس.",
+      "صرفت {wk} ج.م من أصل {cap}. حاول توقف سحب الكاش لحد السبت."
+    ]);
+  } else if (CAP > 0 && T.wk > CAP * 0.8) {
+    add("near", [
+      "قربت من السقف — فاضلك {left} ج.م بس لحد آخر الأسبوع.",
+      "مصروفك {wk} ج.م والسقف {cap}. عينك على الفاضي: {left} ج.م."
+    ]);
+  } else if (CAP > 0) {
+    add("ok", [
+      "{greet} — فاضلك {left} ج.م من سقف {cap} الأسبوع ده.",
+      "ماشي في السليم: {wk} من {cap} ج.م، وفاضلك {left} ج.م.",
+      "لو حافظت على {left} ج.م الباقية، الأسبوع هيقفل تمام."
+    ]);
+  }
+  if (CAP > 0 && T.wk <= CAP) {
+    add("days", [
+      "فاضل {days} يوم في الشهر — ميزانيتك اليومية حوالي {daily} ج.م.",
+      "لو قسّمت {left} ج.م على {days} يوم، يبقى {daily} ج.م في اليوم."
+    ]);
+  }
+  if (cat) {
+    add("cat", [
+      "أكبر باب صرف عندك الشهر ده: {cat}. لو قصّيته، هتفرق كتير.",
+      "{cat} واخد أكبر نصيب من مصروفك — بالّي هنا الأول."
+    ]);
+  }
+  if (T.mIn > 0) {
+    add("save", [
+      "صافي الشهر {net} ج.م، وهدف الادخار {sav} ج.م.",
+      "دخلك ناقص مصروفك = {net} ج.م. لو كمّلت كده هتدخّر مبلغ محترم."
+    ]);
+  }
+  if (latest) {
+    add("log", [
+      "آخر قيد: {last} بمبلغ {lastA} ج.م. متابَع تمام.",
+      "سجّلت {last} بـ {lastA} ج.م — والأرقام اتحدّثت على طول."
+    ]);
+  }
+  add("market", [
+    "أسعار السوق بتتحدّث كل سبت — نقرب نبص عليها؟",
+    "فاكرين نبض السوق؟ بنزين ودولار وفراخ كلهم في تبويب السوق."
+  ]);
+  return list;
+}
 function _assistantSay(msg, acts) {
   var m = document.getElementById("assistantText");
   var b = document.getElementById("assistantBubble");
@@ -2288,61 +2400,32 @@ function _assistantSay(msg, acts) {
   if (b) b.hidden = false;
 }
 function assistantOpen() {
-  var b = document.getElementById("assistantBubble");
-  if (b && !b.hidden) { hideAssistant(); return; }
-  var msg = assistantContext();
-  _assistantSay(msg.text, msg.acts);
+  var c = _asPick("click", assistantCandidates());
+  if (c) _assistantSay(c.text, c.acts);
 }
 function hideAssistant() {
   var b = document.getElementById("assistantBubble");
   if (b) b.hidden = true;
 }
-/* build the current best message from live data */
-function assistantContext() {
-  var T = totals();
-  var d = new Date();
-  var acts = "";
-  if (T.wk > CAP && CAP > 0) {
-    acts = '<button class="as-a pri" onclick="jumpAdd()">سجّل قيد</button>' +
-           '<button class="as-a" onclick="assistantCat()">شوف التصنيفات</button>';
-    return { text: "خد بالك — مصروف الأسبوع " + Math.round(T.wk) +
-      " ج.م عدّى السقف (" + Math.round(CAP) + " ج.م). هدّي السرعة باقي الأسبوع.", acts: acts };
-  }
-  if (d.getDay() === 6) {
-    acts = '<button class="as-a pri" onclick="assistantMarket()">نبض السوق</button>';
-    return { text: "النهارده السبت — أسعار السوق بتتحدّث. نبص عليها؟", acts: acts };
-  }
-  if (T.mIn > 0 && T.mIn - T.mOut >= 3840) {
-    acts = '<button class="as-a pri" onclick="assistantSave()">التفاصيل</button>';
-    return { text: "شكل صافي الشهر وصل " + Math.round(T.mIn - T.mOut) +
-      " ج.م — فوق هدف الادخار 3,840. تمام.", acts: acts };
-  }
-  var left = Math.max(0, CAP - T.wk);
-  acts = '<button class="as-a pri" onclick="jumpAdd()">أضف قيد</button>' +
-         '<button class="as-a" onclick="assistantCat()">التصنيفات</button>';
-  return { text: "صباح الفل — فاضلك " + Math.round(left) +
-    " ج.م الأسبوع ده من سقف " + Math.round(CAP) + " ج.م.", acts: acts };
-}
-/* boot trigger: greet once per month, react on later opens */
+/* boot: greet with a fresh varied line every load */
 function checkAssistant() {
-  var T = totals();
-  if (T.wk > CAP && CAP > 0) { assistantOpen(); return; }
-  var seen = null;
-  try { seen = localStorage.getItem("as_greet_" + localISO().slice(0, 7)); } catch (e) {}
-  if (!seen) {
-    var c = assistantContext();
-    _assistantSay(c.text, c.acts);
-    try { localStorage.setItem("as_greet_" + localISO().slice(0, 7), "1"); } catch (e) {}
-  }
+  var c = _asPick("boot", assistantCandidates());
+  if (c) _assistantSay(c.text, c.acts);
 }
 /* action helpers */
 function assistantCat() { hideAssistant(); var s = document.getElementById("insights"); if (s) s.scrollIntoView({ behavior: "smooth" }); }
 function assistantMarket() { hideAssistant(); var s = document.getElementById("market"); if (s) s.scrollIntoView({ behavior: "smooth" }); }
 function assistantSave() { hideAssistant(); var s = document.getElementById("hero"); if (s) s.scrollIntoView({ behavior: "smooth" }); }
-/* entry feedback: bubble says it was counted */
+/* entry feedback: confirms and reports the new remaining, varied each time */
 function assistantAfterEntry() {
-  _assistantSay("اتحسبلك فورًا. فاضلك " +
-    Math.round(Math.max(0, CAP - totals().wk)) + " ج.م الأسبوع ده.",
+  var T = totals();
+  var left = Math.round(Math.max(0, CAP - T.wk)), wk = Math.round(T.wk);
+  var lines = [
+    "اتحسبلك فورًا. فاضلك " + left + " ج.م الأسبوع ده.",
+    "القيد اتسجل. مصروف الأسبوع بقى " + wk + " ج.م، والفاضي " + left + " ج.م.",
+    "تمام — الأرقام اتحدّثت. لسه معاك " + left + " ج.م."
+  ];
+  _assistantSay(lines[Math.floor(Math.random() * lines.length)],
     '<button class="as-a pri" onclick="jumpAdd()">قيد تاني</button>');
 }
 /* -------------------------------------------------------------------------- */
