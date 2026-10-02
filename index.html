@@ -448,6 +448,35 @@ box-shadow:var(--sh-l); backdrop-filter:saturate(180%) blur(14px);
 .sndfab .ic{width:22px; height:22px}
 .sndfab[aria-pressed="false"]{color:var(--red)}
 @media (max-height:560px){ .sndfab{bottom:206px} }
+/* ---------- floating assistant: avatar FAB + speech bubble ---------- */
+.assistant{position:fixed; bottom:212px; inset-inline-end:14px; z-index:47;
+ display:flex; flex-direction:column-reverse; align-items:flex-end; gap:8px;
+ pointer-events:none}
+.assistant > *{pointer-events:auto}
+.as-av{width:52px; height:52px; border-radius:50%; border:.5px solid var(--sep);
+ background:linear-gradient(145deg,#0E6BA8,#0E2A47); color:#fff;
+ display:grid; place-items:center; cursor:pointer; padding:0;
+ box-shadow:0 8px 22px rgba(14,42,71,.28); transition:transform .2s var(--ease)}
+.as-av:active{transform:scale(.94)}
+.as-av svg{width:24px; height:24px}
+.as-b{max-width:250px; background:var(--surface); border:.5px solid var(--sep);
+ border-radius:16px; border-end-end-radius:4px; padding:11px 13px 12px;
+ box-shadow:0 12px 30px rgba(14,42,71,.16); animation:asIn .26s var(--ease)}
+.as-h{display:flex; align-items:center; justify-content:space-between; gap:10px;
+ margin-bottom:5px}
+.as-ttl{font-size:12px; font-weight:800; color:var(--tint); letter-spacing:.2px}
+.as-x{width:22px; height:22px; border:0; background:transparent; color:var(--label-3);
+ font-size:17px; line-height:1; cursor:pointer; border-radius:50%; padding:0}
+.as-x:hover{background:var(--surface-2)}
+.as-m{font-size:13px; line-height:1.55; color:var(--label)}
+.as-acts{display:flex; gap:7px; margin-top:9px; flex-wrap:wrap}
+.as-a{border:.5px solid var(--sep); background:var(--surface-2); color:var(--label);
+ font-family:inherit; font-size:12px; font-weight:700; padding:6px 11px;
+ border-radius:9px; cursor:pointer}
+.as-a.pri{background:var(--tint); border-color:var(--tint); color:#fff}
+@keyframes asIn{from{opacity:0; transform:translateY(7px) scale(.97)} to{opacity:1; transform:none}}
+.locked .assistant{display:none}
+@media (max-height:560px){ .assistant{bottom:266px} }
 body.priv .num:not(.pub), body.priv .a-amt, body.priv .env-a, body.priv .bal,
 body.priv .tx-a, body.priv .li-amt, body.priv .env-left{
 filter:blur(7px); user-select:none; -webkit-user-select:none}
@@ -764,7 +793,7 @@ th,td{padding:9px 8px}
 <a href="1a6c073a15_summary_2026.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>الأرقام المجمعة (JSON)<span class="sz">24 KB</span></a>
 <a href="7215c039a2_plan_2026-10.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>خطة الشهر (إكسل)<span class="sz">10 KB</span></a>
 <a href="94044d7e24_market_watch.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>أسعار السوق والأخبار (JSON)<span class="sz">5 KB</span></a></div>
-    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 14:26</b></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 15:03</b></div>
     <div class="note warn" id="stale_hint" style="display:none"><svg class="ic" aria-hidden="true"><use href="#ic-clock"/></svg>
       اللوحة دي متبنيّة على شهر <b>2026-10</b> — بس تاريخ النهارده <b class="stale-m num"></b>.
       لو الشهر اتغيّر شغّل <b>plan_month</b> عشان الخطة والتنبيهات تتحدّث.</div>
@@ -772,7 +801,7 @@ th,td{padding:9px 8px}
 
 </main>
 <footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام
-  <span>آخر توليد <b id="gentime" class="num">2026-10-02 14:26</b></span>
+  <span>آخر توليد <b id="gentime" class="num">2026-10-02 15:03</b></span>
   <span>تاريخ البناء 02/10/2026</span></footer>
 
 <button class="fab" id="fab" aria-label="إضافة قيد" onclick="jumpAdd()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button>
@@ -781,12 +810,15 @@ th,td{padding:9px 8px}
       <button class="sndfab" id="snd_fab" type="button" aria-label="كتم الصوت" aria-pressed="true" onclick="toggleSnd()"><svg class="ic" aria-hidden="true"><use href="#ic-volume-2"/></svg></button>
 
 <!-- Lightweight in-app assistant (no Spline, SVG only) -->
-<div class="assistant" id="assistant" aria-label="مساعد مالي" role="alert" hidden>
-  <div class="av"><use href="#ic-info"/></div>
-  <div class="b">
-    <div class="h">مساعد المالي</div>
-    <div class="m" id="assistantText"></div>
-    <button class="d" onclick="hideAssistant()">إغلاق</button>
+<div class="assistant" id="assistant" role="status" aria-live="polite">
+  <button class="as-av" id="assistantFab" type="button" aria-label="مساعد المالي" onclick="assistantOpen()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#ic-info"/></svg>
+  </button>
+  <div class="as-b" id="assistantBubble" hidden>
+    <div class="as-h"><span class="as-ttl">مساعد المالي</span>
+      <button class="as-x" type="button" aria-label="إغلاق" onclick="hideAssistant()">×</button></div>
+    <div class="as-m" id="assistantText"></div>
+    <div class="as-acts" id="assistantActions"></div>
   </div>
 </div>
 
@@ -1517,6 +1549,7 @@ function addEntry() {
   renderLog();
   SND.play(TYPE === "in" ? "deposit" : (TYPE === "tr" ? "transfer" : "withdraw"));
   toast("اتحفظ القيد · الرصيد والرسوم اتحدّثوا فورًا");
+  if (typeof assistantAfterEntry === "function") assistantAfterEntry();
   el.focus();
 }
 function delEntry(i) {
@@ -2225,7 +2258,7 @@ function renderTx() {
   /* stale hint: build older than 6h, or calendar moved past the built month */
   var hint = document.getElementById("stale_hint");
   if (hint) {
-    var gt = Date.parse("2026-10-02 14:26".replace(" ", "T") + ":00");
+    var gt = Date.parse("2026-10-02 15:03".replace(" ", "T") + ":00");
     var old = isFinite(gt) && (Date.now() - gt > 6 * 3600 * 1000);
     var moved = localISO().slice(0, 7) > "2026-10";
     if (old || moved) {
@@ -2236,65 +2269,82 @@ function renderTx() {
     }
   }
   setType(TYPE);
+  seedLog();
   renderLog();
   renderTx();
   renderAccounts();
   fillAccountSelects();
+  checkAssistant();
 })();
 
 /* ---------- lightweight in-app assistant (SVG only, no external hosts) ---------- */
-var assistantMessages = {
-  firstOpen: "صباح الفل — فاضلك 848 ج.م الأسبوع ده",
-  firstSalary: "17,000 وصلوا — خطة الشهر اتحسبت",
-  overBudget: "تجاوز السقف",
-  saturdayMarket: "أسعار السوق اتحدّثت",
-  savingsGoal: "وصلت 3,840",
-  afterEntry: "اتحسبلك فورًا"
-};
-function showAssistant(key) {
-  var el = document.getElementById("assistantText");
-  if (el) el.textContent = assistantMessages[key] || "";
-  var pa = document.getElementById("assistant");
-  if (pa) { pa.hidden = false; pa.setAttribute("aria-hidden", "false"); }
+/* Persistent avatar FAB + speech bubble. Reacts to real ledger values (T.wk / CAP / mSav). */
+function _assistantSay(msg, acts) {
+  var m = document.getElementById("assistantText");
+  var b = document.getElementById("assistantBubble");
+  var a = document.getElementById("assistantActions");
+  if (m) m.textContent = msg || "";
+  if (a) a.innerHTML = acts || "";
+  if (b) b.hidden = false;
+}
+function assistantOpen() {
+  var b = document.getElementById("assistantBubble");
+  if (b && !b.hidden) { hideAssistant(); return; }
+  var msg = assistantContext();
+  _assistantSay(msg.text, msg.acts);
 }
 function hideAssistant() {
-  var pa = document.getElementById("assistant");
-  if (pa) { pa.hidden = true; pa.setAttribute("aria-hidden", "true"); }
+  var b = document.getElementById("assistantBubble");
+  if (b) b.hidden = true;
 }
-// Show on first open (only once)
-if (localStorage.getItem("assistant_shown") === null) {
-  showAssistant("firstOpen");
-  localStorage.setItem("assistant_shown", "1");
+/* build the current best message from live data */
+function assistantContext() {
+  var T = totals();
+  var d = new Date();
+  var acts = "";
+  if (T.wk > CAP && CAP > 0) {
+    acts = '<button class="as-a pri" onclick="jumpAdd()">سجّل قيد</button>' +
+           '<button class="as-a" onclick="assistantCat()">شوف التصنيفات</button>';
+    return { text: "خد بالك — مصروف الأسبوع " + Math.round(T.wk) +
+      " ج.م عدّى السقف (" + Math.round(CAP) + " ج.م). هدّي السرعة باقي الأسبوع.", acts: acts };
+  }
+  if (d.getDay() === 6) {
+    acts = '<button class="as-a pri" onclick="assistantMarket()">نبض السوق</button>';
+    return { text: "النهارده السبت — أسعار السوق بتتحدّث. نبص عليها؟", acts: acts };
+  }
+  if (T.mIn > 0 && T.mIn - T.mOut >= 3840) {
+    acts = '<button class="as-a pri" onclick="assistantSave()">التفاصيل</button>';
+    return { text: "شكل صافي الشهر وصل " + Math.round(T.mIn - T.mOut) +
+      " ج.م — فوق هدف الادخار 3,840. تمام.", acts: acts };
+  }
+  var left = Math.max(0, CAP - T.wk);
+  acts = '<button class="as-a pri" onclick="jumpAdd()">أضف قيد</button>' +
+         '<button class="as-a" onclick="assistantCat()">التصنيفات</button>';
+  return { text: "صباح الفل — فاضلك " + Math.round(left) +
+    " ج.م الأسبوع ده من سقف " + Math.round(CAP) + " ج.م.", acts: acts };
 }
-// Show after first entry (if not already shown this session)
-var firstEntryShown = localStorage.getItem("entry_shown");
-function markEntryShown() {
-  if (!firstEntryShown) {
-    localStorage.setItem("entry_shown", "1");
-    if (!document.getElementById("assistant").hidden) showAssistant("afterEntry");
+/* boot trigger: greet once per month, react on later opens */
+function checkAssistant() {
+  var T = totals();
+  if (T.wk > CAP && CAP > 0) { assistantOpen(); return; }
+  var seen = null;
+  try { seen = localStorage.getItem("as_greet_" + localISO().slice(0, 7)); } catch (e) {}
+  if (!seen) {
+    var c = assistantContext();
+    _assistantSay(c.text, c.acts);
+    try { localStorage.setItem("as_greet_" + localISO().slice(0, 7), "1"); } catch (e) {}
   }
 }
-/* ----- triggers ----- */
-// Saturday market refresh (every Saturday, day 6 = Thu in JS? Actually check)
-// Simple: if today is Saturday (Arabic week starts Thu, but let's use standard)
-// We'll check client-side: 
-var d = new Date();
-if (d.getDay() === 6) showAssistant("saturdayMarket"); // Saturday
-// Savings goal reached (from loaded data)
-function checkSavingsGoal() {
-  // savings target 3,840 — check if achieved; simplified: always offer
-  showAssistant("savingsGoal");
+/* action helpers */
+function assistantCat() { hideAssistant(); var s = document.getElementById("insights"); if (s) s.scrollIntoView({ behavior: "smooth" }); }
+function assistantMarket() { hideAssistant(); var s = document.getElementById("market"); if (s) s.scrollIntoView({ behavior: "smooth" }); }
+function assistantSave() { hideAssistant(); var s = document.getElementById("hero"); if (s) s.scrollIntoView({ behavior: "smooth" }); }
+/* entry feedback: bubble says it was counted */
+function assistantAfterEntry() {
+  _assistantSay("اتحسبلك فورًا. فاضلك " +
+    Math.round(Math.max(0, CAP - totals().wk)) + " ج.م الأسبوع ده.",
+    '<button class="as-a pri" onclick="jumpAdd()">قيد تاني</button>');
 }
-// Over budget (weekly spend vs 848 cap)
-function checkOverBudget() {
-  // T.wk vs CAP 848 — if T.wk > CAP, show
-  // simplified trigger
-  showAssistant("overBudget");
-}
-
-// Call after each entry save to offer "after entry" message
-document.addEventListener("DOMContentLoaded", markEntryShown);
-
 /* -------------------------------------------------------------------------- */
 /* ---------- end assistant ---------- */
 /* -------------------------------------------------------------------------- */
