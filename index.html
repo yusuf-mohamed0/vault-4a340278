@@ -649,6 +649,21 @@ th,td{padding:9px 8px}
         <div class="l">متوسط الدخل · آخر 10 شهر</div></div>
     </div>
 
+    <section class="sec" id="income_sources" style="margin-top:18px">
+      <div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg></span>
+        <h2>مين بيدفعلك</h2>
+        <span class="hint">كل الفترة</span>
+      </div>
+      <div class="inc-sources" id="inc_sources"><div class="ishare"><span class="ish-n" dir="auto">يوسف نبيل نصيف رزق</span><span class="share-bar"><i style="width:97%"></i></span><span class="num ishare-p">97%</span></div><div class="ishare"><span class="ish-n" dir="auto">NBE ATM713</span><span class="share-bar"><i style="width:7%"></i></span><span class="num ishare-p">7%</span></div><div class="ishare"><span class="ish-n" dir="auto">ESSAM MOHAMED TAHA MAHROUS IBRAHIM</span><span class="share-bar"><i style="width:1%"></i></span><span class="num ishare-p">1%</span></div><div class="ishare"><span class="ish-n" dir="auto">FIBE HO</span><span class="share-bar"><i style="width:1%"></i></span><span class="num ishare-p">1%</span></div><div class="ishare"><span class="ish-n" dir="auto">نجلاء فتحى محمد ايوب</span><span class="share-bar"><i style="width:0%"></i></span><span class="num ishare-p">0%</span></div></div>
+      <div class="tw"><table>
+        <thead><tr><th>الجهة الدافعة</th><th class="num">وارد لها</th>
+          <th class="num">مرات</th></tr></thead>
+        <tbody><tr><td><span dir="ltr" style="display:inline-block">1. يوسف نبيل نصيف رزق</span></td><td class="num">108,000</td><td class="num">11</td></tr><tr><td><span dir="ltr" style="display:inline-block">2. NBE ATM713</span></td><td class="num">8,000</td><td class="num">1</td></tr><tr><td><span dir="ltr" style="display:inline-block">3. ESSAM MOHAMED TAHA MAHROUS IBRAHIM</span></td><td class="num">1,440</td><td class="num">6</td></tr><tr><td><span dir="ltr" style="display:inline-block">4. FIBE HO</span></td><td class="num">1,000</td><td class="num">1</td></tr><tr><td><span dir="ltr" style="display:inline-block">5. نجلاء فتحى محمد ايوب</span></td><td class="num">500</td><td class="num">1</td></tr></tbody>
+      </table></div>
+      <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> كل وارد أو استرجاع في كل الفترات بيتحسب باسم الجهة
+        اللي بعتته: تحويل راتب، إعادة بيع، وأي حد بعتلك.</div>
+    </section>
+
     <section class="sec" id="accounts" data-fx="52" data-cur="EGP" style="margin-top:20px">
       <div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-wallet"/></svg></span>
         <h2>حساباتي وصافي الثروة</h2>
@@ -688,24 +703,24 @@ th,td{padding:9px 8px}
     <button type="button" class="cat-pick" id="cat_btn" onclick="openSheet('cat_sheet')">
       <svg class="ic" aria-hidden="true"><use href="#ic-circle-dot"/></svg><span id="cat_lbl">اختار تصنيف</span><svg class="ic" aria-hidden="true"><use href="#ic-chevron-left"/></svg>
     </button>
+    <div class="acc-grid" style="margin-top:9px">
+      <div class="acc-cell" id="w_from">
+        <label class="fl" for="lg_from"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg> من حساب</label>
+        <select id="lg_from" aria-label="من حساب"></select>
+      </div>
+      <div class="acc-cell" id="w_to" hidden>
+        <label class="fl" for="lg_to"><svg class="ic" aria-hidden="true"><use href="#ic-wallet"/></svg> إلى حساب</label>
+        <select id="lg_to" aria-label="إلى حساب"></select>
+      </div>
+    </div>
     <div class="f-row" style="margin-top:9px">
       <input class="full" type="text" id="lg_n" placeholder="ملاحظة قصيرة (اختياري)" maxlength="40" aria-label="ملاحظة" onkeydown="if(event.key=='Enter')addEntry();">
     </div>
     <details class="det" id="lg_det">
-      <summary><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> تفاصيل (ملاحظة / حساب)</summary>
+      <summary><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> تفاصيل إضافية (اختياري)</summary>
       <div class="det-b">
-        <label class="fl" for="lg_note">تفاصيل إضافية (اختياري)</label>
+        <label class="fl" for="lg_note">تفاصيل إضافية</label>
         <input type="text" id="lg_note" placeholder="اكتب أي تفصيلة تحب" maxlength="60" aria-label="تفاصيل" onkeydown="if(event.key=='Enter')addEntry();">
-        <div class="acc-grid">
-          <div class="acc-cell" id="w_from">
-            <label class="fl" for="lg_from"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg> من حساب</label>
-            <select id="lg_from" aria-label="من حساب"></select>
-          </div>
-          <div class="acc-cell" id="w_to" hidden>
-            <label class="fl" for="lg_to"><svg class="ic" aria-hidden="true"><use href="#ic-wallet"/></svg> إلى حساب</label>
-            <select id="lg_to" aria-label="إلى حساب"></select>
-          </div>
-        </div>
       </div>
     </details>
     <div class="ferr" id="lg_err"></div>
@@ -796,17 +811,6 @@ th,td{padding:9px 8px}
         </table></div>
       </div>
     </div>
-    <div class="inc-wrap" id="income_sources">
-      <div class="mk-h"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg> أكبر 5 جهات بيجيلي منها فلوس</div>
-      <div class="inc-sources" id="inc_sources"><div class="ishare"><span class="ish-n" dir="auto">يوسف نبيل نصيف رزق</span><span class="share-bar"><i style="width:97%"></i></span><span class="num ishare-p">97%</span></div><div class="ishare"><span class="ish-n" dir="auto">NBE ATM713</span><span class="share-bar"><i style="width:7%"></i></span><span class="num ishare-p">7%</span></div><div class="ishare"><span class="ish-n" dir="auto">ESSAM MOHAMED TAHA MAHROUS IBRAHIM</span><span class="share-bar"><i style="width:1%"></i></span><span class="num ishare-p">1%</span></div><div class="ishare"><span class="ish-n" dir="auto">FIBE HO</span><span class="share-bar"><i style="width:1%"></i></span><span class="num ishare-p">1%</span></div><div class="ishare"><span class="ish-n" dir="auto">نجلاء فتحى محمد ايوب</span><span class="share-bar"><i style="width:0%"></i></span><span class="num ishare-p">0%</span></div></div>
-      <div class="tw"><table>
-        <thead><tr><th>الجهة الدافعة</th><th class="num">وارد لها</th>
-          <th class="num">مرات</th></tr></thead>
-        <tbody><tr><td><span dir="ltr" style="display:inline-block">1. يوسف نبيل نصيف رزق</span></td><td class="num">108,000</td><td class="num">11</td></tr><tr><td><span dir="ltr" style="display:inline-block">2. NBE ATM713</span></td><td class="num">8,000</td><td class="num">1</td></tr><tr><td><span dir="ltr" style="display:inline-block">3. ESSAM MOHAMED TAHA MAHROUS IBRAHIM</span></td><td class="num">1,440</td><td class="num">6</td></tr><tr><td><span dir="ltr" style="display:inline-block">4. FIBE HO</span></td><td class="num">1,000</td><td class="num">1</td></tr><tr><td><span dir="ltr" style="display:inline-block">5. نجلاء فتحى محمد ايوب</span></td><td class="num">500</td><td class="num">1</td></tr></tbody>
-      </table></div>
-      <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> الأرقام دي مجمّعة من كل الفترة: كل وارد أو استرجاع
-        بيتحسب باسم الجهة اللي بعتته (تحويل راتب، إعادة بيع،等因素).</div>
-    </div>
     <div class="mk-h" style="margin-bottom:8px"><svg class="ic" aria-hidden="true"><use href="#ic-chart-column"/></svg> توزيع المصروف حسب التصنيف
       <span class="hint" style="margin-inline-start:auto">اضغط أي صف لتفصيله</span></div>
     <div class="tw"><table id="cat_tbl">
@@ -878,7 +882,7 @@ th,td{padding:9px 8px}
 <a href="1a6c073a15_summary_2026.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>الأرقام المجمعة (JSON)<span class="sz">24 KB</span></a>
 <a href="7215c039a2_plan_2026-10.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>خطة الشهر (إكسل)<span class="sz">10 KB</span></a>
 <a href="94044d7e24_market_watch.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>أسعار السوق والأخبار (JSON)<span class="sz">5 KB</span></a></div>
-    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 21:04</b></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 21:23</b></div>
     <div class="note warn" id="stale_hint" style="display:none"><svg class="ic" aria-hidden="true"><use href="#ic-clock"/></svg>
       اللوحة دي متبنيّة على شهر <b>2026-10</b> — بس تاريخ النهارده <b class="stale-m num"></b>.
       لو الشهر اتغيّر شغّل <b>plan_month</b> عشان الخطة والتنبيهات تتحدّث.</div>
@@ -886,7 +890,7 @@ th,td{padding:9px 8px}
 
 </main>
 <footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام
-  <span>آخر توليد <b id="gentime" class="num">2026-10-02 21:04</b></span>
+  <span>آخر توليد <b id="gentime" class="num">2026-10-02 21:23</b></span>
   <span>تاريخ البناء 02/10/2026</span></footer>
 
 <button class="fab" id="fab" aria-label="إضافة قيد" onclick="jumpAdd()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button>
@@ -2475,7 +2479,7 @@ function peekOnce(kind, n) {
   /* stale hint: build older than 6h, or calendar moved past the built month */
   var hint = document.getElementById("stale_hint");
   if (hint) {
-    var gt = Date.parse("2026-10-02 21:04".replace(" ", "T") + ":00");
+    var gt = Date.parse("2026-10-02 21:23".replace(" ", "T") + ":00");
     var old = isFinite(gt) && (Date.now() - gt > 6 * 3600 * 1000);
     var moved = localISO().slice(0, 7) > "2026-10";
     if (old || moved) {
