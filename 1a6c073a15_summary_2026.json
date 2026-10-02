@@ -1,26 +1,26 @@
 {
-  "period": "2026-01-28 .. 2026-10-01",
-  "days": 247,
-  "n_lines": 270,
+  "period": "2026-01-28 .. 2026-10-02",
+  "days": 248,
+  "n_lines": 271,
   "n_otp": 57,
   "n_failed": 2,
-  "n_txns": 210,
-  "n_debits": 180,
+  "n_txns": 211,
+  "n_debits": 181,
   "n_credits": 28,
   "n_refunds": 2,
-  "total_debits": 101391.53,
+  "total_debits": 102763.79,
   "total_refunds": 9000.0,
-  "net_out": 92391.53,
+  "net_out": 93763.79,
   "cash_out": 39500.0,
-  "card_out": 52891.53,
+  "card_out": 54263.79,
   "total_credits": 111725.0,
-  "net_flow": 19333.47,
+  "net_flow": 17961.21,
   "opening": 743.94,
-  "closing_calc": 20077.41,
-  "closing_reported": 15475.79,
+  "closing_calc": 18705.15,
+  "closing_reported": 14103.53,
   "drift": 4601.62,
-  "avg_daily_out": 374.05,
-  "avg_monthly_out": 11386.23,
+  "avg_daily_out": 378.08,
+  "avg_monthly_out": 11508.75,
   "monthly": {
     "2026-01": {
       "debit": 1681.29,
@@ -77,10 +77,10 @@
       "n": 35
     },
     "2026-10": {
-      "debit": 2000.0,
+      "debit": 3372.26,
       "credit": 17000.0,
       "refund": 0.0,
-      "n": 2
+      "n": 3
     }
   },
   "categories": {
@@ -101,8 +101,8 @@
       "n": 48
     },
     "مطاعم وتوصيل": {
-      "amount": 5750.55,
-      "n": 25
+      "amount": 7122.81,
+      "n": 26
     },
     "تسوق أونلاين": {
       "amount": 3199.98,
@@ -214,6 +214,10 @@
       "amount": 1500.0,
       "n": 1
     },
+    "talabat.com postpaid Maa": {
+      "amount": 1372.26,
+      "n": 1
+    },
     "KASHIER*AboSh Cai": {
       "amount": 1350.0,
       "n": 1
@@ -229,10 +233,6 @@
     "BDC HARAM H": {
       "amount": 1200.0,
       "n": 2
-    },
-    "U TURN GI": {
-      "amount": 1150.0,
-      "n": 1
     }
   },
   "senders": {
@@ -1515,6 +1515,13 @@
       "BDC ELSTODYOHAT ALANTA 6",
       20077.41,
       15475.79,
+      4601.62
+    ],
+    [
+      "2026-10-02",
+      "talabat.com postpaid Maa",
+      18705.15,
+      14103.53,
       4601.62
     ]
   ]

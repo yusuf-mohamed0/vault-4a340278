@@ -64,7 +64,7 @@ font-size:17px; letter-spacing:4px; font-family:inherit; height:48px;
 .lock-err{min-height:1.3em; font-size:13px; color:var(--red); margin-top:10px}
 .lock-hint{display:flex; gap:7px; align-items:center; justify-content:center;
 font-size:12px; color:var(--label-3); margin-top:16px}
-.locked header, .locked main, .locked footer, .locked .tabbar, .locked .fab{display:none}
+.locked header, .locked main, .locked footer, .locked .tabbar, .locked .fab, .locked .pvt, .locked .sndfab{display:none}
 
 /* app bar */
 .appbar{
@@ -104,7 +104,10 @@ section{scroll-margin-top:60px}
 letter-spacing:-.5px}
 .lt p{font-size:13px; color:var(--label-2); margin-top:4px}
 .lt .row{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; align-items:center}
-.sec{background:var(--surface); border-radius:var(--r); padding:16px; box-shadow:var(--sh)}
+.sec{background:var(--surface); border-radius:var(--r); padding:16px; box-shadow:var(--sh); min-width:0}
+/* grid children must be allowed to shrink below their content (nowrap tables) */
+.kpis>*,.f-row>*,.mk>*,.mk-cols>*,.cmp-grid>*,.dl>*,.cgrid>*{min-width:0}
+.gcell{min-width:0}
 .sec-h{display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap}
 .sec-h .sic{width:32px; height:32px; border-radius:10px; display:grid;
 place-items:center; background:rgba(14,107,168,.1); color:var(--tint); flex:none}
@@ -149,7 +152,7 @@ display:inline-flex; gap:6px; align-items:center}
 .hchip b{color:#fff; font-weight:700; font-variant-numeric:tabular-nums}
 
 /* stat tiles */
-.kpis{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
+.kpis{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px}
 .card{background:var(--surface); border-radius:var(--r); padding:14px; box-shadow:var(--sh)}
 .ci{width:32px; height:32px; border-radius:10px; display:grid;
 place-items:center; margin-bottom:9px}
@@ -204,7 +207,7 @@ box-shadow:0 1px 3px rgba(0,0,0,.12); font-weight:700}
 .seg-btn.t-in.on{color:#1B8F3E}
 .seg-btn.t-tr.on{color:var(--tint)}
 label.fl{display:block; font-size:13px; font-weight:600; color:var(--label-2); margin-bottom:6px}
-.f-row{display:grid; grid-template-columns:1fr 1fr; gap:9px}
+.f-row{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:9px}
 .f-row input,.f-row select,.ed-f input,.ed-f select,.sheet-b input,.sheet-b select{
 height:48px; padding:11px 12px; border:0; border-radius:var(--r-s);
 font:inherit; font-size:15px; background:var(--surface-2); width:100%;
@@ -261,7 +264,7 @@ display:flex; flex-direction:column; gap:3px}
 .mk-l .ic{width:14px; height:14px; color:var(--gold)}
 .mk-v{font-size:15px; font-weight:800}
 .mk-s{font-size:12px; color:var(--label-2)}
-.mk-cols{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px}
+.mk-cols{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; margin-top:14px}
 .mk-h{font-size:13px; font-weight:700; margin-bottom:8px;
 display:flex; gap:7px; align-items:center}
 .mk-h .ic{width:15px; height:15px; color:var(--tint)}
@@ -275,7 +278,7 @@ border-radius:var(--r-s); padding:9px 10px}
 .chart-wrap{background:var(--surface-2); border-radius:var(--r-s);
 padding:12px 8px 4px; margin-bottom:14px}
 .chart{width:100%; height:auto; display:block}
-.cmp-grid{display:grid; grid-template-columns:1fr; gap:14px; margin-bottom:14px}
+.cmp-grid{display:grid; grid-template-columns:minmax(0,1fr); gap:14px; margin-bottom:14px}
 .alerts{display:flex; flex-direction:column; gap:9px; margin-top:14px}
 .alert{display:flex; align-items:center; gap:10px; background:#FFF5F5;
 border-radius:var(--r-s); padding:10px 12px}
@@ -366,7 +369,7 @@ padding:1px 8px; border-radius:99px; display:inline-block; margin-top:2px}
 white-space:nowrap}
 
 /* downloads */
-.dl{display:grid; grid-template-columns:1fr; gap:9px}
+.dl{display:grid; grid-template-columns:minmax(0,1fr); gap:9px}
 .dl a{display:flex; align-items:center; gap:9px; min-height:48px; padding:12px 13px;
 border-radius:var(--r-s); background:var(--surface-2); color:var(--label);
 text-decoration:none; font-size:13px; font-weight:600}
@@ -391,7 +394,7 @@ margin-bottom:14px}
 .sheet-h b{font-size:17px; font-weight:700}
 .x44{width:44px; height:44px; border-radius:50%; border:0; background:var(--surface-2);
 display:grid; place-items:center; color:var(--label-2); padding:0}
-.cgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
+.cgrid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px}
 .ct{display:flex; flex-direction:column; align-items:center; gap:5px;
 padding:10px 4px; min-height:66px; border-radius:12px; border:0;
 background:var(--surface-2); font-size:12px; font-weight:600; color:var(--label)}
@@ -427,6 +430,29 @@ display:grid; place-items:center; box-shadow:var(--sh-l);
 transition:transform .2s var(--ease)}
 .fab:active{transform:scale(.94)}
 .fab .ic{width:24px; height:24px}
+.pvt{position:fixed; bottom:88px; inset-inline-end:14px; width:52px; height:52px;
+border-radius:50%; background:rgba(255,255,255,.9); color:var(--brand);
+border:.5px solid var(--sep); z-index:46; display:grid; place-items:center;
+box-shadow:var(--sh-l); backdrop-filter:saturate(180%) blur(14px);
+-webkit-backdrop-filter:saturate(180%) blur(14px); transition:transform .2s var(--ease), color .2s var(--ease)}
+.pvt:active{transform:scale(.94)}
+.pvt .ic{width:24px; height:24px}
+body.priv .pvt{color:var(--tint)}
+/* floating mute switch for the sound pack - stacked above the privacy eye */
+.sndfab{position:fixed; bottom:150px; inset-inline-end:14px; width:52px; height:52px;
+border-radius:50%; background:rgba(255,255,255,.9); color:var(--label-2);
+border:.5px solid var(--sep); z-index:46; display:grid; place-items:center;
+box-shadow:var(--sh-l); backdrop-filter:saturate(180%) blur(14px);
+-webkit-backdrop-filter:saturate(180%) blur(14px); transition:transform .2s var(--ease), color .2s var(--ease)}
+.sndfab:active{transform:scale(.94)}
+.sndfab .ic{width:22px; height:22px}
+.sndfab[aria-pressed="false"]{color:var(--red)}
+@media (max-height:560px){ .sndfab{bottom:206px} }
+body.priv .num:not(.pub), body.priv .a-amt, body.priv .env-a, body.priv .bal{
+filter:blur(7px); user-select:none; -webkit-user-select:none}
+/* trend-chart figures are personal too - month labels stay readable */
+body.priv .chart .cv{filter:blur(9px); user-select:none; -webkit-user-select:none}
+/* public market figures stay readable */
 .tabbar{position:fixed; inset-inline:0; bottom:0; z-index:45; display:flex;
 background:rgba(255,255,255,.82); backdrop-filter:saturate(180%) blur(20px);
 -webkit-backdrop-filter:saturate(180%) blur(20px);
@@ -446,14 +472,16 @@ align-items:center; flex-wrap:wrap}
 footer .ic{width:14px; height:14px; color:var(--label-3)}
 
 @media (max-width:400px){
-.cgrid{grid-template-columns:repeat(3,1fr)}
+.cgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
 .hero-v{font-size:32px}
 .lt h1{font-size:30px}
+th,td{padding:9px 8px}
+.a-top{gap:6px}
 }
 </style>
 </head>
 <body class="locked">
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="ic-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol><symbol id="ic-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol><symbol id="ic-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V5"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></symbol><symbol id="ic-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></symbol><symbol id="ic-trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17h6v-6"/><path d="m22 17-8.5-8.5-5 5L2 7"/></symbol><symbol id="ic-piggy-bank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17h3v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a3.16 3.16 0 0 0 2-2h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-1a5 5 0 0 0-2-4V3a4 4 0 0 0-3.2 1.6l-.3.4H11a6 6 0 0 0-6 6v1a5 5 0 0 0 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1z"/><path d="M16 10h.01"/><path d="M2 8v1a2 2 0 0 0 2 2h1"/></symbol><symbol id="ic-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></symbol><symbol id="ic-calendar-days" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M8 13h.01"/><path d="M12 13h.01"/><path d="M16 13h.01"/><path d="M8 17h.01"/><path d="M12 17h.01"/><path d="M16 17h.01"/></symbol><symbol id="ic-calendar-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="m9 15 2 2 4-4"/></symbol><symbol id="ic-clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></symbol><symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol><symbol id="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol><symbol id="ic-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></symbol><symbol id="ic-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol><symbol id="ic-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol><symbol id="ic-circle-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></symbol><symbol id="ic-circle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></symbol><symbol id="ic-triangle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol><symbol id="ic-banknote" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></symbol><symbol id="ic-fuel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0v-6.998a2 2 0 0 0-.59-1.42L18 5"/><path d="M14 21V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v16"/><path d="M2 21h13"/><path d="M3 9h11"/></symbol><symbol id="ic-smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></symbol><symbol id="ic-shopping-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></symbol><symbol id="ic-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol><symbol id="ic-coffee" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></symbol><symbol id="ic-shopping-basket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></symbol><symbol id="ic-heart-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/><path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></symbol><symbol id="ic-shirt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></symbol><symbol id="ic-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol><symbol id="ic-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></symbol><symbol id="ic-file-spreadsheet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M8 13h2"/><path d="M14 13h2"/><path d="M8 17h2"/><path d="M14 17h2"/></symbol><symbol id="ic-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol><symbol id="ic-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></symbol><symbol id="ic-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></symbol><symbol id="ic-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol><symbol id="ic-list-checks" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/></symbol><symbol id="ic-square-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></symbol><symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol><symbol id="ic-log-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/></symbol><symbol id="ic-circle-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="12" r="10"/></symbol><symbol id="ic-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></symbol><symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="ic-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol><symbol id="ic-chart-column" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol><symbol id="ic-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></symbol><symbol id="ic-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/></symbol><symbol id="ic-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></symbol></svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="ic-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol><symbol id="ic-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol><symbol id="ic-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V5"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></symbol><symbol id="ic-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></symbol><symbol id="ic-trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17h6v-6"/><path d="m22 17-8.5-8.5-5 5L2 7"/></symbol><symbol id="ic-piggy-bank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17h3v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a3.16 3.16 0 0 0 2-2h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-1a5 5 0 0 0-2-4V3a4 4 0 0 0-3.2 1.6l-.3.4H11a6 6 0 0 0-6 6v1a5 5 0 0 0 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1z"/><path d="M16 10h.01"/><path d="M2 8v1a2 2 0 0 0 2 2h1"/></symbol><symbol id="ic-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></symbol><symbol id="ic-calendar-days" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M8 13h.01"/><path d="M12 13h.01"/><path d="M16 13h.01"/><path d="M8 17h.01"/><path d="M12 17h.01"/><path d="M16 17h.01"/></symbol><symbol id="ic-calendar-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="m9 15 2 2 4-4"/></symbol><symbol id="ic-clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></symbol><symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol><symbol id="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol><symbol id="ic-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></symbol><symbol id="ic-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol><symbol id="ic-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol><symbol id="ic-circle-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></symbol><symbol id="ic-circle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></symbol><symbol id="ic-triangle-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol><symbol id="ic-banknote" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></symbol><symbol id="ic-fuel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0v-6.998a2 2 0 0 0-.59-1.42L18 5"/><path d="M14 21V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v16"/><path d="M2 21h13"/><path d="M3 9h11"/></symbol><symbol id="ic-smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></symbol><symbol id="ic-shopping-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></symbol><symbol id="ic-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol><symbol id="ic-coffee" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></symbol><symbol id="ic-shopping-basket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></symbol><symbol id="ic-heart-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/><path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></symbol><symbol id="ic-shirt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></symbol><symbol id="ic-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol><symbol id="ic-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></symbol><symbol id="ic-file-spreadsheet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M8 13h2"/><path d="M14 13h2"/><path d="M8 17h2"/><path d="M14 17h2"/></symbol><symbol id="ic-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol><symbol id="ic-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></symbol><symbol id="ic-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></symbol><symbol id="ic-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol><symbol id="ic-list-checks" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/></symbol><symbol id="ic-square-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></symbol><symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol><symbol id="ic-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="ic-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></symbol><symbol id="ic-log-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/></symbol><symbol id="ic-circle-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="12" r="10"/></symbol><symbol id="ic-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></symbol><symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="ic-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol><symbol id="ic-chart-column" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol><symbol id="ic-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></symbol><symbol id="ic-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/></symbol><symbol id="ic-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></symbol><symbol id="ic-volume-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.4 5.6a9 9 0 0 1 0 12.8"/></symbol><symbol id="ic-volume-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></symbol></svg>
 
 <div id="lock">
   <div class="lock-card">
@@ -470,7 +498,7 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
 <header class="appbar" id="appbar">
   <div class="ab">
     <span class="ab-logo"><svg class="ic" aria-hidden="true"><use href="#ic-wallet"/></svg></span>
-    <div class="ab-n">نظامي المالي<small>من 2026-01-28 إلى 2026-10-01</small></div>
+    <div class="ab-n">نظامي المالي<small>من 2026-01-28 إلى 2026-10-02</small></div>
     <span class="ab-t" id="ab_title">الرئيسية</span>
   </div>
 </header>
@@ -479,8 +507,8 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
 
   <!-- 1. HOME -->
   <div class="lt"><h1>الرئيسية</h1>
-    <p>من 2026-01-28 إلى 2026-10-01 · لوحتك المالية على جهازك</p>
-    <div class="row"><span class="pill"><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>الراتب المتوقع: النهاردة (01/10)</span><span class="chip"><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> محلّي</span></div>
+    <p>من 2026-01-28 إلى 2026-10-02 · لوحتك المالية على جهازك</p>
+    <div class="row"><span class="pill"><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>الراتب المتوقع: بعد 30 يوم (01/11)</span><span class="chip"><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> محلّي</span></div>
   </div>
   <section id="hero" class="stack">
     <div class="hero">
@@ -499,7 +527,7 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
       </div>
       <div class="hero-chips">
         <span class="hchip">دخل الفترة <b class="num">111,725</b></span>
-        <span class="hchip">متوسط شهري <b class="num">11,386</b></span>
+        <span class="hchip">متوسط شهري <b class="num">11,509</b></span>
         <span class="hchip">هدف الادخار <b class="num">3,840</b></span>
       </div>
     </div>
@@ -512,7 +540,7 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
       <div class="card"><span class="ci tone-red"><svg class="ic" aria-hidden="true"><use href="#ic-trending-down"/></svg></span>
         <div class="v num" id="st_out">—</div><div class="l">مصروف الشهر</div></div>
       <div class="card"><span class="ci tone-navy"><svg class="ic" aria-hidden="true"><use href="#ic-scale"/></svg></span>
-        <div class="v num" id="st_net">92,392 ج.م</div>
+        <div class="v num" id="st_net">93,764 ج.م</div>
         <div class="l">صافي الشهر
           <button type="button" class="qm" aria-label="ما هو صافي الشهر" onclick="term(this)">?</button>
           <span class="tip">الوارد ناقص المصروف في الشهر الحالي — لو أصفر يعني بتصرف أكتر مما يدخل.</span>
@@ -538,6 +566,7 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
         <button class="ghost" onclick="openGrpForm('')"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg> مجموعة</button>
         <button class="ghost" onclick="exportCfg()"><svg class="ic" aria-hidden="true"><use href="#ic-download"/></svg> تصدير الإعدادات</button>
         <button class="ghost" onclick="clearLocal()"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg> مسح محلي</button>
+        <button class="ghost" id="snd_btn" type="button" aria-pressed="true" onclick="toggleSnd()"><svg class="ic" aria-hidden="true"><use href="#ic-volume-2"/></svg> الصوت: مفعّل</button>
       </div>
       <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> الأرصدة بتتحدّث لحظيًا من كل قيد تسجّله — لو رصيد بنكك الحقيقي مختلف عدّله من زر تعديل الحساب.</div>
     </section>
@@ -591,11 +620,11 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
   </section>
 
   <!-- 3. ENVELOPES -->
-  <div class="lt"><h1>الأظرف</h1><p>ميزانية 2026-10 — بنك حتى 2026-10-01 + تسجيلاتك</p></div>
+  <div class="lt"><h1>الأظرف</h1><p>ميزانية 2026-10 — بنك حتى 2026-10-02 + تسجيلاتك</p></div>
   <section class="sec" id="envelopes">
     <div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-list-checks"/></svg></span>
       <h2>الأظرف 2026-10</h2>
-      <span class="hint">بنك حتى 2026-10-01 + تسجيلاتك</span>
+      <span class="hint">بنك حتى 2026-10-02 + تسجيلاتك</span>
     </div>
     <div class="wk-h">الحد الأسبوعي للسحب النقدي
       <button type="button" class="qm" aria-label="ما هو الظرف الأسبوعي" onclick="term(this)">?</button>
@@ -606,7 +635,7 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
       <div class="wk-h"><span>مصروف الأسبوع مقابل السقف</span><b class="num" id="rail_wk">—</b></div>
       <div class="bar"><i id="bar_wk" style="width:0%"></i></div>
     </div>
-    <div class="env-list" id="env_list"><div class="env" data-k="ادخار وطوارئ (وزّعه قبل أي صرف)" data-b="2620" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-piggy-bank"/></svg><span class="env-n">ادخار وطوارئ (وزّعه قبل أي صرف)</span><span class="env-a num"><b class="env-done">0</b> / 2,620 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 2,620 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 605</span></div></div><div class="env" data-k="سحب نقدي - مصروف يومي مسجّل" data-b="3670" data-bank="2000"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg><span class="env-n">سحب نقدي - مصروف يومي مسجّل</span><span class="env-a num"><b class="env-done">0</b> / 3,670 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 3,670 ج.م</span><span class="env-src">بنك 2,000 · يدوي 0 · أسبوع 848</span></div></div><div class="env" data-k="موبايل وإنترنت" data-b="1220" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-smartphone"/></svg><span class="env-n">موبايل وإنترنت</span><span class="env-a num"><b class="env-done">0</b> / 1,220 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 1,220 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 282</span></div></div><div class="env" data-k="بنزين وصيانة الموتوسيكل" data-b="3850" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg><span class="env-n">بنزين وصيانة الموتوسيكل</span><span class="env-a num"><b class="env-done">0</b> / 3,850 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 3,850 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 889</span></div></div><div class="env" data-k="مشتريات ومحلات" data-b="1220" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-cart"/></svg><span class="env-n">مشتريات ومحلات</span><span class="env-a num"><b class="env-done">0</b> / 1,220 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 1,220 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 282</span></div></div><div class="env" data-k="مطاعم وتوصيل" data-b="520" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-utensils"/></svg><span class="env-n">مطاعم وتوصيل</span><span class="env-a num"><b class="env-done">0</b> / 520 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 520 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 120</span></div></div><div class="env" data-k="كافيهات وترفيه" data-b="170" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-coffee"/></svg><span class="env-n">كافيهات وترفيه</span><span class="env-a num"><b class="env-done">0</b> / 170 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 170 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 39</span></div></div><div class="env" data-k="بقالة وسوبر ماركت" data-b="700" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-basket"/></svg><span class="env-n">بقالة وسوبر ماركت</span><span class="env-a num"><b class="env-done">0</b> / 700 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 700 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 162</span></div></div><div class="env" data-k="صحة وصيدليات" data-b="520" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-heart-pulse"/></svg><span class="env-n">صحة وصيدليات</span><span class="env-a num"><b class="env-done">0</b> / 520 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 520 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 120</span></div></div><div class="env" data-k="تسوق أونلاين" data-b="260" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-shirt"/></svg><span class="env-n">تسوق أونلاين</span><span class="env-a num"><b class="env-done">0</b> / 260 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 260 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 60</span></div></div><div class="env" data-k="اشتراكات ومحتوى" data-b="350" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg><span class="env-n">اشتراكات ومحتوى</span><span class="env-a num"><b class="env-done">0</b> / 350 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 350 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 81</span></div></div><div class="env" data-k="تحويلات ومدفوعات (أصدقاء)" data-b="520" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-send"/></svg><span class="env-n">تحويلات ومدفوعات (أصدقاء)</span><span class="env-a num"><b class="env-done">0</b> / 520 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 520 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 120</span></div></div><div class="env" data-k="طوارئ غير متوقع (كل شهر)" data-b="610" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg><span class="env-n">طوارئ غير متوقع (كل شهر)</span><span class="env-a num"><b class="env-done">0</b> / 610 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 610 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 141</span></div></div><div class="env" data-k="فائض حر -&gt; ادخار إضافي" data-b="1220" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-piggy-bank"/></svg><span class="env-n">فائض حر -&gt; ادخار إضافي</span><span class="env-a num"><b class="env-done">0</b> / 1,220 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 1,220 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 282</span></div></div>
+    <div class="env-list" id="env_list"><div class="env" data-k="ادخار وطوارئ (وزّعه قبل أي صرف)" data-b="2620" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-piggy-bank"/></svg><span class="env-n">ادخار وطوارئ (وزّعه قبل أي صرف)</span><span class="env-a num"><b class="env-done">0</b> / 2,620 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 2,620 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 605</span></div></div><div class="env" data-k="سحب نقدي - مصروف يومي مسجّل" data-b="3670" data-bank="2000"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg><span class="env-n">سحب نقدي - مصروف يومي مسجّل</span><span class="env-a num"><b class="env-done">0</b> / 3,670 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 3,670 ج.م</span><span class="env-src">بنك 2,000 · يدوي 0 · أسبوع 848</span></div></div><div class="env" data-k="موبايل وإنترنت" data-b="1220" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-smartphone"/></svg><span class="env-n">موبايل وإنترنت</span><span class="env-a num"><b class="env-done">0</b> / 1,220 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 1,220 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 282</span></div></div><div class="env" data-k="بنزين وصيانة الموتوسيكل" data-b="3850" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg><span class="env-n">بنزين وصيانة الموتوسيكل</span><span class="env-a num"><b class="env-done">0</b> / 3,850 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 3,850 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 889</span></div></div><div class="env" data-k="مشتريات ومحلات" data-b="1220" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-cart"/></svg><span class="env-n">مشتريات ومحلات</span><span class="env-a num"><b class="env-done">0</b> / 1,220 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 1,220 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 282</span></div></div><div class="env" data-k="مطاعم وتوصيل" data-b="520" data-bank="1372"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-utensils"/></svg><span class="env-n">مطاعم وتوصيل</span><span class="env-a num"><b class="env-done">0</b> / 520 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 520 ج.م</span><span class="env-src">بنك 1,372 · يدوي 0 · أسبوع 120</span></div></div><div class="env" data-k="كافيهات وترفيه" data-b="170" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-coffee"/></svg><span class="env-n">كافيهات وترفيه</span><span class="env-a num"><b class="env-done">0</b> / 170 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 170 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 39</span></div></div><div class="env" data-k="بقالة وسوبر ماركت" data-b="700" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-basket"/></svg><span class="env-n">بقالة وسوبر ماركت</span><span class="env-a num"><b class="env-done">0</b> / 700 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 700 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 162</span></div></div><div class="env" data-k="صحة وصيدليات" data-b="520" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-heart-pulse"/></svg><span class="env-n">صحة وصيدليات</span><span class="env-a num"><b class="env-done">0</b> / 520 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 520 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 120</span></div></div><div class="env" data-k="تسوق أونلاين" data-b="260" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-shirt"/></svg><span class="env-n">تسوق أونلاين</span><span class="env-a num"><b class="env-done">0</b> / 260 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 260 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 60</span></div></div><div class="env" data-k="اشتراكات ومحتوى" data-b="350" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg><span class="env-n">اشتراكات ومحتوى</span><span class="env-a num"><b class="env-done">0</b> / 350 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 350 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 81</span></div></div><div class="env" data-k="تحويلات ومدفوعات (أصدقاء)" data-b="520" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-send"/></svg><span class="env-n">تحويلات ومدفوعات (أصدقاء)</span><span class="env-a num"><b class="env-done">0</b> / 520 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 520 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 120</span></div></div><div class="env" data-k="طوارئ غير متوقع (كل شهر)" data-b="610" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg><span class="env-n">طوارئ غير متوقع (كل شهر)</span><span class="env-a num"><b class="env-done">0</b> / 610 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 610 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 141</span></div></div><div class="env" data-k="فائض حر -&gt; ادخار إضافي" data-b="1220" data-bank="0"><div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-piggy-bank"/></svg><span class="env-n">فائض حر -&gt; ادخار إضافي</span><span class="env-a num"><b class="env-done">0</b> / 1,220 ج.م</span></div><div class="bar"><i style="width:0%"></i></div><div class="env-f"><span class="env-left">متبقي 1,220 ج.م</span><span class="env-src">بنك 0 · يدوي 0 · أسبوع 282</span></div></div>
       <div class="env loose" id="env_loose" style="display:none">
         <div class="env-h"><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span class="env-n">بدون ظرف (ملاحظات غير مصنفة)</span>
           <span class="env-a num"><b id="env_loose_a">0 ج.م</b></span></div>
@@ -617,41 +646,41 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
 
   <!-- 4. MARKET (generated) -->
   <div class="lt"><h1>السوق</h1><p>نبض أسعار القاهرة أسبوعيًا</p></div>
-  <section id="market" class="sec"><div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg></span><h2>نبض السوق — القاهرة</h2><span class="hint">آخر فحص: 27/09/2026</span></div><div class="mk"><div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg>بنزين 92 (رسمي)</span><b class="mk-v num">22.25 ج.م / لتر</b><span class="mk-s">محطات الوقود — 25/09/2026</span></div>
-<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg>تعبئة بنزين الموتوسيكل</span><b class="mk-v num">445 ج.م (20 لتر) — كل 10–14 يوم</b><span class="mk-s">بنزين 92 × 20 لتر — 27/09/2026</span></div>
-<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-gauge"/></svg>زيت وصيانة دورية</span><b class="mk-v num">620 ج.م/1000 كم + 350 دوري</b><span class="mk-s">بيان المستخدم — 27/09/2026</span></div>
-<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg>الدولار (بيع البنوك)</span><b class="mk-v num">51.96 – 52.18 ج.م</b><span class="mk-s">البنوك المصرية — 21/09/2026</span></div>
-<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-trending-up"/></svg>التضخم السنوي</span><b class="mk-v num">12.7% عام / 14.5% مدن</b><span class="mk-s">المركزي للإحصاء — أغسطس 2026</span></div>
-<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-basket"/></svg>فراخ بيضاء (تجزئة)</span><b class="mk-v num">78 – 81 ج.م / كجم</b><span class="mk-s">سوق القاهرة — 26/09/2026</span></div>
-<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-heart-pulse"/></svg>لحوم بلدية كندوز</span><b class="mk-v num">400 – 450 ج.م / كجم</b><span class="mk-s">أسواق المنافذ — سبتمبر 2026</span></div>
-<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-utensils"/></svg>وجبة مطعم رخيصة</span><b class="mk-v num">250 ج.م (100 – 500)</b><span class="mk-s">Numbeo القاهرة — 21/09/2026</span></div>
-<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-coffee"/></svg>كابتشينو</span><b class="mk-v num">91 ج.م (35 – 150)</b><span class="mk-s">Numbeo القاهرة — 21/09/2026</span></div>
-<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-smartphone"/></svg>خطة موبايل شهرية</span><b class="mk-v num">436 ج.م (10 جيجا+)</b><span class="mk-s">Numbeo القاهرة — 21/09/2026</span></div>
-<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-wallet"/></svg>متوسط راتب صافي</span><b class="mk-v num">10,516 ج.م</b><span class="mk-s">Numbeo القاهرة — 21/09/2026</span></div></div><div class="mk-cols"><div><div class="mk-h"><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg> أثر الأسعار على خطتك</div><ul class="mk-ul"><li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>تعبئة بنزين الموتوسيكل 20 لتر = 445 ج.م بتمشي 10–14 يوم، أي 970–1,350 ج.م وقود شهريًا (22.25 ج.م/لتر).</span></li>
+  <section id="market" class="sec"><div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg></span><h2>نبض السوق — القاهرة</h2><span class="hint">آخر فحص: 02/10/2026</span></div><div class="mk"><div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg>بنزين 92 (رسمي)</span><b class="mk-v num pub">22.25 ج.م / لتر</b><span class="mk-s">محطات الوقود — 02/10/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-fuel"/></svg>تعبئة بنزين الموتوسيكل</span><b class="mk-v num pub">445 ج.م (20 لتر) — كل 10–14 يوم</b><span class="mk-s">بنزين 92 × 20 لتر — 02/10/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-gauge"/></svg>زيت وصيانة دورية</span><b class="mk-v num pub">620 ج.م/1000 كم + 350 دوري</b><span class="mk-s">بيان المستخدم — 27/09/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg>الدولار (بيع البنوك)</span><b class="mk-v num pub">51.92 – 52.07 ج.م</b><span class="mk-s">البنك المركزي والبنوك — 02/10/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-trending-up"/></svg>التضخم السنوي</span><b class="mk-v num pub">12.7% عام / 14.5% مدن</b><span class="mk-s">المركزي للإحصاء — أغسطس 2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-basket"/></svg>فراخ بيضاء (تجزئة)</span><b class="mk-v num pub">80 – 87 ج.م / كجم</b><span class="mk-s">أسواق القاهرة — 02/10/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-heart-pulse"/></svg>لحوم بلدية كندوز</span><b class="mk-v num pub">420 – 450 ج.م / كجم</b><span class="mk-s">أسواق المنافذ — 01/10/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-utensils"/></svg>وجبة مطعم رخيصة</span><b class="mk-v num pub">250 ج.م (100 – 500)</b><span class="mk-s">Numbeo القاهرة — 21/09/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-coffee"/></svg>كابتشينو</span><b class="mk-v num pub">91 ج.م (35 – 150)</b><span class="mk-s">Numbeo القاهرة — 21/09/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-smartphone"/></svg>خطة موبايل شهرية</span><b class="mk-v num pub">436 ج.م (10 جيجا+)</b><span class="mk-s">Numbeo القاهرة — 21/09/2026</span></div>
+<div class="mk-i"><span class="mk-l"><svg class="ic" aria-hidden="true"><use href="#ic-wallet"/></svg>متوسط راتب صافي</span><b class="mk-v num pub">10,516 ج.م</b><span class="mk-s">Numbeo القاهرة — 21/09/2026</span></div></div><div class="mk-cols"><div><div class="mk-h"><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg> أثر الأسعار على خطتك</div><ul class="mk-ul"><li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>تعبئة بنزين الموتوسيكل 20 لتر = 445 ج.م بتمشي 10–14 يوم، أي 970–1,350 ج.م وقود شهريًا (22.25 ج.م/لتر).</span></li>
 <li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>زيت 620 ج.م كل 1000 كم + صيانة دورية 350 ج.م كل شهر أو شهرين (175 متوسط) — وقود وصيانة دورية = 1,130–1,690 ج.م/شهر (زيت إضافي حسب الكيلومترات) مقابل 2,200 ج.م في خطة أكتوبر بعد إعادة التوزيع المعتمدة بتاريخ 27/09.</span></li>
-<li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>400 ج.م بقالة = حوالي 5 كجم فراخ + سلة خضار وحبوب — اللحوم الحمراء (479 ج.م/كجم) خارج الميزانية الشهرية.</span></li>
+<li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>400 ج.م بقالة = حوالي 5 كجم فراخ + سلة خضار وحبوب — اللحوم الحمراء (441 ج.م/كجم) خارج الميزانية الشهرية إلا بأقل من 100 ج.م.</span></li>
 <li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>400 ج.م مطاعم = 1.6 وجبة بالمتوسط أو 4 وجبات شعبية في الأسبوع (100 ج.م).</span></li>
 <li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>200 ج.م كافيهات = 2.2 كابتشينو بالمتوسط — تقريبًا نصف كوباية في الأسبوع.</span></li>
 <li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>200 ج.م اشتراكات = 3.8 دولار — لو عندك اشتراك دولي (نتفليكس حوالي 10 دولار) الميزانية مش هتكفيه.</span></li>
-<li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>التضخم الحضري 14.5% = قوة الشراء بتقل حوالي 1.1% كل شهر لو الراتب ما اترفعش.</span></li></ul></div><div><div class="mk-h"><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg> أخبار تؤثر في مصروفاتك</div><ul class="mk-ul"><li><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span>مراجعة أسعار الوقود: توقعات بزيادة خلال أكتوبر<span class="mk-date">21/09/2026 — لو الزيادة تمت تعبئة الموتوسيكل (445 ج.م) هتروح ≈470–490 ج.م — تكلفة الشهر تزيد 100–150 ج.م فوق ميزانية الوقود.</span></span></li>
-<li><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span>رفع الفائدة الأمريكية 18/09/2026<span class="mk-date">18/09/2026 — ضغط على الجنيه وأثر محتمل على الاشتراكات والبضائع المستوردة بعد شهرين.</span></span></li>
-<li><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span>التضخم تراجع لـ12.7% عام و14.5% في المدن أغسطس<span class="mk-date">10/09/2026 — الغذاء انخفض 1.2% شهريًا (خضروات -7%) — أرخص وقت لترفع البقالة البيتية.</span></span></li></ul></div></div><div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> الأرقام دي بتتحدّث أسبوعيًا كل سبت وأمام أي خطة شهرية، والمصدر الكامل بتواريخه في وثيقة الأسعار داخل المجلد المحلي.</div></section>
+<li><svg class="ic" aria-hidden="true"><use href="#ic-target"/></svg><span>التضخم الحضري 14.5% = قوة الشراء بتقل حوالي 1.1% كل شهر لو الراتب ما اترفعش.</span></li></ul></div><div><div class="mk-h"><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg> أخبار تؤثر في مصروفاتك</div><ul class="mk-ul"><li><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span>مراجعة أسعار الوقود أكتوبر 2026: استقرار بدون زيادة<span class="mk-date">02/10/2026 — وزارة البترول أثبتت بنزين 92 عند 22.25 ج.م/لتر — تعبئة الموتوسيكل فاضلة 445 ج.م وميزانية الوقود في أكتوبر ما اتغيرتش.</span></span></li>
+<li><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span>الدولار يتراجع أمام الجنيه إلى 51.92/52.00 بالمركزي<span class="mk-date">02/10/2026 — أقوى من 51.96–52.18 في 21/09 — لو عندك اشتراكات دولية تكلفتها بالجنيه بتقل قليلًا.</span></span></li>
+<li><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg><span>التضخم الحضري تراجع لـ14.5% في أغسطس مقابل 14.9% يوليو<span class="mk-date">10/09/2026 — أول تراجع من شهور — الغذاء نزل 1.2% شهريًا (خضروات -7%)، أرخص وقت ترفع البقالة البيتية.</span></span></li></ul></div></div><div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-info"/></svg> الأرقام دي بتتحدّث أسبوعيًا كل سبت وأمام أي خطة شهرية، والمصدر الكامل بتواريخه في وثيقة الأسعار داخل المجلد المحلي.</div></section>
 
   <!-- 5. INSIGHTS -->
-  <div class="lt"><h1>تحليل</h1><p>من 2026-01-28 إلى 2026-10-01</p></div>
+  <div class="lt"><h1>تحليل</h1><p>من 2026-01-28 إلى 2026-10-02</p></div>
   <section class="sec" id="insights">
     <div class="sec-h"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-chart-column"/></svg></span>
       <h2>تحليل الشهر</h2>
-      <span class="hint">من 2026-01-28 إلى 2026-10-01</span>
+      <span class="hint">من 2026-01-28 إلى 2026-10-02</span>
     </div>
-    <div class="chart-wrap"><svg class="chart" viewBox="0 0 680 232" role="img" aria-label="مصروف آخر تسعة شهور" preserveAspectRatio="xMidYMid meet"><line x1="10" y1="88.6" x2="670" y2="88.6" stroke="#C9A227" stroke-width="1.5" stroke-dasharray="5 4" opacity=".9"/><text x="668" y="82.6" fill="#8A6F14" font-size="11" text-anchor="start">المتوسط 11,386</text><rect x="27.6" y="80.5" width="38.1" height="117.5" rx="6" fill="#163A5F"/><text x="46.7" y="73.5" fill="#5B6A80" font-size="10" text-anchor="middle">12,232</text><text x="46.7" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">فبر</text><rect x="100.9" y="94.2" width="38.1" height="103.8" rx="6" fill="#163A5F"/><text x="120.0" y="87.2" fill="#5B6A80" font-size="10" text-anchor="middle">10,810</text><text x="120.0" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">مار</text><rect x="174.3" y="34.0" width="38.1" height="164.0" rx="6" fill="#163A5F"/><text x="193.3" y="27.0" fill="#5B6A80" font-size="10" text-anchor="middle">17,071</text><text x="193.3" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">أبر</text><rect x="247.6" y="112.6" width="38.1" height="85.4" rx="6" fill="#163A5F"/><text x="266.7" y="105.6" fill="#5B6A80" font-size="10" text-anchor="middle">8,886</text><text x="266.7" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">ماي</text><rect x="320.9" y="94.8" width="38.1" height="103.2" rx="6" fill="#163A5F"/><text x="340.0" y="87.8" fill="#5B6A80" font-size="10" text-anchor="middle">10,741</text><text x="340.0" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">يون</text><rect x="394.3" y="126.6" width="38.1" height="71.4" rx="6" fill="#163A5F"/><text x="413.3" y="119.6" fill="#5B6A80" font-size="10" text-anchor="middle">7,428</text><text x="413.3" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">يول</text><rect x="467.6" y="93.1" width="38.1" height="104.9" rx="6" fill="#163A5F"/><text x="486.7" y="86.1" fill="#5B6A80" font-size="10" text-anchor="middle">10,921</text><text x="486.7" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">أغس</text><rect x="540.9" y="96.0" width="38.1" height="102.0" rx="6" fill="#163A5F"/><text x="560.0" y="89.0" fill="#5B6A80" font-size="10" text-anchor="middle">10,622</text><text x="560.0" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">سبت</text><rect x="614.3" y="178.8" width="38.1" height="19.2" rx="6" fill="#C9A227"/><text x="633.3" y="171.8" fill="#5B6A80" font-size="10" text-anchor="middle">2,000</text><text x="633.3" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">أكت</text><line x1="10" y1="198" x2="670" y2="198" stroke="#E3E9F2" stroke-width="1"/></svg></div>
+    <div class="chart-wrap"><svg class="chart" viewBox="0 0 680 232" role="img" aria-label="مصروف آخر تسعة شهور" preserveAspectRatio="xMidYMid meet"><line x1="10" y1="87.4" x2="670" y2="87.4" stroke="#C9A227" stroke-width="1.5" stroke-dasharray="5 4" opacity=".9"/><text class="cv" x="668" y="81.4" fill="#8A6F14" font-size="11" text-anchor="start">المتوسط 11,509</text><rect x="27.6" y="80.5" width="38.1" height="117.5" rx="6" fill="#163A5F"/><text class="cv" x="46.7" y="73.5" fill="#5B6A80" font-size="10" text-anchor="middle">12,232</text><text x="46.7" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">فبر</text><rect x="100.9" y="94.2" width="38.1" height="103.8" rx="6" fill="#163A5F"/><text class="cv" x="120.0" y="87.2" fill="#5B6A80" font-size="10" text-anchor="middle">10,810</text><text x="120.0" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">مار</text><rect x="174.3" y="34.0" width="38.1" height="164.0" rx="6" fill="#163A5F"/><text class="cv" x="193.3" y="27.0" fill="#5B6A80" font-size="10" text-anchor="middle">17,071</text><text x="193.3" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">أبر</text><rect x="247.6" y="112.6" width="38.1" height="85.4" rx="6" fill="#163A5F"/><text class="cv" x="266.7" y="105.6" fill="#5B6A80" font-size="10" text-anchor="middle">8,886</text><text x="266.7" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">ماي</text><rect x="320.9" y="94.8" width="38.1" height="103.2" rx="6" fill="#163A5F"/><text class="cv" x="340.0" y="87.8" fill="#5B6A80" font-size="10" text-anchor="middle">10,741</text><text x="340.0" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">يون</text><rect x="394.3" y="126.6" width="38.1" height="71.4" rx="6" fill="#163A5F"/><text class="cv" x="413.3" y="119.6" fill="#5B6A80" font-size="10" text-anchor="middle">7,428</text><text x="413.3" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">يول</text><rect x="467.6" y="93.1" width="38.1" height="104.9" rx="6" fill="#163A5F"/><text class="cv" x="486.7" y="86.1" fill="#5B6A80" font-size="10" text-anchor="middle">10,921</text><text x="486.7" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">أغس</text><rect x="540.9" y="96.0" width="38.1" height="102.0" rx="6" fill="#163A5F"/><text class="cv" x="560.0" y="89.0" fill="#5B6A80" font-size="10" text-anchor="middle">10,622</text><text x="560.0" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">سبت</text><rect x="614.3" y="165.6" width="38.1" height="32.4" rx="6" fill="#C9A227"/><text class="cv" x="633.3" y="158.6" fill="#5B6A80" font-size="10" text-anchor="middle">3,372</text><text x="633.3" y="222" fill="#5B6A80" font-size="11" text-anchor="middle">أكت</text><line x1="10" y1="198" x2="670" y2="198" stroke="#E3E9F2" stroke-width="1"/></svg></div>
     <div class="cmp-grid">
       <div>
         <div class="mk-h"><svg class="ic" aria-hidden="true"><use href="#ic-chart-column"/></svg> صافي الصرف شهريًا</div>
         <div class="tw"><table>
           <thead><tr><th>الشهر</th><th class="num">صافي الصرف</th>
             <th class="num">الوارد</th><th class="num">التغيّر</th></tr></thead>
-          <tbody><tr><td class="num">2026-01</td><td class="num">1,681</td><td class="num">13,000</td><td class="num">—</td></tr><tr><td class="num">2026-02</td><td class="num">12,232</td><td class="num">10,000</td><td class="num v-red"><span dir="ltr">+10,551</span></td></tr><tr><td class="num">2026-03</td><td class="num">10,810</td><td class="num">13,000</td><td class="num v-green"><span dir="ltr">-1,422</span></td></tr><tr><td class="num">2026-04</td><td class="num">17,071</td><td class="num">6,255</td><td class="num v-red"><span dir="ltr">+6,261</span></td></tr><tr><td class="num">2026-05</td><td class="num">8,886</td><td class="num">23,475</td><td class="num v-green"><span dir="ltr">-8,185</span></td></tr><tr><td class="num">2026-06</td><td class="num">10,741</td><td class="num">15,000</td><td class="num v-red"><span dir="ltr">+1,855</span></td></tr><tr><td class="num">2026-07</td><td class="num">7,428</td><td class="num">1,175</td><td class="num v-green"><span dir="ltr">-3,313</span></td></tr><tr><td class="num">2026-08</td><td class="num">10,921</td><td class="num">1,770</td><td class="num v-red"><span dir="ltr">+3,494</span></td></tr><tr><td class="num">2026-09</td><td class="num">10,622</td><td class="num">11,050</td><td class="num v-green"><span dir="ltr">-299</span></td></tr><tr><td class="num">2026-10</td><td class="num">2,000</td><td class="num">17,000</td><td class="num v-green"><span dir="ltr">-8,622</span></td></tr></tbody>
+          <tbody><tr><td class="num pub">2026-01</td><td class="num">1,681</td><td class="num">13,000</td><td class="num">—</td></tr><tr><td class="num pub">2026-02</td><td class="num">12,232</td><td class="num">10,000</td><td class="num v-red"><span dir="ltr">+10,551</span></td></tr><tr><td class="num pub">2026-03</td><td class="num">10,810</td><td class="num">13,000</td><td class="num v-green"><span dir="ltr">-1,422</span></td></tr><tr><td class="num pub">2026-04</td><td class="num">17,071</td><td class="num">6,255</td><td class="num v-red"><span dir="ltr">+6,261</span></td></tr><tr><td class="num pub">2026-05</td><td class="num">8,886</td><td class="num">23,475</td><td class="num v-green"><span dir="ltr">-8,185</span></td></tr><tr><td class="num pub">2026-06</td><td class="num">10,741</td><td class="num">15,000</td><td class="num v-red"><span dir="ltr">+1,855</span></td></tr><tr><td class="num pub">2026-07</td><td class="num">7,428</td><td class="num">1,175</td><td class="num v-green"><span dir="ltr">-3,313</span></td></tr><tr><td class="num pub">2026-08</td><td class="num">10,921</td><td class="num">1,770</td><td class="num v-red"><span dir="ltr">+3,494</span></td></tr><tr><td class="num pub">2026-09</td><td class="num">10,622</td><td class="num">11,050</td><td class="num v-green"><span dir="ltr">-299</span></td></tr><tr><td class="num pub">2026-10</td><td class="num">3,372</td><td class="num">17,000</td><td class="num v-green"><span dir="ltr">-7,250</span></td></tr></tbody>
         </table></div>
       </div>
       <div>
@@ -668,12 +697,12 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
     <div class="tw"><table id="cat_tbl">
       <thead><tr><th>التصنيف</th><th class="num">الإجمالي</th>
         <th class="num">الحصة</th><th class="num">عدد</th></tr></thead>
-      <tbody><tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg>سحب نقدي (ATM)</span></td><td class="num">39,500</td><td class="num"><span class="share"><span class="share-bar"><i style="width:43%"></i></span>42.8%</span></td><td class="num">43</td></tr>
-<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-send"/></svg>مدفوعات وتحويلات</span></td><td class="num">14,520</td><td class="num"><span class="share"><span class="share-bar"><i style="width:16%"></i></span>15.7%</span></td><td class="num">24</td></tr>
-<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-cart"/></svg>مشتريات ومحلات</span></td><td class="num">13,478</td><td class="num"><span class="share"><span class="share-bar"><i style="width:15%"></i></span>14.6%</span></td><td class="num">13</td></tr>
-<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-smartphone"/></svg>موبايل وإنترنت</span></td><td class="num">8,740</td><td class="num"><span class="share"><span class="share-bar"><i style="width:9%"></i></span>9.5%</span></td><td class="num">48</td></tr>
-<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-utensils"/></svg>مطاعم وتوصيل</span></td><td class="num">5,751</td><td class="num"><span class="share"><span class="share-bar"><i style="width:6%"></i></span>6.2%</span></td><td class="num">25</td></tr>
-<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-shirt"/></svg>تسوق أونلاين</span></td><td class="num">3,200</td><td class="num"><span class="share"><span class="share-bar"><i style="width:3%"></i></span>3.5%</span></td><td class="num">2</td></tr>
+      <tbody><tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-banknote"/></svg>سحب نقدي (ATM)</span></td><td class="num">39,500</td><td class="num"><span class="share"><span class="share-bar"><i style="width:42%"></i></span>42.1%</span></td><td class="num">43</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-send"/></svg>مدفوعات وتحويلات</span></td><td class="num">14,520</td><td class="num"><span class="share"><span class="share-bar"><i style="width:15%"></i></span>15.5%</span></td><td class="num">24</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-cart"/></svg>مشتريات ومحلات</span></td><td class="num">13,478</td><td class="num"><span class="share"><span class="share-bar"><i style="width:14%"></i></span>14.4%</span></td><td class="num">13</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-smartphone"/></svg>موبايل وإنترنت</span></td><td class="num">8,740</td><td class="num"><span class="share"><span class="share-bar"><i style="width:9%"></i></span>9.3%</span></td><td class="num">48</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-utensils"/></svg>مطاعم وتوصيل</span></td><td class="num">7,123</td><td class="num"><span class="share"><span class="share-bar"><i style="width:8%"></i></span>7.6%</span></td><td class="num">26</td></tr>
+<tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-shirt"/></svg>تسوق أونلاين</span></td><td class="num">3,200</td><td class="num"><span class="share"><span class="share-bar"><i style="width:3%"></i></span>3.4%</span></td><td class="num">2</td></tr>
 <tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg>أخرى (غير مصنف)</span></td><td class="num">1,766</td><td class="num"><span class="share"><span class="share-bar"><i style="width:2%"></i></span>1.9%</span></td><td class="num">2</td></tr>
 <tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-shopping-basket"/></svg>بقالة وسوبر ماركت</span></td><td class="num">1,680</td><td class="num"><span class="share"><span class="share-bar"><i style="width:2%"></i></span>1.8%</span></td><td class="num">9</td></tr>
 <tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-heart-pulse"/></svg>صحة وصيدليات</span></td><td class="num">1,419</td><td class="num"><span class="share"><span class="share-bar"><i style="width:2%"></i></span>1.5%</span></td><td class="num">3</td></tr>
@@ -681,7 +710,7 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
 <tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-coffee"/></svg>كافيهات وترفيه</span></td><td class="num">797</td><td class="num"><span class="share"><span class="share-bar"><i style="width:1%"></i></span>0.9%</span></td><td class="num">4</td></tr>
 <tr><td><span class="cell-cat"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg>اشتراكات ومحتوى</span></td><td class="num">349</td><td class="num"><span class="share"><span class="share-bar"><i style="width:0%"></i></span>0.4%</span></td><td class="num">1</td></tr></tbody>
     </table></div>
-    <div class="alerts"><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>NBE ATM666</b><span class="a-s">09/03 · سحب نقدي (ATM) · أعلى من المعتاد ×3.3</span></div><span class="a-amt num">3,300 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>NBE ATM713</b><span class="a-s">04/03 · سحب نقدي (ATM) · أعلى من المعتاد ×3.0</span></div><span class="a-amt num">3,000 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>Talabat Maa</b><span class="a-s">13/07 · مطاعم وتوصيل · أعلى من المعتاد ×3.4</span></div><span class="a-amt num">625 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>Vodafone Top Up APP Sma</b><span class="a-s">29/05 · موبايل وإنترنت · أعلى من المعتاد ×3.4</span></div><span class="a-amt num">500 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>Vodafone Top Up APP Sma</b><span class="a-s">09/06 · موبايل وإنترنت · أعلى من المعتاد ×3.4</span></div><span class="a-amt num">500 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>Vodafone Top Up APP Sma</b><span class="a-s">30/06 · موبايل وإنترنت · أعلى من المعتاد ×3.4</span></div><span class="a-amt num">500 ج.م</span></div></div>
+    <div class="alerts"><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>NBE ATM666</b><span class="a-s">09/03 · سحب نقدي (ATM) · أعلى من المعتاد ×3.3</span></div><span class="a-amt num">3,300 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>talabat.com postpaid Maa</b><span class="a-s">02/10 · مطاعم وتوصيل · أعلى من المعتاد ×7.0</span></div><span class="a-amt num">1,372 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>Talabat Maa</b><span class="a-s">13/07 · مطاعم وتوصيل · أعلى من المعتاد ×3.2</span></div><span class="a-amt num">625 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>Vodafone Top Up APP Sma</b><span class="a-s">29/05 · موبايل وإنترنت · أعلى من المعتاد ×3.4</span></div><span class="a-amt num">500 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>Vodafone Top Up APP Sma</b><span class="a-s">09/06 · موبايل وإنترنت · أعلى من المعتاد ×3.4</span></div><span class="a-amt num">500 ج.م</span></div><div class="alert"><span class="a-ic"><svg class="ic" aria-hidden="true"><use href="#ic-triangle-alert"/></svg></span><div class="a-m"><b>Vodafone Top Up APP Sma</b><span class="a-s">30/06 · موبايل وإنترنت · أعلى من المعتاد ×3.4</span></div><span class="a-amt num">500 ج.م</span></div></div>
     <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-circle-alert"/></svg> التنبيهات بتتبنى على تاريخ نفس التصنيف: أي مبلغ قفز عن إيقاعه المعتاد بيتسجّل هنا عشان تراجعه في مراجعة الجمعة.</div>
   </section>
 
@@ -729,13 +758,12 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
     <div class="sec-h" style="margin-top:20px"><span class="sic"><svg class="ic" aria-hidden="true"><use href="#ic-download"/></svg></span>
       <h2>تحميل تقاريري</h2>
     </div>
-    <div class="dl"><a href="33151d2496_dashboard_2026.html" download><svg class="ic" aria-hidden="true"><use href="#ic-layout-dashboard"/></svg>لوحة التحكم التفاعلية<span class="sz">4.6 MB</span></a>
-<a href="57cfe36beb_Financial_Analysis_2026.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-file-spreadsheet"/></svg>تقرير التحليل الكامل<span class="sz">28 KB</span></a>
+    <div class="dl"><a href="57cfe36beb_Financial_Analysis_2026.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-file-spreadsheet"/></svg>تقرير التحليل الكامل<span class="sz">28 KB</span></a>
 <a href="5c906c6244_transactions_2026.csv" download><svg class="ic" aria-hidden="true"><use href="#ic-table"/></svg>كل المعاملات (CSV)<span class="sz">17 KB</span></a>
 <a href="1a6c073a15_summary_2026.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>الأرقام المجمعة (JSON)<span class="sz">24 KB</span></a>
 <a href="7215c039a2_plan_2026-10.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>خطة الشهر (إكسل)<span class="sz">10 KB</span></a>
 <a href="94044d7e24_market_watch.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>أسعار السوق والأخبار (JSON)<span class="sz">5 KB</span></a></div>
-    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-01 22:36</b></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 12:11</b></div>
     <div class="note warn" id="stale_hint" style="display:none"><svg class="ic" aria-hidden="true"><use href="#ic-clock"/></svg>
       اللوحة دي متبنيّة على شهر <b>2026-10</b> — بس تاريخ النهارده <b class="stale-m num"></b>.
       لو الشهر اتغيّر شغّل <b>plan_month</b> عشان الخطة والتنبيهات تتحدّث.</div>
@@ -743,10 +771,13 @@ footer .ic{width:14px; height:14px; color:var(--label-3)}
 
 </main>
 <footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام
-  <span>آخر توليد <b id="gentime" class="num">2026-10-01 22:36</b></span>
-  <span>تاريخ البناء 01/10/2026</span></footer>
+  <span>آخر توليد <b id="gentime" class="num">2026-10-02 12:11</b></span>
+  <span>تاريخ البناء 02/10/2026</span></footer>
 
 <button class="fab" id="fab" aria-label="إضافة قيد" onclick="jumpAdd()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button>
+
+<button class="pvt" id="pvt" type="button" aria-label="إخفاء الأرقام" aria-pressed="false" onclick="togglePrivate()"><svg class="ic" aria-hidden="true"><use href="#ic-eye"/></svg></button>
+      <button class="sndfab" id="snd_fab" type="button" aria-label="كتم الصوت" aria-pressed="true" onclick="toggleSnd()"><svg class="ic" aria-hidden="true"><use href="#ic-volume-2"/></svg></button>
 
 <nav class="tabbar" id="tabbar" aria-label="تنقل سريع">
   <button type="button" class="tb on" data-t="hero"><svg class="ic" aria-hidden="true"><use href="#ic-gauge"/></svg><span>الرئيسية</span></button>
@@ -842,6 +873,7 @@ function sha(s) {
 function unlock() {
   document.body.classList.remove("locked");
   document.getElementById("lock").style.display = "none";
+  SND.play("unlock");
 }
 function go() {
   var v = document.getElementById("pw").value;
@@ -852,6 +884,7 @@ function go() {
     } else {
       document.getElementById("err").textContent = "الرمز غلط — جرّب تاني";
       document.getElementById("pw").value = "";
+      SND.play("err");
     }
   });
 }
@@ -861,6 +894,155 @@ document.getElementById("pw").addEventListener("keydown", function (e) {
 try {
   if (sessionStorage.getItem("mf_ok") === "1") unlock();
 } catch (e) {}
+
+/* privacy eye: blur every personal number, toggle with the floating eye */
+function applyPrivate(on) {
+  document.body.classList.toggle("priv", !!on);
+  var b = document.getElementById("pvt");
+  if (b) {
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+    b.setAttribute("aria-label", on ? "إظهار الأرقام" : "إخفاء الأرقام");
+    b.innerHTML = on
+      ? '<svg class="ic" aria-hidden="true"><use href="#ic-eye-off"/></svg>'
+      : '<svg class="ic" aria-hidden="true"><use href="#ic-eye"/></svg>';
+  }
+  try { localStorage.setItem("mf_priv", on ? "1" : "0"); } catch (e) {}
+}
+function togglePrivate() {
+  applyPrivate(!document.body.classList.contains("priv"));
+  SND.play("peek");
+}
+try { if (localStorage.getItem("mf_priv") === "1") applyPrivate(true); } catch (e) {}
+
+/* ---------- sound pack: synthesised in the browser, zero audio files ----- */
+var SND = (function () {
+  var ac = null, bus = null, armed = false, last = 0, live = true;
+  try { live = localStorage.getItem("mf_snd") !== "0"; } catch (e) {}
+  function ctx() {
+    if (!ac) {
+      var A = window.AudioContext || window.webkitAudioContext;
+      if (!A) return null;
+      try { ac = new A(); } catch (e) { return null; }
+      bus = ac.createGain();
+      bus.gain.value = 0.6;
+      bus.connect(ac.destination);
+    }
+    if (ac.state === "suspended") { try { ac.resume(); } catch (e) {} }
+    return ac;
+  }
+  /* one enveloped oscillator gliding f0 -> f1 across dur seconds */
+  function tone(f0, f1, dur, type, vol, at) {
+    var c = ctx(); if (!c) return;
+    var t = c.currentTime + (at || 0);
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = type || "sine";
+    o.frequency.setValueAtTime(f0, t);
+    if (f1 && f1 !== f0) {
+      try { o.frequency.exponentialRampToValueAtTime(f1, t + dur); }
+      catch (e) { o.frequency.setValueAtTime(f1, t + dur); }
+    }
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(bus);
+    o.start(t); o.stop(t + dur + 0.04);
+  }
+  /* every entry: [f0, f1, duration, wave, volume, delay] */
+  var P = {
+    tick:     [[1560, 1180, 0.045, "triangle", 0.10, 0]],
+    /* إيداع / وارد: صعود مبهج - نشوة استلام الفلوس (مظبوط فودافون كاش / انستاباي) */
+    deposit:  [[523, 523, 0.06, "triangle", 0.17, 0],
+               [659, 659, 0.06, "triangle", 0.17, 0.05],
+               [784, 784, 0.06, "triangle", 0.18, 0.10],
+               [1047, 1319, 0.22, "triangle", 0.19, 0.15],
+               [1568, 1568, 0.26, "sine", 0.10, 0.20],
+               [2093, 2093, 0.32, "sine", 0.05, 0.26]],
+    /* سحب / صادر: هبوط بطيء بشعور حزين - الفلوس طالعة */
+    withdraw: [[523, 494, 0.10, "sine", 0.16, 0],
+               [440, 415, 0.12, "sine", 0.15, 0.10],
+               [349, 311, 0.16, "sine", 0.15, 0.22],
+               [262, 196, 0.38, "triangle", 0.13, 0.38]],
+    /* تحويل بين حسابين: حركة الفلوس من مكان لمكان */
+    transfer: [[440, 587, 0.09, "triangle", 0.14, 0],
+               [659, 880, 0.10, "triangle", 0.14, 0.08],
+               [1047, 1047, 0.17, "triangle", 0.13, 0.17]],
+    open:     [[420, 940, 0.17, "triangle", 0.09, 0]],
+    close:    [[940, 400, 0.15, "triangle", 0.08, 0]],
+    save:     [[784, 784, 0.07, "triangle", 0.16, 0],
+               [1175, 1175, 0.18, "triangle", 0.14, 0.065]],
+    done:     [[880, 880, 0.06, "sine", 0.14, 0],
+               [1319, 1319, 0.06, "sine", 0.13, 0.055],
+               [1760, 1760, 0.20, "sine", 0.11, 0.11]],
+    /* حذف: نغمة منخفضة نازلة - رحيل */
+    del:      [[392, 330, 0.14, "sine", 0.16, 0],
+               [262, 175, 0.26, "sine", 0.15, 0.13]],
+    wipe:     [[330, 294, 0.16, "sine", 0.17, 0],
+               [220, 131, 0.36, "sine", 0.15, 0.14]],
+    /* خطأ: دقّتين خفاف من غير أي صرامة */
+    err:      [[320, 260, 0.09, "sine", 0.15, 0],
+               [320, 260, 0.09, "sine", 0.15, 0.13]],
+    /* البوابة: فتح ناجح مع لمعة */
+    unlock:   [[523, 523, 0.06, "sine", 0.15, 0],
+               [784, 784, 0.06, "sine", 0.15, 0.06],
+               [1047, 1047, 0.20, "sine", 0.15, 0.12],
+               [1568, 1568, 0.26, "sine", 0.08, 0.17]],
+    /* عين الخصوصية: نظرة سريعة */
+    peek:     [[1240, 720, 0.10, "triangle", 0.11, 0]]
+  };
+  function play(name) {
+    if (!live || !armed || !name) return;
+    var seq = P[name];
+    if (!seq) return;
+    var now = Date.now();
+    if (now - last < 70) return;
+    last = now;
+    try {
+      for (var i = 0; i < seq.length; i++) {
+        var s = seq[i];
+        tone(s[0], s[1], s[2], s[3], s[4], s[5]);
+      }
+    } catch (e) {}
+  }
+  return {
+    play: play,
+    on: function () { return live; },
+    setOn: function (v) { live = !!v; },
+    arm: function () { armed = true; }
+  };
+})();
+/* the context may only start after a real gesture, so arm it on the first one */
+document.addEventListener("pointerdown", function () { SND.arm(); },
+                          { once: true, passive: true });
+document.addEventListener("keydown", function () { SND.arm(); },
+                          { once: true, passive: true });
+
+function applySnd(on) {
+  SND.setOn(on);
+  var b = document.getElementById("snd_btn");
+  if (b) {
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+    b.innerHTML = on
+      ? '<svg class="ic" aria-hidden="true"><use href="#ic-volume-2"/></svg> الصوت: مفعّل'
+      : '<svg class="ic" aria-hidden="true"><use href="#ic-volume-x"/></svg> الصوت: مقفول';
+  }
+  /* the floating switch mirrors the same state */
+  var f = document.getElementById("snd_fab");
+  if (f) {
+    f.setAttribute("aria-pressed", on ? "true" : "false");
+    f.setAttribute("aria-label", on ? "كتم الصوت" : "تشغيل الصوت");
+    f.innerHTML = on
+      ? '<svg class="ic" aria-hidden="true"><use href="#ic-volume-2"/></svg>'
+      : '<svg class="ic" aria-hidden="true"><use href="#ic-volume-x"/></svg>';
+  }
+}
+function toggleSnd() {
+  var on = !SND.on();
+  applySnd(on);
+  try { localStorage.setItem("mf_snd", on ? "1" : "0"); } catch (e) {}
+  if (on) { SND.arm(); SND.play("save"); }
+  else toast("الصوت اتقفل");
+}
+try { if (localStorage.getItem("mf_snd") === "0") applySnd(false); } catch (e) {}
 
 /* utilities */
 var REDUCED = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -927,12 +1109,14 @@ function lgErr(msg) {
   if (!e) return;
   e.textContent = msg || "";
   e.classList.toggle("on", !!msg);
+  if (msg) SND.play("err");
 }
 
 /* bottom sheets */
 function openSheet(id) {
   var bd = document.getElementById("sheet_bd"), s = document.getElementById(id);
   if (!s) return;
+  SND.play("open");
   if (SHEET && SHEET !== id) {
     var old = document.getElementById(SHEET);
     if (old) old.classList.remove("on");
@@ -947,6 +1131,7 @@ function openSheet(id) {
 }
 function closeSheet() {
   if (!SHEET) return;
+  SND.play("close");
   var bd = document.getElementById("sheet_bd"), s = document.getElementById(SHEET);
   if (s) s.classList.remove("on");
   bd.classList.remove("on");
@@ -965,6 +1150,7 @@ document.addEventListener("keydown", function (e) {
 
 /* quick log: expenses, income and transfers */
 function setType(t) {
+  if (t !== TYPE) SND.play("tick");
   TYPE = t;
   var o = document.getElementById("seg_out"),
       n = document.getElementById("seg_in"),
@@ -1244,6 +1430,7 @@ function renderLog() {
   mfFire();
 }
 function pickCat(el) {
+  SND.play("tick");
   quickNote(el.getAttribute("data-c") || "");
   document.getElementById("cat_lbl").textContent = el.getAttribute("data-c") || "اختار تصنيف";
   closeSheet();
@@ -1253,6 +1440,7 @@ function quickNote(v) {
   if (f) { f.value = v; }
 }
 function jumpAdd() {
+  SND.play("tick");
   var sec = document.getElementById("log");
   if (sec) sec.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "start" });
   setTimeout(function () {
@@ -1297,6 +1485,7 @@ function addEntry() {
   if (nt) nt.value = "";
   document.getElementById("cat_lbl").textContent = "اختار تصنيف";
   renderLog();
+  SND.play(TYPE === "in" ? "deposit" : (TYPE === "tr" ? "transfer" : "withdraw"));
   toast("اتحفظ القيد · الرصيد والرسوم اتحدّثوا فورًا");
   el.focus();
 }
@@ -1308,11 +1497,13 @@ function delEntry(i) {
   saveLog(arr);
   if (EDIT === i) EDIT = -1;
   renderLog();
+  SND.play("del");
   toast("اتمسح القيد");
 }
 function editEntry(i) {
   var arr = loadLog();
   if (i < 0 || i >= arr.length) return;
+  SND.play("tick");
   EDIT = i;
   EDTYPE = arr[i].t === "in" ? "in" : (arr[i].t === "tr" ? "tr" : "out");
   renderLog();
@@ -1320,6 +1511,7 @@ function editEntry(i) {
   if (f) { f.focus(); f.select(); }
 }
 function setEdType(t) {
+  if (t !== EDTYPE) SND.play("tick");
   EDTYPE = t;
   var o = document.getElementById("edt_out"),
       n = document.getElementById("edt_in"),
@@ -1332,6 +1524,7 @@ function setEdType(t) {
   if (wo) wo.hidden = (t === "out");
 }
 function cancelEdit() {
+  SND.play("close");
   EDIT = -1;
   renderLog();
 }
@@ -1360,6 +1553,7 @@ function saveEdit() {
   saveLog(arr);
   EDIT = -1;
   renderLog();
+  SND.play(EDTYPE === "in" ? "deposit" : (EDTYPE === "tr" ? "transfer" : "withdraw"));
   toast("اتعدّل القيد");
 }
 function wipeLog() {
@@ -1368,6 +1562,7 @@ function wipeLog() {
   saveLog([]);
   EDIT = -1;
   renderLog();
+  SND.play("wipe");
   toast("اتمسح السجل");
 }
 function exportLog() {
@@ -1386,6 +1581,7 @@ function exportLog() {
   a.click();
   document.body.removeChild(a);
   setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  SND.play("done");
   toast("اتحفظت نسخة " + arr.length + " قيد — احتفظ بالملف في مكان آمن");
 }
 function importLog() {
@@ -1426,6 +1622,7 @@ function doImport(input) {
     saveLog(clean);
     EDIT = -1;
     renderLog();
+    SND.play("done");
     toast("اتاستورد " + clean.length + " قيد بنجاح");
     input.value = "";
   };
@@ -1474,7 +1671,7 @@ function copyReport() {
     }
   }
   var done = false;
-  function finishCopy() { if (done) return; done = true; toast("اتنسخ التقرير — افتح المحادثة والصقه"); }
+  function finishCopy() { if (done) return; done = true; SND.play("done"); toast("اتنسخ التقرير — افتح المحادثة والصقه"); }
   function fallbackCopy() { if (done) return; done = true; manualCopy(txt); }
   if (navigator.clipboard && navigator.clipboard.writeText) {
     try {
@@ -1749,6 +1946,7 @@ function saveAcc() {
     closeSheet();
     renderAccounts();
     fillAccountSelects();
+    SND.play("save");
     toast("اتضاف حساب «" + n + "»");
     return;
   }
@@ -1772,6 +1970,7 @@ function saveAcc() {
   closeSheet();
   renderAccounts();
   fillAccountSelects();
+  SND.play("save");
   toast("اتعدّل حساب «" + n + "»");
 }
 function delAcc(id) {
@@ -1787,6 +1986,7 @@ function delAcc(id) {
   closeSheet();
   renderAccounts();
   fillAccountSelects();
+  SND.play("del");
   toast("اتمسح الحساب");
 }
 function saveGrp() {
@@ -1800,6 +2000,7 @@ function saveGrp() {
     saveCfg(c);
     closeSheet();
     renderAccounts();
+    SND.play("save");
     toast("اتضافت المجموعة «" + n + "»");
     return;
   }
@@ -1809,6 +2010,7 @@ function saveGrp() {
   saveCfg(c);
   closeSheet();
   renderAccounts();
+  SND.play("save");
   toast("اتعدّلت المجموعة");
 }
 function delGrp() {
@@ -1823,6 +2025,7 @@ function delGrp() {
   saveCfg(c);
   closeSheet();
   renderAccounts();
+  SND.play("del");
   toast("اتمسحت المجموعة");
 }
 function exportCfg() {
@@ -1851,6 +2054,7 @@ function exportCfg() {
   el.click();
   document.body.removeChild(el);
   setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  SND.play("done");
   toast("اتحمّل accounts.json · " + nAcc + " حساب · رصيد عدّلته بيدك: " + touched);
 }
 function clearLocal() {
@@ -1866,13 +2070,15 @@ function clearLocal() {
   } catch (e) {}
   renderAccounts();
   fillAccountSelects();
+  SND.play("wipe");
   toast("اتمسحت الإعدادات المحلية");
 }
 
 /* transactions explorer */
-var TX = [{"d": "2026-10-01", "k": "credit", "n": "يوسف نبيل نصيف رزق", "c": "وارد", "a": 17000.0}, {"d": "2026-10-01", "k": "debit", "n": "BDC ELSTODYOHAT ALANTA 6", "c": "سحب نقدي (ATM)", "a": 2000.0}, {"d": "2026-09-30", "k": "credit", "n": "ESSAM MOHAMED TAHA MAHROUS IBRAHIM", "c": "وارد", "a": 480.0}, {"d": "2026-09-29", "k": "debit", "n": "CHOCO STORE", "c": "بقالة وسوبر ماركت", "a": 5.0}, {"d": "2026-09-28", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 143.0}, {"d": "2026-09-28", "k": "debit", "n": "CHILL OUT DAR ELSALAM", "c": "كافيهات وترفيه", "a": 226.0}, {"d": "2026-09-28", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 126.0}, {"d": "2026-09-26", "k": "credit", "n": "يوسف نبيل نصيف رزق", "c": "وارد", "a": 2000.0}, {"d": "2026-09-26", "k": "debit", "n": "CIB-FAWRY PLUS FAISAL G", "c": "مدفوعات وتحويلات", "a": 1000.0}, {"d": "2026-09-26", "k": "debit", "n": "FAWRY*DOCTOR BIKE AU", "c": "مدفوعات وتحويلات", "a": 500.0}, {"d": "2026-09-22", "k": "debit", "n": "CHOCO STORE", "c": "بقالة وسوبر ماركت", "a": 5.0}, {"d": "2026-09-19", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 20.0}, {"d": "2026-09-14", "k": "credit", "n": "ESSAM MOHAMED TAHA MAHROUS IBRAHIM", "c": "وارد", "a": 40.0}, {"d": "2026-09-14", "k": "credit", "n": "نجلاء فتحى محمد ايوب", "c": "وارد", "a": 500.0}, {"d": "2026-09-14", "k": "debit", "n": "NBE ATM020", "c": "سحب نقدي (ATM)", "a": 500.0}, {"d": "2026-09-14", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 43.0}, {"d": "2026-09-11", "k": "debit", "n": "WATANIYA ABOU ELDARG SUE", "c": "بقالة وسوبر ماركت", "a": 720.0}, {"d": "2026-09-11", "k": "debit", "n": "FAWRY*WINK DOLPHIN S", "c": "مدفوعات وتحويلات", "a": 100.0}, {"d": "2026-09-10", "k": "debit", "n": "BDC ELHARAM C", "c": "سحب نقدي (ATM)", "a": 1000.0}, {"d": "2026-09-10", "k": "debit", "n": "FAWRY*SAHB ALSAADH", "c": "مدفوعات وتحويلات", "a": 200.0}, {"d": "2026-09-10", "k": "debit", "n": "Market Khier wa Baraka 52", "c": "بقالة وسوبر ماركت", "a": 135.0}, {"d": "2026-09-09", "k": "debit", "n": "CHILL OUT DAR ELSALAM", "c": "كافيهات وترفيه", "a": 184.0}, {"d": "2026-09-07", "k": "credit", "n": "IBRAHIM SAEED ABD ELAZIZ ABD ELNAGY", "c": "وارد", "a": 30.0}, {"d": "2026-09-06", "k": "debit", "n": "CHILL OUT DAR ELSALAM", "c": "كافيهات وترفيه", "a": 232.0}, {"d": "2026-09-06", "k": "debit", "n": "CAIROXXX CAI", "c": "أخرى (غير مصنف)", "a": 616.0}, {"d": "2026-09-05", "k": "debit", "n": "BDC ELHARAM C", "c": "سحب نقدي (ATM)", "a": 2000.0}, {"d": "2026-09-03", "k": "debit", "n": "BDC HARAM H", "c": "سحب نقدي (ATM)", "a": 100.0}, {"d": "2026-09-03", "k": "debit", "n": "FAWRY*SAHB ALSAADH", "c": "مدفوعات وتحويلات", "a": 150.0}, {"d": "2026-09-03", "k": "debit", "n": "BDC ELHARAM C", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-09-03", "k": "debit", "n": "BDC ELHARAM C", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-09-02", "k": "debit", "n": "NBE ATM020", "c": "سحب نقدي (ATM)", "a": 50.0}, {"d": "2026-09-02", "k": "debit", "n": "VODAFONE EGYPT Cai", "c": "موبايل وإنترنت", "a": 164.29}, {"d": "2026-09-01", "k": "credit", "n": "يوسف نبيل نصيف رزق", "c": "وارد", "a": 8000.0}, {"d": "2026-09-01", "k": "debit", "n": "talabat.com PostPaid cai", "c": "مطاعم وتوصيل", "a": 362.99}, {"d": "2026-09-01", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 274.99}, {"d": "2026-09-01", "k": "debit", "n": "OLA ENERGY RING RD GI", "c": "بنزين ووقود", "a": 265.0}, {"d": "2026-09-01", "k": "debit", "n": "BDC HARAM H", "c": "سحب نقدي (ATM)", "a": 1100.0}, {"d": "2026-08-31", "k": "credit", "n": "كريم جميل جوهرى عبدالفتاح الجوهرى", "c": "وارد", "a": 70.0}, {"d": "2026-08-25", "k": "credit", "n": "يوسف نبيل نصيف رزق", "c": "وارد", "a": 1000.0}, {"d": "2026-08-25", "k": "debit", "n": "KFH-Egypt CAI", "c": "مدفوعات وتحويلات", "a": 1000.0}, {"d": "2026-08-23", "k": "debit", "n": "AWBE CAI", "c": "مشتريات ومحلات", "a": 60.0}, {"d": "2026-08-20", "k": "debit", "n": "NBE ATM020", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-08-20", "k": "debit", "n": "HDB-ATM4807", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-08-20", "k": "debit", "n": "HDB-ATM4807", "c": "سحب نقدي (ATM)", "a": 100.0}, {"d": "2026-08-18", "k": "debit", "n": "CIB-OLA Diplomat N", "c": "مدفوعات وتحويلات", "a": 500.0}, {"d": "2026-08-18", "k": "credit", "n": "ESSAM MOHAMED TAHA MAHROUS IBRAHIM", "c": "وارد", "a": 400.0}, {"d": "2026-08-18", "k": "debit", "n": "VODAFONE EGYPT Cai", "c": "موبايل وإنترنت", "a": 164.29}, {"d": "2026-08-16", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 395.74}, {"d": "2026-08-12", "k": "debit", "n": "GEIDEAE*Animalia Ne", "c": "مشتريات ومحلات", "a": 43.0}, {"d": "2026-08-12", "k": "debit", "n": "FAWRY*THE STAR SUPER", "c": "بقالة وسوبر ماركت", "a": 20.0}, {"d": "2026-08-12", "k": "debit", "n": "BM HUB OLA DEBOMAT 2TH C", "c": "مشتريات ومحلات", "a": 1500.0}, {"d": "2026-08-12", "k": "debit", "n": "Orange - Home InternetNIL", "c": "موبايل وإنترنت", "a": 143.0}, {"d": "2026-08-12", "k": "debit", "n": "Orange - Home InternetNIL", "c": "موبايل وإنترنت", "a": 43.0}, {"d": "2026-08-11", "k": "debit", "n": "NBE ATM435", "c": "سحب نقدي (ATM)", "a": 500.0}, {"d": "2026-08-09", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 500.98}, {"d": "2026-08-09", "k": "credit", "n": "ESSAM MOHAMED TAHA MAHROUS IBRAHIM", "c": "وارد", "a": 250.0}, {"d": "2026-08-09", "k": "debit", "n": "OLA ENERGY RING RD GI", "c": "بنزين ووقود", "a": 310.0}, {"d": "2026-08-07", "k": "debit", "n": "BANK NXT ATM ATM", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-08-06", "k": "debit", "n": "FAWRY*ROMIO STORE MO", "c": "مدفوعات وتحويلات", "a": 250.0}, {"d": "2026-08-06", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 286.0}, {"d": "2026-08-05", "k": "credit", "n": "JANA AHMED", "c": "وارد", "a": 50.0}, {"d": "2026-08-05", "k": "debit", "n": "FAWRY*ALQRYTY", "c": "مدفوعات وتحويلات", "a": 440.0}, {"d": "2026-08-04", "k": "debit", "n": "OPAY_PF*Gamety Ca", "c": "مدفوعات وتحويلات", "a": 60.0}, {"d": "2026-08-04", "k": "debit", "n": "QNBS-0838 GIZ", "c": "مدفوعات وتحويلات", "a": 500.0}, {"d": "2026-08-04", "k": "debit", "n": "FAWRY*ALQRYTY", "c": "مدفوعات وتحويلات", "a": 610.0}, {"d": "2026-08-03", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 181.19}, {"d": "2026-08-02", "k": "debit", "n": "BDC ELHARAM C", "c": "سحب نقدي (ATM)", "a": 1000.0}, {"d": "2026-08-02", "k": "debit", "n": "VODAFONE EGYPT Cai", "c": "موبايل وإنترنت", "a": 164.29}, {"d": "2026-08-02", "k": "debit", "n": "BDC ELHARAM C", "c": "سحب نقدي (ATM)", "a": 400.0}, {"d": "2026-08-01", "k": "debit", "n": "U TURN GI", "c": "أخرى (غير مصنف)", "a": 1150.0}, {"d": "2026-07-27", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 80.0}, {"d": "2026-07-26", "k": "credit", "n": "KARIM GAMIL GOHARI ABDELFATAH EL GOHRI", "c": "وارد", "a": 200.0}, {"d": "2026-07-26", "k": "debit", "n": "NBE ATM435", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-07-25", "k": "debit", "n": "NBE ATM714", "c": "سحب نقدي (ATM)", "a": 100.0}, {"d": "2026-07-23", "k": "debit", "n": "VODAFONE EGYPT Cai", "c": "موبايل وإنترنت", "a": 164.29}, {"d": "2026-07-22", "k": "debit", "n": "EC H AL AHRAM TRF", "c": "اشتراكات ومحتوى", "a": 348.68}, {"d": "2026-07-21", "k": "debit", "n": "Uber Dow", "c": "مطاعم وتوصيل", "a": 5.0}, {"d": "2026-07-21", "k": "debit", "n": "Uber Dow", "c": "مطاعم وتوصيل", "a": 159.97}, {"d": "2026-07-20", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 127.64}, {"d": "2026-07-16", "k": "debit", "n": "TOTAL TERSA FUEL 510515", "c": "بنزين ووقود", "a": 475.0}, {"d": "2026-04-09", "k": "refund", "n": "FIBE HO", "c": "رد مبلغ", "a": 1000.0}, {"d": "2026-03-04", "k": "refund", "n": "NBE ATM713", "c": "رد مبلغ", "a": 8000.0}];
+var TX = [{"d": "2026-10-02", "k": "debit", "n": "talabat.com postpaid Maa", "c": "مطاعم وتوصيل", "a": 1372.26}, {"d": "2026-10-01", "k": "credit", "n": "يوسف نبيل نصيف رزق", "c": "وارد", "a": 17000.0}, {"d": "2026-10-01", "k": "debit", "n": "BDC ELSTODYOHAT ALANTA 6", "c": "سحب نقدي (ATM)", "a": 2000.0}, {"d": "2026-09-30", "k": "credit", "n": "ESSAM MOHAMED TAHA MAHROUS IBRAHIM", "c": "وارد", "a": 480.0}, {"d": "2026-09-29", "k": "debit", "n": "CHOCO STORE", "c": "بقالة وسوبر ماركت", "a": 5.0}, {"d": "2026-09-28", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 143.0}, {"d": "2026-09-28", "k": "debit", "n": "CHILL OUT DAR ELSALAM", "c": "كافيهات وترفيه", "a": 226.0}, {"d": "2026-09-28", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 126.0}, {"d": "2026-09-26", "k": "credit", "n": "يوسف نبيل نصيف رزق", "c": "وارد", "a": 2000.0}, {"d": "2026-09-26", "k": "debit", "n": "CIB-FAWRY PLUS FAISAL G", "c": "مدفوعات وتحويلات", "a": 1000.0}, {"d": "2026-09-26", "k": "debit", "n": "FAWRY*DOCTOR BIKE AU", "c": "مدفوعات وتحويلات", "a": 500.0}, {"d": "2026-09-22", "k": "debit", "n": "CHOCO STORE", "c": "بقالة وسوبر ماركت", "a": 5.0}, {"d": "2026-09-19", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 20.0}, {"d": "2026-09-14", "k": "credit", "n": "ESSAM MOHAMED TAHA MAHROUS IBRAHIM", "c": "وارد", "a": 40.0}, {"d": "2026-09-14", "k": "credit", "n": "نجلاء فتحى محمد ايوب", "c": "وارد", "a": 500.0}, {"d": "2026-09-14", "k": "debit", "n": "NBE ATM020", "c": "سحب نقدي (ATM)", "a": 500.0}, {"d": "2026-09-14", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 43.0}, {"d": "2026-09-11", "k": "debit", "n": "WATANIYA ABOU ELDARG SUE", "c": "بقالة وسوبر ماركت", "a": 720.0}, {"d": "2026-09-11", "k": "debit", "n": "FAWRY*WINK DOLPHIN S", "c": "مدفوعات وتحويلات", "a": 100.0}, {"d": "2026-09-10", "k": "debit", "n": "BDC ELHARAM C", "c": "سحب نقدي (ATM)", "a": 1000.0}, {"d": "2026-09-10", "k": "debit", "n": "FAWRY*SAHB ALSAADH", "c": "مدفوعات وتحويلات", "a": 200.0}, {"d": "2026-09-10", "k": "debit", "n": "Market Khier wa Baraka 52", "c": "بقالة وسوبر ماركت", "a": 135.0}, {"d": "2026-09-09", "k": "debit", "n": "CHILL OUT DAR ELSALAM", "c": "كافيهات وترفيه", "a": 184.0}, {"d": "2026-09-07", "k": "credit", "n": "IBRAHIM SAEED ABD ELAZIZ ABD ELNAGY", "c": "وارد", "a": 30.0}, {"d": "2026-09-06", "k": "debit", "n": "CHILL OUT DAR ELSALAM", "c": "كافيهات وترفيه", "a": 232.0}, {"d": "2026-09-06", "k": "debit", "n": "CAIROXXX CAI", "c": "أخرى (غير مصنف)", "a": 616.0}, {"d": "2026-09-05", "k": "debit", "n": "BDC ELHARAM C", "c": "سحب نقدي (ATM)", "a": 2000.0}, {"d": "2026-09-03", "k": "debit", "n": "BDC HARAM H", "c": "سحب نقدي (ATM)", "a": 100.0}, {"d": "2026-09-03", "k": "debit", "n": "FAWRY*SAHB ALSAADH", "c": "مدفوعات وتحويلات", "a": 150.0}, {"d": "2026-09-03", "k": "debit", "n": "BDC ELHARAM C", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-09-03", "k": "debit", "n": "BDC ELHARAM C", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-09-02", "k": "debit", "n": "NBE ATM020", "c": "سحب نقدي (ATM)", "a": 50.0}, {"d": "2026-09-02", "k": "debit", "n": "VODAFONE EGYPT Cai", "c": "موبايل وإنترنت", "a": 164.29}, {"d": "2026-09-01", "k": "credit", "n": "يوسف نبيل نصيف رزق", "c": "وارد", "a": 8000.0}, {"d": "2026-09-01", "k": "debit", "n": "talabat.com PostPaid cai", "c": "مطاعم وتوصيل", "a": 362.99}, {"d": "2026-09-01", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 274.99}, {"d": "2026-09-01", "k": "debit", "n": "OLA ENERGY RING RD GI", "c": "بنزين ووقود", "a": 265.0}, {"d": "2026-09-01", "k": "debit", "n": "BDC HARAM H", "c": "سحب نقدي (ATM)", "a": 1100.0}, {"d": "2026-08-31", "k": "credit", "n": "كريم جميل جوهرى عبدالفتاح الجوهرى", "c": "وارد", "a": 70.0}, {"d": "2026-08-25", "k": "credit", "n": "يوسف نبيل نصيف رزق", "c": "وارد", "a": 1000.0}, {"d": "2026-08-25", "k": "debit", "n": "KFH-Egypt CAI", "c": "مدفوعات وتحويلات", "a": 1000.0}, {"d": "2026-08-23", "k": "debit", "n": "AWBE CAI", "c": "مشتريات ومحلات", "a": 60.0}, {"d": "2026-08-20", "k": "debit", "n": "NBE ATM020", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-08-20", "k": "debit", "n": "HDB-ATM4807", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-08-20", "k": "debit", "n": "HDB-ATM4807", "c": "سحب نقدي (ATM)", "a": 100.0}, {"d": "2026-08-18", "k": "debit", "n": "CIB-OLA Diplomat N", "c": "مدفوعات وتحويلات", "a": 500.0}, {"d": "2026-08-18", "k": "credit", "n": "ESSAM MOHAMED TAHA MAHROUS IBRAHIM", "c": "وارد", "a": 400.0}, {"d": "2026-08-18", "k": "debit", "n": "VODAFONE EGYPT Cai", "c": "موبايل وإنترنت", "a": 164.29}, {"d": "2026-08-16", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 395.74}, {"d": "2026-08-12", "k": "debit", "n": "GEIDEAE*Animalia Ne", "c": "مشتريات ومحلات", "a": 43.0}, {"d": "2026-08-12", "k": "debit", "n": "FAWRY*THE STAR SUPER", "c": "بقالة وسوبر ماركت", "a": 20.0}, {"d": "2026-08-12", "k": "debit", "n": "BM HUB OLA DEBOMAT 2TH C", "c": "مشتريات ومحلات", "a": 1500.0}, {"d": "2026-08-12", "k": "debit", "n": "Orange - Home InternetNIL", "c": "موبايل وإنترنت", "a": 143.0}, {"d": "2026-08-12", "k": "debit", "n": "Orange - Home InternetNIL", "c": "موبايل وإنترنت", "a": 43.0}, {"d": "2026-08-11", "k": "debit", "n": "NBE ATM435", "c": "سحب نقدي (ATM)", "a": 500.0}, {"d": "2026-08-09", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 500.98}, {"d": "2026-08-09", "k": "credit", "n": "ESSAM MOHAMED TAHA MAHROUS IBRAHIM", "c": "وارد", "a": 250.0}, {"d": "2026-08-09", "k": "debit", "n": "OLA ENERGY RING RD GI", "c": "بنزين ووقود", "a": 310.0}, {"d": "2026-08-07", "k": "debit", "n": "BANK NXT ATM ATM", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-08-06", "k": "debit", "n": "FAWRY*ROMIO STORE MO", "c": "مدفوعات وتحويلات", "a": 250.0}, {"d": "2026-08-06", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 286.0}, {"d": "2026-08-05", "k": "credit", "n": "JANA AHMED", "c": "وارد", "a": 50.0}, {"d": "2026-08-05", "k": "debit", "n": "FAWRY*ALQRYTY", "c": "مدفوعات وتحويلات", "a": 440.0}, {"d": "2026-08-04", "k": "debit", "n": "OPAY_PF*Gamety Ca", "c": "مدفوعات وتحويلات", "a": 60.0}, {"d": "2026-08-04", "k": "debit", "n": "QNBS-0838 GIZ", "c": "مدفوعات وتحويلات", "a": 500.0}, {"d": "2026-08-04", "k": "debit", "n": "FAWRY*ALQRYTY", "c": "مدفوعات وتحويلات", "a": 610.0}, {"d": "2026-08-03", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 181.19}, {"d": "2026-08-02", "k": "debit", "n": "BDC ELHARAM C", "c": "سحب نقدي (ATM)", "a": 1000.0}, {"d": "2026-08-02", "k": "debit", "n": "VODAFONE EGYPT Cai", "c": "موبايل وإنترنت", "a": 164.29}, {"d": "2026-08-02", "k": "debit", "n": "BDC ELHARAM C", "c": "سحب نقدي (ATM)", "a": 400.0}, {"d": "2026-08-01", "k": "debit", "n": "U TURN GI", "c": "أخرى (غير مصنف)", "a": 1150.0}, {"d": "2026-07-27", "k": "debit", "n": "Vodafone Top Up APP Sma", "c": "موبايل وإنترنت", "a": 80.0}, {"d": "2026-07-26", "k": "credit", "n": "KARIM GAMIL GOHARI ABDELFATAH EL GOHRI", "c": "وارد", "a": 200.0}, {"d": "2026-07-26", "k": "debit", "n": "NBE ATM435", "c": "سحب نقدي (ATM)", "a": 200.0}, {"d": "2026-07-25", "k": "debit", "n": "NBE ATM714", "c": "سحب نقدي (ATM)", "a": 100.0}, {"d": "2026-07-23", "k": "debit", "n": "VODAFONE EGYPT Cai", "c": "موبايل وإنترنت", "a": 164.29}, {"d": "2026-07-22", "k": "debit", "n": "EC H AL AHRAM TRF", "c": "اشتراكات ومحتوى", "a": 348.68}, {"d": "2026-07-21", "k": "debit", "n": "Uber Dow", "c": "مطاعم وتوصيل", "a": 5.0}, {"d": "2026-07-21", "k": "debit", "n": "Uber Dow", "c": "مطاعم وتوصيل", "a": 159.97}, {"d": "2026-07-20", "k": "debit", "n": "Talabat Maa", "c": "مطاعم وتوصيل", "a": 127.64}, {"d": "2026-04-09", "k": "refund", "n": "FIBE HO", "c": "رد مبلغ", "a": 1000.0}, {"d": "2026-03-04", "k": "refund", "n": "NBE ATM713", "c": "رد مبلغ", "a": 8000.0}];
 var TXK = "all";
 function setTxK(k) {
+  if (k !== TXK) SND.play("tick");
   TXK = k;
   var btns = document.querySelectorAll("#tx_f .chip-b");
   for (var i = 0; i < btns.length; i++)
@@ -1963,6 +2169,7 @@ function renderTx() {
       var el = document.getElementById(id);
       if (!el) return;
       setActive(id);
+      SND.play("tick");
       jumpTo(el);
     });
   }
@@ -1988,7 +2195,7 @@ function renderTx() {
   /* stale hint: build older than 6h, or calendar moved past the built month */
   var hint = document.getElementById("stale_hint");
   if (hint) {
-    var gt = Date.parse("2026-10-01 22:36".replace(" ", "T") + ":00");
+    var gt = Date.parse("2026-10-02 12:11".replace(" ", "T") + ":00");
     var old = isFinite(gt) && (Date.now() - gt > 6 * 3600 * 1000);
     var moved = localISO().slice(0, 7) > "2026-10";
     if (old || moved) {
