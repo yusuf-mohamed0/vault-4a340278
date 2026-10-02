@@ -449,8 +449,9 @@ box-shadow:var(--sh-l); backdrop-filter:saturate(180%) blur(14px);
 .sndfab[aria-pressed="false"]{color:var(--red)}
 @media (max-height:560px){ .sndfab{bottom:206px} }
 /* ---------- floating assistant: avatar FAB + speech bubble ---------- */
-.assistant{--as-b:212px; position:fixed; bottom:var(--as-b); inset-inline-end:14px; z-index:47;
- display:flex; flex-direction:column-reverse; align-items:flex-end; gap:8px;
+.assistant{--as-b:212px; --as-av:52px; --as-gap:8px; --as-top:62px;
+ position:fixed; bottom:var(--as-b); top:var(--as-top); inset-inline-end:14px; z-index:47;
+ display:flex; flex-direction:column-reverse; align-items:flex-end; gap:var(--as-gap);
  pointer-events:none}
 .assistant > *{pointer-events:auto}
 .as-av{width:52px; height:52px; border-radius:50%; border:.5px solid var(--sep);
@@ -459,8 +460,10 @@ box-shadow:var(--sh-l); backdrop-filter:saturate(180%) blur(14px);
  box-shadow:0 8px 22px rgba(14,42,71,.28); transition:transform .2s var(--ease)}
 .as-av:active{transform:scale(.94)}
 .as-av svg{width:24px; height:24px}
-.as-b{max-width:250px; max-height:calc(100vh - var(--as-b) - 72px);
- max-height:calc(100dvh - var(--as-b) - 72px); overflow-y:auto;
+.as-b{max-width:250px;
+ max-height:calc(100vh - var(--as-b) - var(--as-av) - var(--as-gap) - var(--as-top));
+ max-height:calc(100dvh - var(--as-b) - var(--as-av) - var(--as-gap) - var(--as-top));
+ overflow-y:auto;
  overscroll-behavior:contain; background:var(--surface); border:.5px solid var(--sep);
  border-radius:16px; border-end-end-radius:4px; padding:0 13px 12px;
  box-shadow:0 12px 30px rgba(14,42,71,.16); animation:asIn .26s var(--ease)}
@@ -819,7 +822,7 @@ th,td{padding:9px 8px}
 <a href="1a6c073a15_summary_2026.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>الأرقام المجمعة (JSON)<span class="sz">24 KB</span></a>
 <a href="7215c039a2_plan_2026-10.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>خطة الشهر (إكسل)<span class="sz">10 KB</span></a>
 <a href="94044d7e24_market_watch.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>أسعار السوق والأخبار (JSON)<span class="sz">5 KB</span></a></div>
-    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 16:12</b></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 16:50</b></div>
     <div class="note warn" id="stale_hint" style="display:none"><svg class="ic" aria-hidden="true"><use href="#ic-clock"/></svg>
       اللوحة دي متبنيّة على شهر <b>2026-10</b> — بس تاريخ النهارده <b class="stale-m num"></b>.
       لو الشهر اتغيّر شغّل <b>plan_month</b> عشان الخطة والتنبيهات تتحدّث.</div>
@@ -827,7 +830,7 @@ th,td{padding:9px 8px}
 
 </main>
 <footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام
-  <span>آخر توليد <b id="gentime" class="num">2026-10-02 16:12</b></span>
+  <span>آخر توليد <b id="gentime" class="num">2026-10-02 16:50</b></span>
   <span>تاريخ البناء 02/10/2026</span></footer>
 
 <button class="fab" id="fab" aria-label="إضافة قيد" onclick="jumpAdd()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button>
@@ -1093,13 +1096,41 @@ var SND = (function () {
     /* عين الخصوصية: نظرة سريعة */
     peek:     [[1240, 720, 0.10, "triangle", 0.11, 0]]
   };
+  /* real cash sounds (local mp3 samples) - tried first, procedural falls back */
+  var SAMPLES = {
+    deposit:  "sounds/cash-register.mp3",
+    withdraw: "sounds/not-enough-cash.mp3",
+    transfer: "sounds/cash-point.mp3",
+    save:     "sounds/cha-ching.mp3",
+    done:     "sounds/money.mp3",
+    unlock:   "sounds/apple-pay.mp3",
+    del:      "sounds/cash-chaching.mp3",
+    over:     "sounds/cashier-beep.mp3",
+    goal:     "sounds/two-million.mp3",
+    market:   "sounds/cash-counter.mp3",
+    err:      "sounds/correct-cash.mp3",
+    open:     "sounds/insert-cash.mp3",
+    close:    "sounds/cash-register-2.mp3",
+    wipe:     "sounds/cash-me-outside.mp3",
+    peek:     "sounds/ka-ching.mp3",
+    tick:     "sounds/scanner-beep.mp3"
+  };
   function play(name) {
     if (!live || !armed || !name) return;
-    var seq = P[name];
-    if (!seq) return;
     var now = Date.now();
     if (now - last < 70) return;
     last = now;
+    var src = SAMPLES[name];
+    if (src) {
+      try {
+        var a = new Audio(src);
+        a.volume = 0.7;
+        a.play().catch(function () {});
+        return;
+      } catch (e) {}
+    }
+    var seq = P[name];
+    if (!seq) return;
     try {
       for (var i = 0; i < seq.length; i++) {
         var s = seq[i];
@@ -1339,6 +1370,7 @@ function renderHero() {
   var el = document.getElementById("hero_left");
   heroSet(el, left);
   el.className = "hero-v num" + (left < 0 ? " over" : "");
+  if (left < 0) SND.play("over");
   var idx = (new Date().getDay() + 1) % 7;   /* 0 = Saturday */
   var daysLeft = 7 - idx;
   document.getElementById("hero_days").textContent = daysLeft;
@@ -1429,6 +1461,7 @@ function renderEnvelopes() {
       leftEl.textContent = "تجاوز " + nf(done - b) + " ج.م";
       leftEl.className = "env-left v-red";
       OVER.push(key + ": تجاوز " + nf(done - b) + " ج.م");
+      SND.play("over");
     } else {
       leftEl.textContent = "متبقي " + nf(b - done) + " ج.م";
       leftEl.className = "env-left" + (pct > 75 ? " v-amber" : "");
@@ -1472,6 +1505,7 @@ function renderLog() {
     var rate = T.mIn > 0 ? ((T.mIn - T.mOut) / T.mIn) * 100 : 0;
     savEl.textContent = rate.toFixed(1) + "%";
     savEl.className = "v num " + (rate >= 0 ? "v-green" : "v-red");
+    if (T.mIn > 0 && (T.mIn - T.mOut) >= 3840) SND.play("goal");
   }
 
   renderHero();
@@ -2319,7 +2353,7 @@ function renderTx() {
   /* stale hint: build older than 6h, or calendar moved past the built month */
   var hint = document.getElementById("stale_hint");
   if (hint) {
-    var gt = Date.parse("2026-10-02 16:12".replace(" ", "T") + ":00");
+    var gt = Date.parse("2026-10-02 16:50".replace(" ", "T") + ":00");
     var old = isFinite(gt) && (Date.now() - gt > 6 * 3600 * 1000);
     var moved = localISO().slice(0, 7) > "2026-10";
     if (old || moved) {
@@ -2462,7 +2496,7 @@ function _assistantSay(msg, acts) {
 }
 function assistantOpen() {
   var c = _asPick("click", assistantCandidates());
-  if (c) _assistantSay(c.text, c.acts);
+  if (c) { _assistantSay(c.text, c.acts); SND.play("peek"); }
 }
 function hideAssistant() {
   var b = document.getElementById("assistantBubble");
@@ -2488,6 +2522,7 @@ function assistantAfterEntry() {
   ];
   _assistantSay(lines[Math.floor(Math.random() * lines.length)],
     '<button class="as-a pri" onclick="jumpAdd()">قيد تاني</button>');
+  SND.play("done");
 }
 /* ---------- AI layer: free MiMo (Xiaomi) via AIHubMix ---------- */
 /* The key is entered by YOU and kept only in this browser's localStorage.
