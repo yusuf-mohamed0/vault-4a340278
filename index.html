@@ -822,7 +822,7 @@ th,td{padding:9px 8px}
 <a href="1a6c073a15_summary_2026.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>الأرقام المجمعة (JSON)<span class="sz">24 KB</span></a>
 <a href="7215c039a2_plan_2026-10.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>خطة الشهر (إكسل)<span class="sz">10 KB</span></a>
 <a href="94044d7e24_market_watch.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>أسعار السوق والأخبار (JSON)<span class="sz">5 KB</span></a></div>
-    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 17:00</b></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 17:26</b></div>
     <div class="note warn" id="stale_hint" style="display:none"><svg class="ic" aria-hidden="true"><use href="#ic-clock"/></svg>
       اللوحة دي متبنيّة على شهر <b>2026-10</b> — بس تاريخ النهارده <b class="stale-m num"></b>.
       لو الشهر اتغيّر شغّل <b>plan_month</b> عشان الخطة والتنبيهات تتحدّث.</div>
@@ -830,7 +830,7 @@ th,td{padding:9px 8px}
 
 </main>
 <footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام
-  <span>آخر توليد <b id="gentime" class="num">2026-10-02 17:00</b></span>
+  <span>آخر توليد <b id="gentime" class="num">2026-10-02 17:26</b></span>
   <span>تاريخ البناء 02/10/2026</span></footer>
 
 <button class="fab" id="fab" aria-label="إضافة قيد" onclick="jumpAdd()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button>
@@ -1094,41 +1094,27 @@ var SND = (function () {
                [1047, 1047, 0.20, "sine", 0.15, 0.12],
                [1568, 1568, 0.26, "sine", 0.08, 0.17]],
     /* عين الخصوصية: نظرة سريعة */
-    peek:     [[1240, 720, 0.10, "triangle", 0.11, 0]]
+    peek:     [[1240, 720, 0.10, "triangle", 0.11, 0]],
+    /* تجاوز سقف الأسبوع: دقتين حادتين نازلتين */
+    over:     [[880, 880, 0.09, "square", 0.11, 0],
+               [622, 622, 0.09, "square", 0.11, 0.10],
+               [466, 466, 0.26, "square", 0.12, 0.20]],
+    /* تحقق هدف الادخار: ثلاث نقرات كاش متتالية */
+    goal:     [[1568, 1568, 0.05, "square", 0.10, 0],
+               [1568, 1568, 0.05, "square", 0.10, 0.09],
+               [1568, 1568, 0.05, "square", 0.10, 0.18],
+               [2093, 2093, 0.24, "triangle", 0.12, 0.28]],
+    /* نبض السوق: تحديث الأسعار - ثلاث نغمات صاعدة */
+    market:   [[1047, 1047, 0.07, "sine", 0.10, 0],
+               [1319, 1319, 0.07, "sine", 0.10, 0.08],
+               [1568, 1568, 0.16, "sine", 0.09, 0.16]]
   };
-  /* real cash sounds (local mp3 samples) - tried first, procedural falls back */
-  var SAMPLES = {
-    deposit:  "sounds/cash-register.mp3",
-    withdraw: "sounds/not-enough-cash.mp3",
-    transfer: "sounds/cash-point.mp3",
-    save:     "sounds/cha-ching.mp3",
-    done:     "sounds/money.mp3",
-    unlock:   "sounds/apple-pay.mp3",
-    del:      "sounds/cash-chaching.mp3",
-    over:     "sounds/cashier-beep.mp3",
-    goal:     "sounds/two-million.mp3",
-    market:   "sounds/cash-counter.mp3",
-    err:      "sounds/correct-cash.mp3",
-    open:     "sounds/insert-cash.mp3",
-    close:    "sounds/cash-register-2.mp3",
-    wipe:     "sounds/cash-me-outside.mp3",
-    peek:     "sounds/ka-ching.mp3",
-    tick:     "sounds/scanner-beep.mp3"
-  };
+  /* كل الأصوات إجرائية (Web Audio) - صفر ملفات، صفر صمت */
   function play(name) {
     if (!live || !armed || !name) return;
     var now = Date.now();
     if (now - last < 70) return;
     last = now;
-    var src = SAMPLES[name];
-    if (src) {
-      try {
-        var a = new Audio(src);
-        a.volume = 0.7;
-        a.play().catch(function () {});
-        return;
-      } catch (e) {}
-    }
     var seq = P[name];
     if (!seq) return;
     try {
@@ -2353,7 +2339,7 @@ function renderTx() {
   /* stale hint: build older than 6h, or calendar moved past the built month */
   var hint = document.getElementById("stale_hint");
   if (hint) {
-    var gt = Date.parse("2026-10-02 17:00".replace(" ", "T") + ":00");
+    var gt = Date.parse("2026-10-02 17:26".replace(" ", "T") + ":00");
     var old = isFinite(gt) && (Date.now() - gt > 6 * 3600 * 1000);
     var moved = localISO().slice(0, 7) > "2026-10";
     if (old || moved) {
