@@ -816,7 +816,7 @@ th,td{padding:9px 8px}
 <a href="1a6c073a15_summary_2026.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>الأرقام المجمعة (JSON)<span class="sz">24 KB</span></a>
 <a href="7215c039a2_plan_2026-10.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>خطة الشهر (إكسل)<span class="sz">10 KB</span></a>
 <a href="94044d7e24_market_watch.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>أسعار السوق والأخبار (JSON)<span class="sz">5 KB</span></a></div>
-    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 15:25</b></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 15:47</b></div>
     <div class="note warn" id="stale_hint" style="display:none"><svg class="ic" aria-hidden="true"><use href="#ic-clock"/></svg>
       اللوحة دي متبنيّة على شهر <b>2026-10</b> — بس تاريخ النهارده <b class="stale-m num"></b>.
       لو الشهر اتغيّر شغّل <b>plan_month</b> عشان الخطة والتنبيهات تتحدّث.</div>
@@ -824,7 +824,7 @@ th,td{padding:9px 8px}
 
 </main>
 <footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام
-  <span>آخر توليد <b id="gentime" class="num">2026-10-02 15:25</b></span>
+  <span>آخر توليد <b id="gentime" class="num">2026-10-02 15:47</b></span>
   <span>تاريخ البناء 02/10/2026</span></footer>
 
 <button class="fab" id="fab" aria-label="إضافة قيد" onclick="jumpAdd()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button>
@@ -849,13 +849,19 @@ th,td{padding:9px 8px}
       <button type="submit" class="as-go" aria-label="إرسال"><svg class="ic" aria-hidden="true"><use href="#ic-send"/></svg></button>
     </form>
     <div class="as-cfg" id="aiCfg" hidden>
-      <label for="ai_key">مفتاح AIHubMix (يتخزن في متصفحك بس)</label>
+      <label for="ai_prov">مزوّد الذكاء</label>
+      <select id="ai_prov" onchange="aiProvChanged()"></select>
+      <div id="ai_urlu" hidden>
+        <label for="ai_urlc">رابط الـAPI (متوافق OpenAI)</label>
+        <input type="text" id="ai_urlc" placeholder="https://example.com/v1/chat/completions" autocomplete="off" dir="ltr">
+      </div>
+      <label for="ai_key" id="ai_key_lbl">المفتاح (يتخزن في متصفحك بس)</label>
       <input type="password" id="ai_key" placeholder="sk-..." autocomplete="off" dir="ltr">
       <label for="ai_model">الموديل</label>
-      <select id="ai_model">
-        <option value="xiaomi-mimo-v2.6-pro-free">MiMo V2.6 Pro (مجاني)</option>
-        <option value="xiaomi-mimo-v2.6-flash-free">MiMo V2.6 Flash (مجاني، أسرع)</option>
-      </select>
+      <select id="ai_model" onchange="aiModelChanged()"></select>
+      <div id="ai_modelu" hidden>
+        <input type="text" id="ai_modelc" placeholder="اكتب اسم الموديل بالظبط" autocomplete="off" dir="ltr">
+      </div>
       <div class="as-cfgrow">
         <button type="button" class="as-a pri" onclick="aiSaveKey()">حفظ</button>
         <button type="button" class="as-a" onclick="aiClearKey()">امسح المفتاح</button>
@@ -2301,7 +2307,7 @@ function renderTx() {
   /* stale hint: build older than 6h, or calendar moved past the built month */
   var hint = document.getElementById("stale_hint");
   if (hint) {
-    var gt = Date.parse("2026-10-02 15:25".replace(" ", "T") + ":00");
+    var gt = Date.parse("2026-10-02 15:47".replace(" ", "T") + ":00");
     var old = isFinite(gt) && (Date.now() - gt > 6 * 3600 * 1000);
     var moved = localISO().slice(0, 7) > "2026-10";
     if (old || moved) {
@@ -2475,11 +2481,205 @@ function assistantAfterEntry() {
 /* The key is entered by YOU and kept only in this browser's localStorage.
    It is never written into the published site. Numbers go to the model only
    when you press ask. */
-var AI_KEY = "mf_ai_key", AI_MODEL = "mf_ai_model", AI_URL = "https://aihubmix.com/v1/chat/completions";
+var AI_PROV = "mf_ai_prov", AI_URL_KEY = "mf_ai_url";
 var AI_CTX_TOKEN = null;
-function aiKey() { try { return localStorage.getItem(AI_KEY) || ""; } catch (e) { return ""; } }
+/* supported providers — every endpoint below was CORS-verified from the browser */
+var AI_PROVIDERS = {
+  aihubmix: {
+    name: "AIHubMix (مجاني)",
+    url: "https://aihubmix.com/v1/chat/completions",
+    keyLabel: "مفتاح AIHubMix — مجاني من غير كارت (يتخزن في متصفحك بس)",
+    ph: "sk-...",
+    models: [
+      ["xiaomi-mimo-v2.6-pro-free", "MiMo V2.6 Pro (مجاني)"],
+      ["xiaomi-mimo-v2.6-flash-free", "MiMo V2.6 Flash (مجاني، أسرع)"]
+    ]
+  },
+  gemini: {
+    name: "Google Gemini",
+    url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+    keyLabel: "مفتاح Google AI Studio — يبدأ بـ AIza (يتخزن في متصفحك بس)",
+    ph: "AIza...",
+    models: [
+      ["gemini-2.5-flash", "Gemini 2.5 Flash"],
+      ["gemini-2.5-pro", "Gemini 2.5 Pro"],
+      ["gemini-2.0-flash", "Gemini 2.0 Flash"]
+    ]
+  },
+  openai: {
+    name: "OpenAI",
+    url: "https://api.openai.com/v1/chat/completions",
+    keyLabel: "مفتاح OpenAI — sk- مدفوع بالاستخدام (يتخزن في متصفحك بس)",
+    ph: "sk-...",
+    models: [
+      ["gpt-4o-mini", "GPT-4o mini"],
+      ["gpt-4o", "GPT-4o"],
+      ["gpt-4.1-mini", "GPT-4.1 mini"],
+      ["gpt-4.1", "GPT-4.1"]
+    ]
+  },
+  openrouter: {
+    name: "OpenRouter",
+    url: "https://openrouter.ai/api/v1/chat/completions",
+    keyLabel: "مفتاح OpenRouter — sk-or- (يتخزن في متصفحك بس)",
+    ph: "sk-or-...",
+    models: [
+      ["openai/gpt-4o-mini", "OpenAI GPT-4o mini"],
+      ["openai/gpt-4o", "OpenAI GPT-4o"],
+      ["anthropic/claude-3.5-sonnet", "Claude 3.5 Sonnet"],
+      ["google/gemini-flash-1.5", "Gemini Flash 1.5"],
+      ["xiaomi/mimo-v2.6-flash", "MiMo V2.6 Flash"]
+    ]
+  },
+  groq: {
+    name: "Groq (سريع جدًا)",
+    url: "https://api.groq.com/openai/v1/chat/completions",
+    keyLabel: "مفتاح Groq — gsk_ (يتخزن في متصفحك بس)",
+    ph: "gsk_...",
+    models: [
+      ["llama-3.3-70b-versatile", "Llama 3.3 70B"],
+      ["llama-3.1-8b-instant", "Llama 3.1 8B (أسرع)"],
+      ["gemma2-9b-it", "Gemma 2 9B"]
+    ]
+  },
+  deepseek: {
+    name: "DeepSeek",
+    url: "https://api.deepseek.com/v1/chat/completions",
+    keyLabel: "مفتاح DeepSeek — sk- (يتخزن في متصفحك بس)",
+    ph: "sk-...",
+    models: [
+      ["deepseek-chat", "DeepSeek Chat"],
+      ["deepseek-reasoner", "DeepSeek R1 (تفكير)"]
+    ]
+  },
+  mistral: {
+    name: "Mistral",
+    url: "https://api.mistral.ai/v1/chat/completions",
+    keyLabel: "مفتاح Mistral (يتخزن في متصفحك بس)",
+    ph: "...",
+    models: [
+      ["mistral-large-latest", "Mistral Large"],
+      ["mistral-small-latest", "Mistral Small"],
+      ["open-mistral-nemo", "Mistral Nemo"]
+    ]
+  },
+  xai: {
+    name: "xAI (Grok)",
+    url: "https://api.x.ai/v1/chat/completions",
+    keyLabel: "مفتاح xAI — xai- (يتخزن في متصفحك بس)",
+    ph: "xai-...",
+    models: [
+      ["grok-2-latest", "Grok 2"],
+      ["grok-beta", "Grok Beta"]
+    ]
+  },
+  together: {
+    name: "Together AI",
+    url: "https://api.together.xyz/v1/chat/completions",
+    keyLabel: "مفتاح Together AI (يتخزن في متصفحك بس)",
+    ph: "...",
+    models: [
+      ["meta-llama/Llama-3.3-70B-Instruct-Turbo", "Llama 3.3 70B Turbo"],
+      ["mistralai/Mixtral-8x7B-Instruct-v0.1", "Mixtral 8x7B"]
+    ]
+  },
+  cerebras: {
+    name: "Cerebras (مجاني وسريع)",
+    url: "https://api.cerebras.ai/v1/chat/completions",
+    keyLabel: "مفتاح Cerebras — مجاني (يتخزن في متصفحك بس)",
+    ph: "csk-...",
+    models: []
+  },
+  huggingface: {
+    name: "Hugging Face",
+    url: "https://router.huggingface.co/v1/chat/completions",
+    keyLabel: "توكن Hugging Face — hf_ (يتخزن في متصفحك بس)",
+    ph: "hf_...",
+    models: []
+  },
+  llm7: {
+    name: "LLM7.io (مجاني من غير مفتاح)",
+    url: "https://api.llm7.io/v1/chat/completions",
+    keyLabel: "مفتاح LLM7 (اختياري — مجاني من غير مفتاح)",
+    ph: "unused...",
+    models: []
+  },
+  chutes: {
+    name: "Chutes.ai",
+    url: "https://llm.chutes.ai/v1/chat/completions",
+    keyLabel: "مفتاح Chutes (يتخزن في متصفحك بس)",
+    ph: "...",
+    models: []
+  },
+  nebius: {
+    name: "Nebius",
+    url: "https://api.studio.nebius.com/v1/chat/completions",
+    keyLabel: "مفتاح Nebius (يتخزن في متصفحك بس)",
+    ph: "...",
+    models: []
+  },
+  siliconflow: {
+    name: "SiliconFlow",
+    url: "https://api.siliconflow.cn/v1/chat/completions",
+    keyLabel: "مفتاح SiliconFlow (يتخزن في متصفحك بس)",
+    ph: "sk-...",
+    models: []
+  },
+  modelscope: {
+    name: "ModelScope",
+    url: "https://api-inference.modelscope.cn/v1/chat/completions",
+    keyLabel: "مفتاح ModelScope (يتخزن في متصفحك بس)",
+    ph: "ms-...",
+    models: []
+  },
+  zhipu: {
+    name: "Z AI (Zhipu / GLM)",
+    url: "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+    keyLabel: "مفتاح Zhipu AI (يتخزن في متصفحك بس)",
+    ph: "...",
+    models: []
+  },
+  aionlabs: {
+    name: "Aion Labs",
+    url: "https://api.aionlabs.ai/v1/chat/completions",
+    keyLabel: "مفتاح Aion Labs (يتخزن في متصفحك بس)",
+    ph: "...",
+    models: []
+  },
+  cohere: {
+    name: "Cohere",
+    url: "https://api.cohere.ai/compatibility/v1/chat/completions",
+    keyLabel: "مفتاح Cohere (يتخزن في متصفحك بس)",
+    ph: "...",
+    models: []
+  },
+  custom: {
+    name: "مخصص (أي API متوافق OpenAI)",
+    url: "",
+    keyLabel: "المفتاح (اختياري لو السيرفر مش طالبه)",
+    ph: "...",
+    models: []
+  }
+};
+function aiProv() {
+  var sel = document.getElementById("ai_prov");
+  if (sel && sel.value && AI_PROVIDERS[sel.value]) return sel.value;
+  try { return AI_PROVIDERS[localStorage.getItem(AI_PROV)] ? localStorage.getItem(AI_PROV) : "aihubmix"; } catch (e) { return "aihubmix"; }
+}
+function aiProvDef() { return AI_PROVIDERS[aiProv()] || AI_PROVIDERS.aihubmix; }
+function aiCustomUrl() { try { return (localStorage.getItem(AI_URL_KEY) || "").trim(); } catch (e) { return ""; } }
+function aiUrl() { return aiProv() === "custom" ? aiCustomUrl() : aiProvDef().url; }
+function aiKeyName() { return "mf_ai_key_" + aiProv(); }
+function aiKey() { try { return localStorage.getItem(aiKeyName()) || ""; } catch (e) { return ""; } }
 function aiHasKey() { return !!aiKey(); }
-function aiModel() { try { return localStorage.getItem(AI_MODEL) || "xiaomi-mimo-v2.6-pro-free"; } catch (e) { return "xiaomi-mimo-v2.6-pro-free"; } }
+function aiModel() {
+  var p = aiProv(), d = aiProvDef();
+  try {
+    var v = (localStorage.getItem("mf_ai_model_" + p) || "").trim();
+    if (v) return v;                          /* saved choice (preset OR hand-typed) wins */
+  } catch (e) {}
+  return d.models[0] ? d.models[0][0] : "";
+}
 function _setNote(t, ok) {
   var n = document.getElementById("aiNote");
   if (n) { n.textContent = t || ""; n.style.color = ok ? "var(--label-3)" : "var(--red)"; }
@@ -2508,8 +2708,10 @@ function aiCtxBlock() {
   return lines.join("\n");
 }
 function aiCall(userText, onOk, onErr) {
-  var key = aiKey();
-  if (!key) { onErr("مفيش مفتاح"); return; }
+  var key = aiKey(), prov = aiProv();
+  if (!key && !aiKeyOptional(prov)) { onErr("مفيش مفتاح"); return; }
+  var url = aiUrl();
+  if (!/^https?:\/\//i.test(url)) { onErr("رابط الـAPI مش متظبط"); return; }
   var sys = "أنت \"مساعد المالي\" — محاسب شخصي عربي. تحتيك أرقام الشهر الحقيقي للمستخدم. " +
     "قواعدك: ردّك بالعامية المصرية، مختصر (2 إلى 4 جمل)، كل المبالغ بالجنيه المصري، " +
     "ومن غير أي رقم من عندك — استخدم الأرقام اللي تحتيك بس. لو محتاج رقم مش موجود، قول إنك محتاج القيد. " +
@@ -2523,25 +2725,35 @@ function aiCall(userText, onOk, onErr) {
     temperature: 0.6,
     max_tokens: 400
   };
-  fetch(AI_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
-    body: JSON.stringify(body)
-  }).then(function (r) {
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    return r.json();
-  }).then(function (j) {
-    var c = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
-    if (!c) throw new Error("رد فارغ");
-    onOk(String(c).trim());
-  }).catch(function (e) { onErr(String((e && e.message) || e)); });
+  var headers = { "Content-Type": "application/json" };
+  if (key) headers["Authorization"] = "Bearer " + key;
+  fetch(url, { method: "POST", headers: headers, body: JSON.stringify(body) })
+    .then(function (r) {
+      if (r.ok) return r.json();
+      var msg = "HTTP " + r.status;
+      if (r.status === 401) msg = "المفتاح غلط أو مش متفعّل (401)";
+      else if (r.status === 403) msg = "المفتاح مش مسموح له بالوصول (403)";
+      else if (r.status === 404) msg = "الرابط أو اسم الموديل غلط (404)";
+      else if (r.status === 429) msg = "استهلكت الحد المسموح، استنى شوية (429)";
+      else if (r.status >= 500) msg = "السيرفر نفسه واقع دلوقتي (" + r.status + ")";
+      throw new Error(msg);
+    }).then(function (j) {
+      var c = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+      if (!c) throw new Error("رد فاضي من الموديل");
+      onOk(String(c).trim());
+    }).catch(function (e) { onErr(String((e && e.message) || e)); });
 }
 function aiAsk(ev) {
   if (ev && ev.preventDefault) ev.preventDefault();
   var inp = document.getElementById("ai_q");
   var q = inp ? inp.value.trim() : "";
   if (!q) return false;
-  if (!aiHasKey()) { aiPanelToggle(true); _setNote("لازم تحط مفتاح AIHubMix الأول (مجاني)."); return false; }
+  var prov = aiProv();
+  if (!aiHasKey() && !aiKeyOptional(prov)) {
+    aiPanelToggle(true);
+    _setNote("لازم تحط مفتاح " + aiProvDef().name + " الأول.");
+    return false;
+  }
   var b = document.getElementById("assistantBubble");
   var a = document.getElementById("assistantActions");
   if (a) a.innerHTML = "";
@@ -2564,22 +2776,95 @@ function aiPanelToggle(force) {
   var open = (force === true) ? true : c.hidden;
   c.hidden = !open;
   if (open) {
-    var k = document.getElementById("ai_key"); if (k) k.value = aiKey();
-    var s = document.getElementById("ai_model"); if (s) s.value = aiModel();
+    aiFillProviders();
+    aiLoadProvider();
     var b = document.getElementById("assistantBubble"); if (b) b.hidden = false;
-    _setNote(aiHasKey() ? "المفتاح محفوظ في متصفحك بس. جاهز للأسئلة." :
-      "الصق مفتاح AIHubMix المجاني هنا. بيتخزّن في متصفحك لوحده.", true);
+    var ok = (aiProv() !== "custom") ? aiHasKey() : true;
+    _setNote(ok ? "المفتاح محفوظ في متصفحك بس. جاهز للأسئلة." :
+      (aiProv() === "custom" ? "اكتب رابط الـAPI والموديل، والمفتاح لو السيرفر طالبه." :
+       "الصق المفتاح هنا. بيتخزّن في متصفحك لوحده."), true);
   }
 }
-function aiSaveKey() {
+/* fill the provider dropdown once */
+function aiFillProviders() {
+  var s = document.getElementById("ai_prov");
+  if (!s || s.options.length) return;
+  var add = function (k) {
+    var o = document.createElement("option");
+    o.value = k; o.textContent = AI_PROVIDERS[k].name;
+    s.appendChild(o);
+  };
+  var order = ["aihubmix", "gemini", "groq", "cerebras", "llm7", "mistral", "openrouter", "openai",
+    "deepseek", "xai", "together", "huggingface", "chutes", "nebius", "siliconflow", "modelscope",
+    "zhipu", "aionlabs", "cohere", "custom"];
+  for (var i = 0; i < order.length; i++) if (AI_PROVIDERS[order[i]]) add(order[i]);
+}
+/* render fields for the selected provider */
+function aiKeyOptional(prov) { return prov === "llm7" || prov === "custom"; }
+function aiLoadProvider() {
+  var sel = document.getElementById("ai_prov");
+  var prov = (sel && sel.value && AI_PROVIDERS[sel.value]) ? sel.value : aiProv();
+  var def = AI_PROVIDERS[prov] || AI_PROVIDERS.aihubmix;
   var k = document.getElementById("ai_key"), s = document.getElementById("ai_model");
+  var lbl = document.getElementById("ai_key_lbl"), pu = document.getElementById("ai_urlu");
+  var mnu = document.getElementById("ai_modelu");
+  var ui = document.getElementById("ai_urlc"), mi = document.getElementById("ai_modelc");
+  if (k) { k.value = aiKey(); k.placeholder = def.ph || "..."; }
+  if (lbl) lbl.textContent = def.keyLabel;
+  if (s) {
+    s.innerHTML = "";
+    for (var i = 0; i < def.models.length; i++) {
+      var o = document.createElement("option");
+      o.value = def.models[i][0]; o.textContent = def.models[i][1];
+      s.appendChild(o);
+    }
+    if (!def.models.length) {
+      var c = document.createElement("option");
+      c.value = "__custom__"; c.textContent = "اكتب الموديل يدويًا تحت";
+      s.appendChild(c);
+    }
+    s.value = def.models.length ? aiModel() : "__custom__";
+  }
+  if (pu) pu.hidden = (prov !== "custom");
+  if (ui) ui.value = aiCustomUrl();
+  if (mnu) mnu.hidden = false;              /* manual model is always available */
+  if (mi) mi.value = aiModel();
+  if (sel) sel.value = prov;
+}
+function aiProvChanged() { aiLoadProvider(); _setNote("اختار المزوّد، والصق المفتاح، واضغط حفظ.", true); }
+function aiModelChanged() {}
+function aiSaveKey() {
+  var p = document.getElementById("ai_prov");
+  var prov = p ? p.value : aiProv();
+  var k = document.getElementById("ai_key"), s = document.getElementById("ai_model");
+  var uc = document.getElementById("ai_urlc"), mc = document.getElementById("ai_modelc");
   var v = k ? k.value.trim() : "";
-  if (!v) { _setNote("اكتب المفتاح الأول."); return; }
-  try { localStorage.setItem(AI_KEY, v); localStorage.setItem(AI_MODEL, s ? s.value : aiModel()); } catch (e) {}
+  if (!AI_PROVIDERS[prov]) prov = "aihubmix";
+  if (prov === "custom") {
+    var u = uc ? uc.value.trim() : "";
+    var m = (mc && mc.value.trim()) || (s && s.value !== "__custom__" ? s.value : "");
+    if (!/^https?:\/\//i.test(u)) { _setNote("اكتب رابط API صحيح يبدأ بـ https://"); return; }
+    if (!m) { _setNote("اكتب اسم الموديل."); return; }
+    try {
+      localStorage.setItem(AI_PROV, "custom");
+      localStorage.setItem(AI_URL_KEY, u);
+      localStorage.setItem("mf_ai_model_custom", m);
+      localStorage.setItem("mf_ai_key_custom", v);
+    } catch (e) {}
+  } else {
+    var model = (mc && mc.value.trim()) || (s && s.value !== "__custom__" ? s.value : "");
+    if (!model) { _setNote("اكتب اسم الموديل."); return; }
+    if (!v && !aiKeyOptional(prov)) { _setNote("اكتب المفتاح الأول."); return; }
+    try {
+      localStorage.setItem(AI_PROV, prov);
+      localStorage.setItem("mf_ai_key_" + prov, v);
+      localStorage.setItem("mf_ai_model_" + prov, model);
+    } catch (e) {}
+  }
   _setNote("اتحفظ. اسأل دلوقتي.", true);
 }
 function aiClearKey() {
-  try { localStorage.removeItem(AI_KEY); } catch (e) {}
+  try { localStorage.removeItem(aiKeyName()); } catch (e) {}
   var k = document.getElementById("ai_key"); if (k) k.value = "";
   _setNote("اتمسح من المتصفح.", true);
 }
