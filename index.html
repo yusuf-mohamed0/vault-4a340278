@@ -449,7 +449,7 @@ box-shadow:var(--sh-l); backdrop-filter:saturate(180%) blur(14px);
 .sndfab[aria-pressed="false"]{color:var(--red)}
 @media (max-height:560px){ .sndfab{bottom:206px} }
 /* ---------- floating assistant: avatar FAB + speech bubble ---------- */
-.assistant{position:fixed; bottom:212px; inset-inline-end:14px; z-index:47;
+.assistant{--as-b:212px; position:fixed; bottom:var(--as-b); inset-inline-end:14px; z-index:47;
  display:flex; flex-direction:column-reverse; align-items:flex-end; gap:8px;
  pointer-events:none}
 .assistant > *{pointer-events:auto}
@@ -459,11 +459,14 @@ box-shadow:var(--sh-l); backdrop-filter:saturate(180%) blur(14px);
  box-shadow:0 8px 22px rgba(14,42,71,.28); transition:transform .2s var(--ease)}
 .as-av:active{transform:scale(.94)}
 .as-av svg{width:24px; height:24px}
-.as-b{max-width:250px; background:var(--surface); border:.5px solid var(--sep);
- border-radius:16px; border-end-end-radius:4px; padding:11px 13px 12px;
+.as-b{max-width:250px; max-height:calc(100vh - var(--as-b) - 72px);
+ max-height:calc(100dvh - var(--as-b) - 72px); overflow-y:auto;
+ overscroll-behavior:contain; background:var(--surface); border:.5px solid var(--sep);
+ border-radius:16px; border-end-end-radius:4px; padding:0 13px 12px;
  box-shadow:0 12px 30px rgba(14,42,71,.16); animation:asIn .26s var(--ease)}
 .as-h{display:flex; align-items:center; justify-content:space-between; gap:10px;
- margin-bottom:5px}
+ position:sticky; top:0; z-index:1; background:var(--surface);
+ padding:11px 0 6px; margin-bottom:0}
 .as-ttl{font-size:12px; font-weight:800; color:var(--tint); letter-spacing:.2px}
 .as-x{width:22px; height:22px; border:0; background:transparent; color:var(--label-3);
  font-size:17px; line-height:1; cursor:pointer; border-radius:50%; padding:0}
@@ -499,7 +502,7 @@ box-shadow:var(--sh-l); backdrop-filter:saturate(180%) blur(14px);
 body.priv .as-avares .num{filter:blur(7px)}
 @keyframes asIn{from{opacity:0; transform:translateY(7px) scale(.97)} to{opacity:1; transform:none}}
 .locked .assistant{display:none}
-@media (max-height:560px){ .assistant{bottom:266px} }
+@media (max-height:560px){ .assistant{--as-b:266px} }
 body.priv .num:not(.pub), body.priv .a-amt, body.priv .env-a, body.priv .bal,
 body.priv .tx-a, body.priv .li-amt, body.priv .env-left{
 filter:blur(7px); user-select:none; -webkit-user-select:none}
@@ -816,7 +819,7 @@ th,td{padding:9px 8px}
 <a href="1a6c073a15_summary_2026.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>الأرقام المجمعة (JSON)<span class="sz">24 KB</span></a>
 <a href="7215c039a2_plan_2026-10.xlsx" download><svg class="ic" aria-hidden="true"><use href="#ic-calendar-check"/></svg>خطة الشهر (إكسل)<span class="sz">10 KB</span></a>
 <a href="94044d7e24_market_watch.json" download><svg class="ic" aria-hidden="true"><use href="#ic-braces"/></svg>أسعار السوق والأخبار (JSON)<span class="sz">5 KB</span></a></div>
-    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 15:47</b></div>
+    <div class="note"><svg class="ic" aria-hidden="true"><use href="#ic-refresh-cw"/></svg> الملفات دي بتتولّد أوتوماتيك مع كل تحديث للموقع من نفس مصادر السيستيم (الرسائل الخام + الخطة + السوق) · آخر توليد <b class="num" id="gen2">2026-10-02 16:12</b></div>
     <div class="note warn" id="stale_hint" style="display:none"><svg class="ic" aria-hidden="true"><use href="#ic-clock"/></svg>
       اللوحة دي متبنيّة على شهر <b>2026-10</b> — بس تاريخ النهارده <b class="stale-m num"></b>.
       لو الشهر اتغيّر شغّل <b>plan_month</b> عشان الخطة والتنبيهات تتحدّث.</div>
@@ -824,7 +827,7 @@ th,td{padding:9px 8px}
 
 </main>
 <footer><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg> بياناتك مبنية على جهازك وتُحدَّث من الرسايل الخام
-  <span>آخر توليد <b id="gentime" class="num">2026-10-02 15:47</b></span>
+  <span>آخر توليد <b id="gentime" class="num">2026-10-02 16:12</b></span>
   <span>تاريخ البناء 02/10/2026</span></footer>
 
 <button class="fab" id="fab" aria-label="إضافة قيد" onclick="jumpAdd()"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button>
@@ -865,6 +868,13 @@ th,td{padding:9px 8px}
       <div class="as-cfgrow">
         <button type="button" class="as-a pri" onclick="aiSaveKey()">حفظ</button>
         <button type="button" class="as-a" onclick="aiClearKey()">امسح المفتاح</button>
+      </div>
+      <label for="ai_code">نقل الإعدادات لجهاز تاني</label>
+      <input type="text" id="ai_code" placeholder="اضغط تصدير، وبعدين الصق الكود في الجهاز التاني" autocomplete="off" dir="ltr">
+      <div class="as-cfgrow">
+        <button type="button" class="as-a" onclick="aiExportCfg()">تصدير</button>
+        <button type="button" class="as-a" onclick="aiImportCfg()">استيراد</button>
+        <button type="button" class="as-a" onclick="aiForgetVault()">امسح المحفوظ</button>
       </div>
       <div class="as-note" id="aiNote"></div>
     </div>
@@ -966,11 +976,13 @@ function unlock() {
   document.body.classList.remove("locked");
   document.getElementById("lock").style.display = "none";
   SND.play("unlock");
+  if (typeof aiVaultLoad === "function") { try { aiVaultLoad(); } catch (e) {} }
 }
 function go() {
   var v = document.getElementById("pw").value;
   sha(v).then(function (d) {
     if (d === H) {
+      try { sessionStorage.setItem("mf_pw", v); } catch (e) {}
       unlock();
       try { sessionStorage.setItem("mf_ok","1"); } catch (e) {}
     } else {
@@ -2307,7 +2319,7 @@ function renderTx() {
   /* stale hint: build older than 6h, or calendar moved past the built month */
   var hint = document.getElementById("stale_hint");
   if (hint) {
-    var gt = Date.parse("2026-10-02 15:47".replace(" ", "T") + ":00");
+    var gt = Date.parse("2026-10-02 16:12".replace(" ", "T") + ":00");
     var old = isFinite(gt) && (Date.now() - gt > 6 * 3600 * 1000);
     var moved = localISO().slice(0, 7) > "2026-10";
     if (old || moved) {
@@ -2662,8 +2674,6 @@ var AI_PROVIDERS = {
   }
 };
 function aiProv() {
-  var sel = document.getElementById("ai_prov");
-  if (sel && sel.value && AI_PROVIDERS[sel.value]) return sel.value;
   try { return AI_PROVIDERS[localStorage.getItem(AI_PROV)] ? localStorage.getItem(AI_PROV) : "aihubmix"; } catch (e) { return "aihubmix"; }
 }
 function aiProvDef() { return AI_PROVIDERS[aiProv()] || AI_PROVIDERS.aihubmix; }
@@ -2862,12 +2872,141 @@ function aiSaveKey() {
     } catch (e) {}
   }
   _setNote("اتحفظ. اسأل دلوقتي.", true);
+  try { aiVaultSave(sessionStorage.getItem("mf_pw") || ""); } catch (e) {}
 }
 function aiClearKey() {
   try { localStorage.removeItem(aiKeyName()); } catch (e) {}
   var k = document.getElementById("ai_key"); if (k) k.value = "";
   _setNote("اتمسح من المتصفح.", true);
 }
+/* ---------- encrypted config vault (AES-256-GCM + PBKDF2, WebCrypto) ---------- */
+/* Lets your provider+key+model ride along to any device — stored ENCRYPTED
+   with the vault passcode, so it is useless to anyone who does not know it.
+   No external crypto library: the browser's own WebCrypto does everything. */
+var AI_VAULT = "mf_ai_vault", AI_VAULT_ITER = 200000;
+/* optional encrypted config embedded in the published site (filled by the builder) */
+var PUBLIC_VAULT = "mf1.pLKnkgSniqIBGn-I8TMIPA.BEGCDsPtglTt-zW-.lzkwDYtPjZOeWNMJFAdcJlXXKPw9iNk3tXO9q7R7L0Be7P-WQuHjUsMc53CVSITOAejBRvAyLLf2SklqXbwwAnJikdNQq1xz9znfdrO-oebqzIOWy9CUeNXifCxqcjIwK0utU4RRqoEpMSDZ21J0aO0unzGRQCOcmiaMOst3txeeZwM1qT0B2GsvaIlQpijmUQWYHxFEfhjClDH5JID9FcYSL2BLFzcbLTu8CFhJJssCy6H6H4Wvjs8ZNbfsCknnkSp9sJ2uWu5_NlgFdPKvRhqhv9XYetMBLu67R-eGf32rYomYR-GDIuWLWTRwRBqugJsEv5U_QNQ5RmNQBNddv1a8nEbl4IkZwF4nMVnySNbOraNGcn9wOXG4Dst77R-aZQ8";
+function _b64u(bytes) {
+  var b = new Uint8Array(bytes), s = "";
+  for (var i = 0; i < b.length; i++) s += String.fromCharCode(b[i]);
+  return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function _ub64u(str) {
+  str = String(str).replace(/-/g, "+").replace(/_/g, "/");
+  while (str.length % 4) str += "=";
+  var raw = atob(str), b = new Uint8Array(raw.length);
+  for (var i = 0; i < raw.length; i++) b[i] = raw.charCodeAt(i);
+  return b;
+}
+function _b64urlEncode(str) { return btoa(unescape(encodeURIComponent(str))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
+function _b64urlDecode(str) {
+  str = String(str).replace(/-/g, "+").replace(/_/g, "/");
+  while (str.length % 4) str += "=";
+  return decodeURIComponent(escape(atob(str)));
+}
+function _aiVault() { try { return JSON.parse(localStorage.getItem(AI_VAULT) || "null"); } catch (e) { return null; } }
+function _aiDeriveKey(pw, salt) {
+  return crypto.subtle.importKey("raw", new TextEncoder().encode(pw), { name: "PBKDF2" }, false, ["deriveKey"])
+    .then(function (base) {
+      return crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt: salt, iterations: AI_VAULT_ITER, hash: "SHA-256" },
+        base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+    });
+}
+function _aiEncrypt(cfg, pw) {
+  var salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  return _aiDeriveKey(pw, salt).then(function (key) {
+    return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key,
+      new TextEncoder().encode(JSON.stringify(cfg)));
+  }).then(function (ct) { return "mf1." + _b64u(salt) + "." + _b64u(iv) + "." + _b64u(ct); });
+}
+function _aiDecrypt(payload, pw) {
+  var p = String(payload).split(".");
+  if (p.length !== 4 || p[0] !== "mf1") return Promise.resolve(null);
+  var salt = _ub64u(p[1]), iv = _ub64u(p[2]), ct = _ub64u(p[3]);
+  return _aiDeriveKey(pw, salt).then(function (key) {
+    return crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, ct);
+  }).then(function (buf) { return JSON.parse(new TextDecoder().decode(buf)); })
+    .catch(function () { return null; });
+}
+function _aiKeySource() { return { provider: aiProv(), url: aiUrl(), model: aiModel(), key: aiKey() }; }
+/* persist the current config, encrypted under the passcode */
+function aiVaultSave(code) {
+  var cfg = _aiKeySource();
+  code = code || (sessionStorage.getItem("mf_pw") || "");
+  if (!code) return Promise.resolve(false);
+  return _aiEncrypt(cfg, code).then(function (payload) {
+    localStorage.setItem(AI_VAULT, JSON.stringify({ v: payload, ts: Date.now() }));
+    return true;
+  }).catch(function () { return false; });
+}
+/* called once the vault unlocks: pull config from the encrypted blobs */
+function aiVaultLoad() {
+  var code = "";
+  try { code = sessionStorage.getItem("mf_pw") || ""; } catch (e) {}
+  if (!code) return;
+  var payloads = [], store = _aiVault();
+  if (store && store.v) payloads.push(store.v);
+  if (typeof PUBLIC_VAULT !== "undefined" && PUBLIC_VAULT) payloads.push(PUBLIC_VAULT);
+  if (!payloads.length) return;
+  (function next(i) {
+    if (i >= payloads.length) return;
+    _aiDecrypt(payloads[i], code).then(function (cfg) {
+      if (cfg && cfg.provider && AI_PROVIDERS[cfg.provider]) {
+        localStorage.setItem(AI_PROV, cfg.provider);
+        localStorage.setItem("mf_ai_model_" + cfg.provider, cfg.model || "");
+        localStorage.setItem("mf_ai_key_" + cfg.provider, cfg.key || "");
+        if (cfg.provider === "custom" && cfg.url) localStorage.setItem(AI_URL_KEY, cfg.url);
+        aiFillProviders();
+        aiLoadProvider();
+        _setNote("إعدادات الذكاء اتظبطت تلقائي من الخزنة. جاهز.", true);
+      } else { next(i + 1); }
+    });
+  })(0);
+}
+/* portable text code (plain) so you can carry a key manually if you want */
+function aiExportCfg() {
+  var cfg = _aiKeySource();
+  if (!cfg.url || !cfg.model) { _setNote("ظبط المزوّد والموديل الأول."); return; }
+  var code = "MFAI1:" + _b64urlEncode(JSON.stringify(cfg));
+  var box = document.getElementById("ai_code");
+  if (box) { box.value = code; box.select(); }
+  _setNote("الكود اتنسخ. احفظه والصقه في الجهاز التاني عند الاستيراد.", true);
+}
+function aiImportCfg() {
+  var box = document.getElementById("ai_code");
+  var t = box ? box.value.trim() : "";
+  if (!/^MFAI1:/.test(t)) { _setNote("الصق كود يبدأ بـ MFAI1:"); return; }
+  try {
+    var cfg = JSON.parse(_b64urlDecode(t.slice(6)));
+    if (!cfg || !AI_PROVIDERS[cfg.provider]) { _setNote("الكود مش صالح."); return; }
+    localStorage.setItem(AI_PROV, cfg.provider);
+    localStorage.setItem("mf_ai_model_" + cfg.provider, cfg.model || "");
+    localStorage.setItem("mf_ai_key_" + cfg.provider, cfg.key || "");
+    if (cfg.provider === "custom" && cfg.url) localStorage.setItem(AI_URL_KEY, cfg.url);
+    if (cfg.url && cfg.provider === "custom") localStorage.setItem(AI_URL_KEY, cfg.url);
+    aiFillProviders();
+    aiLoadProvider();
+    _setNote("اتستورد تمام. اسأل دلوقتي.", true);
+  } catch (e) { _setNote("الكود مش صالح."); }
+}
+/* erase the encrypted copy (local + the copy embedded in the site) */
+function aiForgetVault() {
+  try { localStorage.removeItem(AI_VAULT); } catch (e) {}
+  if (typeof PUBLIC_VAULT !== "undefined" && PUBLIC_VAULT) {
+    _setNote("اتمسح من الجهاز. لإزالة النسخة المخزّنة جوّه الموقع قول للمساعد يشيلها.");
+  } else {
+    _setNote("اتمسح من الجهاز.", true);
+  }
+}
+/* migrate single-provider keys saved before multi-provider support */
+try {
+  if (localStorage.getItem("mf_ai_key") && !localStorage.getItem("mf_ai_key_aihubmix")) {
+    localStorage.setItem("mf_ai_key_aihubmix", localStorage.getItem("mf_ai_key"));
+    localStorage.setItem("mf_ai_model_aihubmix",
+      localStorage.getItem("mf_ai_model") || "xiaomi-mimo-v2.6-pro-free");
+  }
+} catch (e) {}
 /* -------------------------------------------------------------------------- */
 /* ---------- end assistant ---------- */
 /* -------------------------------------------------------------------------- */
